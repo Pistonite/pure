@@ -1,11 +1,15 @@
-//! Client side log util
+/**
+ * Client side log util
+ *
+ * @module
+ */
 
 import Denque from "denque";
-import { errstr } from "pure/utils";
+import { errstr } from "../utils";
 
 const LIMIT = 500;
 
-/// Global log queue
+/** Global log queue */
 const LogQueue = new Denque<string>();
 function pushLog(msg: string) {
     if (LogQueue.length > LIMIT) {
@@ -14,41 +18,39 @@ function pushLog(msg: string) {
     LogQueue.push(`[${new Date().toISOString()}]${msg}`);
 }
 
-/// Get the current log
-export function getLogLines() {
+/** Get the current log */
+export function getLogLines(): string[] {
     return LogQueue.toArray();
 }
 
-/// A general-purpose client side logger
+/** A general-purpose client side logger */
 export class Logger {
-    /// The prefix of the logger
+    /** The prefix of the logger */
     private prefix: string;
 
     constructor(prefix: string) {
         this.prefix = prefix;
     }
 
-    /// Log an info message
+    /** Log an info message */
     public info(msg: string) {
         const msgWithPrefix = `[${this.prefix}] ${msg}`;
-        window.console.info(msgWithPrefix);
+        self.console.info(msgWithPrefix);
         pushLog(msgWithPrefix);
     }
 
-    /// Log a warning message
+    /** Log a warning message */
     public warn(msg: string) {
         const msgWithPrefix = `[${this.prefix}] ${msg}`;
-        window.console.warn(msgWithPrefix);
+        self.console.warn(msgWithPrefix);
         pushLog(msgWithPrefix);
     }
 
-    /// Log an error message
-    public error(
-        msg: any /* eslint-disable-line @typescript-eslint/no-explicit-any */,
-    ) {
+    /** Log an error message */
+    public error(msg: unknown) {
         const msgWithPrefix = `[${this.prefix}] ${errstr(msg)}`;
-        window.console.error(msgWithPrefix);
-        window.console.error(msg);
+        self.console.error(msgWithPrefix);
+        self.console.error(msg);
         pushLog(msgWithPrefix);
     }
 }

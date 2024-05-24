@@ -1,20 +1,24 @@
-//! Path utilities
-//!
-//! The library has the following path standard:
-//! - All paths are relative (without leading /) to the root
-//!   of the file system (i.e. the uploaded directory)
-//! - Paths are always separated by /
-//! - Empty string denotes root
-//! - Paths cannot lead outside of root
+/**
+ * Path utilities
+ *
+ * The library has the following path standard:
+ * - All paths are relative (without leading /) to the root
+ *   of the file system (i.e. the uploaded directory)
+ * - Paths are always separated by /
+ * - Empty string denotes root
+ * - Paths cannot lead outside of root
+ *
+ *   @module
+ */
 
-import { FsErr, FsResult, fsErr } from "./FsError.ts";
+import { FsErr, type FsResult, fsErr } from "./FsError.ts";
 
-/// Get the root path. Current implementation is empty string.
+/** Get the root path. Current implementation is empty string. */
 export function fsRoot(): string {
     return "";
 }
 
-/// Check if a path is the root directory, also handles badly formatted paths like ".///../"
+/** Check if a path is the root directory, also handles badly formatted paths like ".///../" */
 export function fsIsRoot(p: string): boolean {
     if (!p) {
         return true;
@@ -27,9 +31,11 @@ export function fsIsRoot(p: string): boolean {
     return true;
 }
 
-/// Get the base name of a path (i.e. remove the last component)
-///
-/// If this path is the root directory, return InvalidPath.
+/**
+ * Get the base name of a path (i.e. remove the last component)
+ *
+ * If this path is the root directory, return InvalidPath.
+ */
 export function fsGetBase(p: string): FsResult<string> {
     if (fsIsRoot(p)) {
         const err = fsErr(FsErr.InvalidPath, "Trying to get the base of root");
@@ -42,12 +48,14 @@ export function fsGetBase(p: string): FsResult<string> {
     return { val: p.substring(0, i) };
 }
 
-/// Get the name of a path (i.e. the last component)
-///
-/// Returns the last component of the path.
-/// Does not include leading or trailing slashes.
-///
-/// If this path is the root directory, return IsRoot.
+/**
+ * Get the name of a path (i.e. the last component)
+ *
+ * Returns the last component of the path.
+ * Does not include leading or trailing slashes.
+ *
+ * If this path is the root directory, return IsRoot.
+ */
 export function fsGetName(p: string): FsResult<string> {
     p = stripTrailingSlashes(p);
     if (fsIsRoot(p)) {
@@ -61,9 +69,11 @@ export function fsGetName(p: string): FsResult<string> {
     return { val: p.substring(i + 1) };
 }
 
-/// Normalize .. and . in a path
-///
-/// Returns InvalidPath if the path tries to escape the root directory.
+/**
+ * Normalize .. and . in a path
+ *
+ * Returns InvalidPath if the path tries to escape the root directory.
+ */
 export function fsNormalize(p: string): FsResult<string> {
     let s = fsRoot();
     for (const comp of fsComponents(p)) {
@@ -80,7 +90,7 @@ export function fsNormalize(p: string): FsResult<string> {
     return { val: s };
 }
 
-/// Join two paths
+/** Join two paths */
 export function fsJoin(p1: string, p2: string): string {
     if (fsIsRoot(p1)) {
         return p2;
@@ -88,7 +98,7 @@ export function fsJoin(p1: string, p2: string): string {
     return p1 + "/" + p2;
 }
 
-/// Iterate through the components of a path. Empty components and . are skipped
+/** Iterate through the components of a path. Empty components and . are skipped */
 export function* fsComponents(p: string): Iterable<string> {
     let i = 0;
     while (i < p.length) {
@@ -112,7 +122,7 @@ export function* fsComponents(p: string): Iterable<string> {
     }
 }
 
-/// Remove trailing slashes from a path
+/** Remove trailing slashes from a path */
 function stripTrailingSlashes(p: string): string {
     let i = p.length - 1;
     for (; i >= 0; i--) {

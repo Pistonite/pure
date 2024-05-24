@@ -1,15 +1,11 @@
 {
-  "name": "pure",
-  "version": "0.0.1",
-  "description": "In-house TypeScript utility library",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Pistonite/pure.git"
-  },
-  "author": "",
-  "license": "Unlicense",
-  "bugs": {
-    "url": "https://github.com/Pistonite/pure/issues"
-  },
-  "homepage": "https://github.com/Pistonite/pure#readme"
+    "dependencies": {
+        "denque": "^2.1.0",
+        "file-saver": "^2.0.5"
+    },
+    "devDependencies": {
+        "@types/file-saver": "^2.0.7",
+        "prettier": "^3.2.5",
+        "typescript": "^5.4.5"
+    }
 }

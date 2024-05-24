@@ -1,11 +1,11 @@
-import { errstr } from "pure/utils";
-import { tryAsync } from "pure/result";
+import { errstr } from "../utils";
+import { tryAsync } from "../result";
 
-import { FsFile } from "./FsFile.ts";
-import { FsFileSystemInternal } from "./FsFileSystemInternal.ts";
-import { FsErr, FsResult, FsVoid, fsErr, fsFail } from "./FsError.ts";
+import type { FsFile } from "./FsFile.ts";
+import type { FsFileSystemInternal } from "./FsFileSystemInternal.ts";
+import { FsErr, type FsResult, type FsVoid, fsErr, fsFail } from "./FsError.ts";
 
-/// Allocate a new file object
+/** Allocate a new file object */
 export function fsFile(fs: FsFileSystemInternal, path: string): FsFile {
     return new FsFileImpl(fs, path);
 }
@@ -15,24 +15,24 @@ function errclosed() {
 }
 
 class FsFileImpl implements FsFile {
-    /// The path of the file
+    /** The path of the file */
     public path: string;
 
     private closed: boolean;
 
-    /// Reference to the file system so we can read/write
+    /** Reference to the file system so we can read/write */
     private fs: FsFileSystemInternal;
-    /// If the file is text
+    /** If the file is text */
     private isText: boolean;
-    /// Bytes of the file
+    /** Bytes of the file */
     private buffer: Uint8Array | undefined;
-    /// If the content in the buffer is different from the content on FS
+    /** If the content in the buffer is different from the content on FS */
     private isBufferDirty: boolean;
-    /// The content string of the file
+    /** The content string of the file */
     private content: string | undefined;
-    /// If the content string is newer than the bytes
+    /** If the content string is newer than the bytes */
     private isContentNewer: boolean;
-    /// The last modified time of the file
+    /** The last modified time of the file */
     private lastModified: number | undefined;
 
     constructor(fs: FsFileSystemInternal, path: string) {
@@ -181,9 +181,11 @@ class FsFileImpl implements FsFile {
         return await this.write();
     }
 
-    /// Write the content without checking if it's dirty. Overwrites the file currently on FS
-    ///
-    /// This is private - outside code should only use writeIfDirty
+    /**
+     * Write the content without checking if it's dirty. Overwrites the file currently on FS
+     *
+     * This is private - outside code should only use writeIfDirty
+     */
     private async write(): Promise<FsVoid> {
         this.updateBuffer();
         const buffer = this.buffer;
@@ -211,7 +213,7 @@ class FsFileImpl implements FsFile {
         }
     }
 
-    /// Encode the content to buffer if it is newer
+    /** Encode the content to buffer if it is newer */
     private updateBuffer() {
         if (!this.isContentNewer || this.content === undefined) {
             return;

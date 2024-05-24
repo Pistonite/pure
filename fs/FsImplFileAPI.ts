@@ -1,18 +1,20 @@
-import { FsFile } from "./FsFile.ts";
-import {
+import type { FsFile } from "./FsFile.ts";
+import type {
     FsFileSystem,
     FsFileSystemUninit,
     FsCapabilities,
 } from "./FsFileSystem.ts";
-import { FsErr, FsResult, FsVoid, fsErr } from "./FsError.ts";
+import { FsErr, type FsResult, type FsVoid, fsErr } from "./FsError.ts";
 import { fsIsRoot, fsNormalize } from "./FsPath.ts";
 import { FsFileMgr } from "./FsFileMgr.ts";
-import { FsFileSystemInternal } from "./FsFileSystemInternal.ts";
+import type { FsFileSystemInternal } from "./FsFileSystemInternal.ts";
 
-/// FileSystem implementation that uses a list of Files
-/// This is supported in all browsers, but it is stale.
-/// It's used for Firefox when the File Entries API is not available
-/// i.e. opened from <input type="file">
+/**
+ * FileSystem implementation that uses a list of Files
+ * This is supported in all browsers, but it is stale.
+ * It's used for Firefox when the File Entries API is not available
+ * i.e. opened from <input type="file">
+ */
 export class FsImplFileAPI
     implements FsFileSystemUninit, FsFileSystem, FsFileSystemInternal
 {
@@ -53,15 +55,15 @@ export class FsImplFileAPI
         return Promise.resolve({ val: this });
     }
 
-    public async listDir(path: string): Promise<FsResult<string[]>> {
+    public listDir(path: string): Promise<FsResult<string[]>> {
         const normalized = fsNormalize(path);
         if (normalized.err) {
-            return normalized;
+            return Promise.resolve(normalized);
         }
         path = normalized.val;
 
         if (path in this.directories) {
-            return { val: this.directories[path] };
+            return Promise.resolve({ val: this.directories[path] });
         }
 
         const set = new Set<string>();
@@ -86,22 +88,22 @@ export class FsImplFileAPI
         const paths = Array.from(set);
         this.directories[path] = paths;
 
-        return { val: paths };
+        return Promise.resolve({ val: paths });
     }
 
-    public async read(path: string): Promise<FsResult<File>> {
+    public read(path: string): Promise<FsResult<File>> {
         const normalized = fsNormalize(path);
         if (normalized.err) {
-            return normalized;
+            return Promise.resolve(normalized);
         }
 
         const file = this.files[normalized.val];
         if (!file) {
             const err = fsErr(FsErr.NotFound, "File not found: " + path);
-            return { err };
+            return Promise.resolve({ err });
         }
 
-        return { val: file };
+        return Promise.resolve({ val: file });
     }
 
     public write(): Promise<FsVoid> {

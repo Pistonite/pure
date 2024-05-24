@@ -1,0 +1,29 @@
+version: "3"
+
+tasks:
+  check:
+    desc: Check the code
+    cmds:
+      - task: prettier
+        vars:
+          PRETTIER_ARGS: --check
+      - bunx tsc
+      - deno lint
+      - bunx jsr publish --dry-run
+
+  fix:
+    desc: Fix the code
+    cmds:
+      - deno lint --fix
+      - task: prettier
+        vars:
+          PRETTIER_ARGS: --write
+
+  prettier:
+    cmds:
+    - bunx prettier "./**/*.{ts,tsx,json,jsonc,js,jsx,cjs}" {{.PRETTIER_ARGS}}
+
+  publish:
+    desc: Publish the package
+    cmds:
+      - bunx jsr publish

@@ -1,14 +1,20 @@
-import { tryCatch, tryAsync } from "pure/result";
-import { errstr } from "pure/utils";
+import { tryCatch, tryAsync } from "../result";
+import { errstr } from "../utils";
 
-import { FsFileSystem, FsFileSystemUninit } from "./FsFileSystem.ts";
-import { FsErr, FsError, FsResult, fsErr, fsFail } from "./FsError.ts";
+import type { FsFileSystem, FsFileSystemUninit } from "./FsFileSystem.ts";
+import {
+    FsErr,
+    type FsError,
+    type FsResult,
+    fsErr,
+    fsFail,
+} from "./FsError.ts";
 import { fsGetSupportStatus } from "./FsSupportStatus.ts";
 import { FsImplFileAPI } from "./FsImplFileAPI.ts";
 import { FsImplEntryAPI } from "./FsImplEntryAPI.ts";
 import { FsImplHandleAPI } from "./FsImplHandleAPI.ts";
 
-/// Handle for handling top level open errors, and decide if the operation should be retried
+/** Handle for handling top level open errors, and decide if the operation should be retried */
 export type FsOpenRetryHandler = (
     error: FsError,
     attempt: number,
@@ -16,7 +22,7 @@ export type FsOpenRetryHandler = (
 
 const MAX_RETRY = 10;
 
-/// Open a file system for read-only access with a directory picker dialog
+/** Open a file system for read-only access with a directory picker dialog */
 export async function fsOpenRead(
     retryHandler?: FsOpenRetryHandler,
 ): Promise<FsResult<FsFileSystem>> {
@@ -27,7 +33,7 @@ export async function fsOpenRead(
     return await init(fs.val, retryHandler);
 }
 
-/// Open a file system for read-write access with a directory picker dialog
+/** Open a file system for read-write access with a directory picker dialog */
 export async function fsOpenReadWrite(
     retryHandler?: FsOpenRetryHandler,
 ): Promise<FsResult<FsFileSystem>> {
@@ -38,7 +44,7 @@ export async function fsOpenReadWrite(
     return await init(fs.val, retryHandler);
 }
 
-/// Open a file system for read-only access from a DataTransferItem from a drag and drop event
+/** Open a file system for read-only access from a DataTransferItem from a drag and drop event */
 export async function fsOpenReadFrom(
     item: DataTransferItem,
     retryHandler?: FsOpenRetryHandler,
@@ -50,7 +56,7 @@ export async function fsOpenReadFrom(
     return await init(fs.val, retryHandler);
 }
 
-/// Open a file system for read-write access from a DataTransferItem from a drag and drop event
+/** Open a file system for read-write access from a DataTransferItem from a drag and drop event */
 export async function fsOpenReadWriteFrom(
     item: DataTransferItem,
     retryHandler?: FsOpenRetryHandler,
@@ -74,10 +80,7 @@ async function createWithPicker(
                 return createFromFileSystemHandle(handle.val, write);
             }
             if (retryHandler) {
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                const isAbort =
-                    handle.err && (handle.err as any).name === "AbortError";
-                const error = isAbort
+                const error = isAbortError(handle.err)
                     ? fsErr(FsErr.UserAbort, "User cancelled the operation")
                     : fsFail(errstr(handle.err));
                 const shouldRetry = await retryHandler(error, attempt);
@@ -224,13 +227,26 @@ async function init(
     }
 }
 
-/// Wrapper for window.showDirectoryPicker
+/** Wrapper for window.showDirectoryPicker */
 function showDirectoryPicker(write: boolean): Promise<FileSystemHandle> {
     // @ts-expect-error showDirectoryPicker is not in the TS lib
-    return window.showDirectoryPicker({ mode: write ? "readwrite" : "read" });
+    return globalThis.showDirectoryPicker({
+        mode: write ? "readwrite" : "read",
+    });
 }
 
-/// Wrapper for DataTransferItem.getAsFileSystemHandle
+/**
+ * Check if an error is an AbortError from Chromium
+ *
+ * @param e The error to check
+ */
+function isAbortError(e: unknown): boolean {
+    return (
+        !!e && typeof e === "object" && "name" in e && e.name === "AbortError"
+    );
+}
+
+/** Wrapper for DataTransferItem.getAsFileSystemHandle */
 async function getAsFileSystemHandle(
     item: DataTransferItem,
 ): Promise<FileSystemHandle> {
@@ -242,7 +258,7 @@ async function getAsFileSystemHandle(
     return handle;
 }
 
-/// Wrapper for DataTransferItem.webkitGetAsEntry
+/** Wrapper for DataTransferItem.webkitGetAsEntry */
 function webkitGetAsEntry(item: DataTransferItem): FileSystemEntry {
     const entry = item.webkitGetAsEntry();
     if (!entry) {

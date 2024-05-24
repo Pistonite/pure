@@ -1,13 +1,17 @@
 import Deque from "denque";
 
-/// Ensure you have exclusive access in concurrent code
-///
-/// Only guaranteed if no one else has reference to the inner object
-///
-/// It can take a second type parameter to specify interface with write methods
+/**
+ * Ensure you have exclusive access in concurrent code
+ *
+ * Only guaranteed if no one else has reference to the inner object
+ *
+ * It can take a second type parameter to specify interface with write methods
+ */
 export class RwLock<TRead, TWrite extends TRead = TRead> {
-    /// This is public so inner object can be accessed directly
-    /// ONLY SAFE in sync context
+    /**
+     * This is public so inner object can be accessed directly
+     * ONLY SAFE in sync context
+     */
     public inner: TWrite;
 
     private readers: number = 0;
@@ -19,7 +23,7 @@ export class RwLock<TRead, TWrite extends TRead = TRead> {
         this.inner = t;
     }
 
-    /// Acquire a read (shared) lock and call fn with the value. Release the lock when fn returns or throws.
+    /** Acquire a read (shared) lock and call fn with the value. Release the lock when fn returns or throws. */
     public async scopedRead<R>(fn: (t: TRead) => Promise<R>): Promise<R> {
         if (this.isWriting) {
             await new Promise<void>((resolve) => {
@@ -52,9 +56,11 @@ export class RwLock<TRead, TWrite extends TRead = TRead> {
         }
     }
 
-    /// Acquire a write (exclusive) lock and call fn with the value. Release the lock when fn returns or throws.
-    ///
-    /// fn takes a setter function as second parameter, which you can use to update the value like `x = set(newX)`
+    /**
+     * Acquire a write (exclusive) lock and call fn with the value. Release the lock when fn returns or throws.
+     *
+     * fn takes a setter function as second parameter, which you can use to update the value like `x = set(newX)`
+     */
     public async scopedWrite<R>(
         fn: (t: TWrite, setter: (t: TWrite) => TWrite) => Promise<R>,
     ): Promise<R> {

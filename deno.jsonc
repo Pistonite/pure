@@ -1,0 +1,15 @@
+{
+    "name": "@pistonite/pure",
+    "version": "0.0.1",
+    "exports": {
+        "./fs": "./fs/index.ts",
+        "./log": "./log/index.ts",
+        "./result": "./result/index.ts",
+        "./utils": "./utils/index.ts",
+    },
+    "lint": {
+        "rules": {
+            "include": ["no-slow-types", "missing-explicit-return-type"],
+        },
+    },
+}

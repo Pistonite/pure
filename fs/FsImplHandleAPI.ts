@@ -1,15 +1,18 @@
-//! FsFileSystem implementation for FileSystemAccess API
+/**
+ * FsFileSystem implementation for FileSystemAccess API
+ * @module
+ */
 
-import { tryAsync } from "pure/result";
-import { errstr } from "pure/utils";
+import { tryAsync } from "../result";
+import { errstr } from "../utils";
 
-import {
+import type {
     FsFileSystem,
     FsFileSystemUninit,
     FsCapabilities,
 } from "./FsFileSystem.ts";
-import { FsErr, FsResult, FsVoid, fsErr, fsFail } from "./FsError.ts";
-import { FsFile } from "./FsFile.ts";
+import { FsErr, type FsResult, type FsVoid, fsErr, fsFail } from "./FsError.ts";
+import type { FsFile } from "./FsFile.ts";
 import {
     fsComponents,
     fsGetBase,
@@ -18,18 +21,20 @@ import {
     fsNormalize,
 } from "./FsPath.ts";
 import { FsFileMgr } from "./FsFileMgr.ts";
-import { FsFileSystemInternal } from "./FsFileSystemInternal.ts";
+import type { FsFileSystemInternal } from "./FsFileSystemInternal.ts";
 
 type PermissionStatus = "granted" | "denied" | "prompt";
 
-/// FsFileSystem implementation that uses FileSystem Access API
-/// This is only supported in Chrome/Edge
+/**
+ * FsFileSystem implementation that uses FileSystem Access API
+ * This is only supported in Chrome/Edge
+ */
 export class FsImplHandleAPI
     implements FsFileSystemUninit, FsFileSystem, FsFileSystemInternal
 {
     public root: string;
     public capabilities: FsCapabilities;
-    /// If app requested write access
+    /** If app requested write access */
     private writeMode: boolean;
     private rootHandle: FileSystemDirectoryHandle;
     private permissionStatus: PermissionStatus;
@@ -168,8 +173,10 @@ export class FsImplHandleAPI
         this.mgr.close(path);
     }
 
-    /// Resolve the FileSystemDirectoryHandle for a directory.
-    /// The path must be normalized
+    /**
+     * Resolve the FileSystemDirectoryHandle for a directory.
+     * The path must be normalized
+     */
     private async resolveDir(
         path: string,
     ): Promise<FsResult<FileSystemDirectoryHandle>> {
@@ -197,8 +204,10 @@ export class FsImplHandleAPI
         return { val: handle };
     }
 
-    /// Resolve the FileSystemFileHandle for a file.
-    /// The path must be normalized
+    /**
+     * Resolve the FileSystemFileHandle for a file.
+     * The path must be normalized
+     */
     private async resolveFile(
         path: string,
     ): Promise<FsResult<FileSystemFileHandle>> {

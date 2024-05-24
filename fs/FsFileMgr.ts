@@ -1,8 +1,8 @@
-import { FsFile } from "./FsFile.ts";
-import { FsFileSystemInternal } from "./FsFileSystemInternal.ts";
+import type { FsFile } from "./FsFile.ts";
+import type { FsFileSystemInternal } from "./FsFileSystemInternal.ts";
 import { fsFile } from "./FsFileImpl.ts";
 
-/// Internal class to track opened files
+/** Internal class to track opened files */
 export class FsFileMgr {
     private opened: { [path: string]: FsFile };
 

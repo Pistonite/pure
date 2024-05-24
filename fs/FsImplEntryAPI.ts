@@ -1,18 +1,18 @@
-import { Ok, tryAsync } from "pure/result";
-import { errstr } from "pure/utils";
+import { type Ok, tryAsync } from "../result";
+import { errstr } from "../utils";
 
-import { FsErr, FsResult, FsVoid, fsErr, fsFail } from "./FsError.ts";
-import {
+import { FsErr, type FsResult, type FsVoid, fsErr, fsFail } from "./FsError.ts";
+import type {
     FsFileSystem,
     FsFileSystemUninit,
     FsCapabilities,
 } from "./FsFileSystem.ts";
-import { FsFile } from "./FsFile.ts";
+import type { FsFile } from "./FsFile.ts";
 import { fsIsRoot, fsNormalize } from "./FsPath.ts";
 import { FsFileMgr } from "./FsFileMgr.ts";
-import { FsFileSystemInternal } from "./FsFileSystemInternal.ts";
+import type { FsFileSystemInternal } from "./FsFileSystemInternal.ts";
 
-/// FsFileSystem implementation that uses FileEntry API
+/** FsFileSystem implementation that uses FileEntry API */
 export class FsImplEntryAPI
     implements FsFileSystemUninit, FsFileSystem, FsFileSystemInternal
 {
@@ -122,7 +122,7 @@ export class FsImplEntryAPI
         this.mgr.close(path);
     }
 
-    /// Resolve a directory entry. Path must be normalized
+    /** Resolve a directory entry. Path must be normalized */
     private async resolveDir(
         path: string,
     ): Promise<FsResult<FileSystemDirectoryEntry>> {
@@ -154,7 +154,7 @@ export class FsImplEntryAPI
         return entry as Ok<FileSystemDirectoryEntry>;
     }
 
-    /// Resolve a file entry. Path must be normalized
+    /** Resolve a file entry. Path must be normalized */
     private async resolveFile(
         path: string,
     ): Promise<FsResult<FileSystemFileEntry>> {
