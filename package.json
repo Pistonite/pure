@@ -8,5 +8,9 @@
         "jsr": "^0.12.4",
         "prettier": "^3.2.5",
         "typescript": "^5.4.5"
+    },
+    "prettier": {
+        "tabWidth": 4,
+        "endOfLine": "auto"
     }
 }
