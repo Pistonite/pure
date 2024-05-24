@@ -1,3 +1,9 @@
+/**
+ * # pure/utils
+ * I have nowhere else to put these
+ *
+ * @module
+ */
 export { RwLock } from "./RwLock.ts";
 
 /** Try converting an error to a string */
