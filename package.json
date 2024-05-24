@@ -1,11 +1,12 @@
 {
-    "dependencies": {
-        "denque": "^2.1.0",
-        "file-saver": "^2.0.5"
-    },
-    "devDependencies": {
-        "@types/file-saver": "^2.0.7",
-        "prettier": "^3.2.5",
-        "typescript": "^5.4.5"
-    }
+  "dependencies": {
+    "denque": "^2.1.0",
+    "file-saver": "^2.0.5"
+  },
+  "devDependencies": {
+    "@types/file-saver": "^2.0.7",
+    "jsr": "^0.12.4",
+    "prettier": "^3.2.5",
+    "typescript": "^5.4.5"
+  }
 }

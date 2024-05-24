@@ -11,6 +11,11 @@ tasks:
       - deno lint
       - bunx jsr publish --dry-run
 
+  test:
+    desc: Run the tests
+    cmds:
+      - echo "No tests"
+
   fix:
     desc: Fix the code
     cmds:
