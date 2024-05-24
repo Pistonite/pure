@@ -1,0 +1,15 @@
+{
+  "name": "pure",
+  "version": "0.0.1",
+  "description": "In-house TypeScript utility library",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Pistonite/pure.git"
+  },
+  "author": "",
+  "license": "Unlicense",
+  "bugs": {
+    "url": "https://github.com/Pistonite/pure/issues"
+  },
+  "homepage": "https://github.com/Pistonite/pure#readme"
+}
