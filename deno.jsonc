@@ -1,6 +1,6 @@
 {
     "name": "@pistonite/pure",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "exports": {
         "./fs": "./fs/index.ts",
         "./log": "./log/index.ts",
