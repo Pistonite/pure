@@ -1,11 +1,11 @@
 {
     "name": "@pistonite/pure",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "exports": {
         "./fs": "./fs/index.ts",
         "./log": "./log/index.ts",
         "./result": "./result/index.ts",
-        "./utils": "./utils/index.ts",
+        "./sync": "./sync/index.ts",
     },
     "lint": {
         "rules": {

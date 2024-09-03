@@ -1,4 +1,4 @@
-import type { Result, Void } from "../result";
+import type { Result, Void } from "../result/index.ts";
 
 /** Result type for file system operations */
 export const FsErr = {
