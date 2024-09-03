@@ -60,7 +60,32 @@ import type { Void, Err, VoidOk } from "../result/index.ts";
  * });
  * ```
  *
- * ## Handling cancel
+ * ## Checking for cancel
+ * It's the event handler's responsibility to check if the event is cancelled by
+ * calling the `shouldCancel` function. This function returns an `Err` if it should be cancelled.
+ *
+ * ```typescript
+ * import { SerialEvent } from "@pistonite/pure/sync";
+ *
+ * const event = new SerialEvent();
+ * await event.run(async (shouldCancel, serial) => {
+ *     // do some operations
+ *     ...
+ *
+ *     const cancelResult = shouldCancel();
+ *     if (cancelResult.err) {
+ *         return cancelResult;
+ *     }
+ *
+ *     // not cancelled, continue
+ *     ...
+ * });
+ * ```
+ * It's possible the operation is cheap enough that an outdated event should probably be let finish.
+ * It's ok in that case to not call `shouldCancel`. The `SerialEvent` class checks it one
+ * last time before returning the result after the callback finishes.
+ *
+ * ## Handling cancelled event
  * To check if an event is completed or cancelled, simply `await`
  * on the promise returned by `event.run` and check the `err`
  * ```typescript
@@ -78,7 +103,7 @@ import type { Void, Err, VoidOk } from "../result/index.ts";
  * ```
  *
  * You can also pass in a callback to the constructor, which will be called
- * when the event is cancelled
+ * when the event is cancelled. This event is guaranteed to fire at most once per run
  * ```typescript
  * import { SerialEvent } from "@pistonite/pure/sync";
  *
@@ -105,15 +130,24 @@ export class SerialEvent {
     public async run<T = VoidOk>(
         callback: SerialEventCallback<T>,
     ): Promise<T | Err<SerialEventCancelToken>> {
+        let cancelled = false;
         const currentSerial = ++this.serial;
         const shouldCancel = () => {
             if (currentSerial !== this.serial) {
-                this.onCancel(currentSerial, this.serial);
+                if (!cancelled) {
+                    cancelled = true;
+                    this.onCancel(currentSerial, this.serial);
+                }
                 return { err: "cancel" as const };
             }
             return {};
         };
-        return await callback(shouldCancel, currentSerial);
+        const result = await callback(shouldCancel, currentSerial);
+        const cancelResult = shouldCancel();
+        if (cancelResult.err) {
+            return cancelResult;
+        }
+        return result;
     }
 }
 
