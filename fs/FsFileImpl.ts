@@ -1,4 +1,4 @@
-import { tryAsync, errstr } from "../result";
+import { tryAsync, errstr } from "../result/index.ts";
 
 import type { FsFile } from "./FsFile.ts";
 import type { FsFileSystemInternal } from "./FsFileSystemInternal.ts";

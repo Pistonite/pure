@@ -1,4 +1,4 @@
-import type { Void, Err, VoidOk } from "../result";
+import type { Void, Err, VoidOk } from "../result/index.ts";
 
 /**
  * An async event that can be cancelled when a new one starts
