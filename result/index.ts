@@ -156,13 +156,29 @@
  * @module
  */
 
+/**
+ * A value that either a success (Ok) or an error (Err)
+ *
+ * Construct a success with { val: ... } and an error with { err: ... }
+ */
+export type Result<T, E> = Ok<T> | Err<E>;
+
 // If these look weird, it's because TypeScript is weird
 // This is to get type narrowing to work most of the time
-export type Ok<T> = { val: T; err?: never };
-export type Err<E> = { err: E; val?: never };
-export type Void<E> = { val?: never; err?: never } | { err: E };
 
-export type Result<T, E> = Ok<T> | Err<E>;
+/** A success value */
+export type Ok<T> = { val: T; err?: never };
+/** An error value */
+export type Err<E> = { err: E; val?: never };
+
+/**
+ * A value that is either `void` or an error
+ *
+ * Construct success with `{}` and an error with `{ err: ... }`
+ */
+export type Void<E> = { val?: never; err?: never } | { err: E };
+/** A value that is a success `void` */
+export type VoidOk = Record<string, never>;
 
 /** Wrap a function with try-catch and return a Result. */
 export function tryCatch<T, E = unknown>(fn: () => T): Result<T, E> {
@@ -182,4 +198,22 @@ export async function tryAsync<T, E = unknown>(
     } catch (e) {
         return { err: e as E };
     }
+}
+
+/** Try best effort converting an error to a string */
+export function errstr(e: unknown): string {
+    if (typeof e === "string") {
+        return e;
+    }
+    if (e) {
+        if (typeof e === "object" && "message" in e) {
+            if (typeof e.message === "string") {
+                return e.message;
+            }
+        }
+        if (typeof e === "object" && "toString" in e) {
+            return e.toString();
+        }
+    }
+    return `${e}`;
 }

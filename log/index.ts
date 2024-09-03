@@ -6,7 +6,7 @@
  */
 
 import Denque from "denque";
-import { errstr } from "../utils";
+import { errstr } from "../result";
 
 const LIMIT = 500;
 

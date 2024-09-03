@@ -3,8 +3,7 @@
  * @module
  */
 
-import { tryAsync } from "../result";
-import { errstr } from "../utils";
+import { tryAsync, errstr } from "../result";
 
 import type {
     FsFileSystem,

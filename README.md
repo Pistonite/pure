@@ -3,11 +3,12 @@
 
 Pure TypeScript utility library for browsers
 
-## Libraries
-- `fs`: Browser File System Integration
+## Documentation
+- [`fs`](https://jsr.io/@pistonite/pure/doc/fs/~): Browser File System Integration
+- [`result`](https://jsr.io/@pistonite/pure/doc/result/~): 0 runtime error handling without exceptions
 - `log`: Logging library with log export ability
-- `result`: Rust-like result handling types and a small number of util functions
-- `utils`: I don't know where to put the stuff
+- [`sync`](https://jsr.io/@pistonite/pure/doc/sync/~): Synchronization utilities
+  - [`SerialEvent`](https://jsr.io/@pistonite/pure/doc/sync/~/SerialEvent): Discard/stop previous async process when a new one starts
 
 ## Setup
 Install the package from JSR (bunx also works)

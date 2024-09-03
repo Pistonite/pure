@@ -1,5 +1,4 @@
-import { tryCatch, tryAsync } from "../result";
-import { errstr } from "../utils";
+import { tryCatch, tryAsync, errstr } from "../result";
 
 import type { FsFileSystem, FsFileSystemUninit } from "./FsFileSystem.ts";
 import {

@@ -1,5 +1,4 @@
-import { type Ok, tryAsync } from "../result";
-import { errstr } from "../utils";
+import { type Ok, tryAsync, errstr } from "../result";
 
 import { FsErr, type FsResult, type FsVoid, fsErr, fsFail } from "./FsError.ts";
 import type {
