@@ -8,11 +8,7 @@
         "./sync": "./sync/index.ts",
     },
     "publish": {
-        "exclude": [
-            ".github/**",
-            "Taskfile.yml",
-            "bun.lockb"
-        ]
+        "exclude": [".github/**", "Taskfile.yml", "bun.lockb"],
     },
     "lint": {
         "rules": {
