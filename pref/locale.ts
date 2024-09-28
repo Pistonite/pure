@@ -46,7 +46,6 @@
  *
  * @module
  */
-import type { i18n, LanguageDetectorModule, ThirdPartyModule } from "i18next";
 
 const KEY = "Pure.Locale";
 
@@ -238,10 +237,10 @@ export const removeLocaleSubscriber = (fn: (locale: string) => void): void => {
  * ```
  *
  */
-export const detectLocale: LanguageDetectorModule = {
-    type: "languageDetector",
+export const detectLocale = {
+    type: "languageDetector" as const,
     detect: () => locale,
-    cacheUserLanguage: (lng: string) => {
+    cacheUserLanguage: (lng: string): void => {
         setLocale(lng);
     },
 };
@@ -261,9 +260,10 @@ export const detectLocale: LanguageDetectorModule = {
  * });
  *
  */
-export const connectI18next: ThirdPartyModule = {
-    type: "3rdParty",
-    init: (i18next: i18n): void => {
+
+export const connectI18next = {
+    type: "3rdParty" as const,
+    init: (i18next: any): void => {
         addLocaleSubscriber((locale) => {
             if (i18next.language !== locale) {
                 i18next.changeLanguage(locale);
