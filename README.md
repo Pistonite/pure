@@ -9,6 +9,7 @@ Pure TypeScript utility library for browsers
 - `log`: Logging library with log export ability
 - [`sync`](https://jsr.io/@pistonite/pure/doc/sync/~): Synchronization utilities
   - [`SerialEvent`](https://jsr.io/@pistonite/pure/doc/sync/~/SerialEvent): Discard/stop previous async process when a new one starts
+- `dark`: Dark mode utilities
 
 ## Setup
 Install the package from JSR (bunx also works)

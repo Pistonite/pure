@@ -1,11 +1,12 @@
 {
     "name": "@pistonite/pure",
-    "version": "0.0.6",
+    "version": "0.0.7",
     "exports": {
         "./fs": "./fs/index.ts",
         "./log": "./log/index.ts",
         "./result": "./result/index.ts",
         "./sync": "./sync/index.ts",
+        "./pref": "./pref/index.ts",
     },
     "publish": {
         "exclude": [".github/**", "Taskfile.yml", "bun.lockb"],
@@ -13,6 +14,7 @@
     "lint": {
         "rules": {
             "include": ["no-slow-types", "missing-explicit-return-type"],
+            "exclude": ["no-explicit-any"],
         },
     },
 }
