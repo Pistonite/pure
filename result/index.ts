@@ -9,8 +9,6 @@
  * Don't even use `isErr()` helper functions to abstract. They are slower than
  * directly property access in my testing.
  *
- * Copy `index.ts` to somewhere in your project to use this library
- *
  * ## Function that can fail
  * Instead of having functions `throw`, make it `return` instead.
  * ```typescript
