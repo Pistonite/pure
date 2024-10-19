@@ -1,4 +1,6 @@
-import { saveAs } from "file-saver";
+// workaround for CommonJS
+import pkg from "file-saver";
+const { saveAs } = pkg;
 
 /** Save (download) a file using Blob */
 export function fsSave(content: string | Uint8Array, filename: string) {
