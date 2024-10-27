@@ -23,20 +23,10 @@
  * ```
  *
  * ## Use with React
- * This library does not depend on React, so you need to create the hook with `createUseDark`.
- * ```tsx
- * import { useState, useEffect } from "react";
- * import { createUseDark } from "@pistonite/pure/dark";
- *
- * const useDark = createUseDark(useState, useEffect);
- *
- * const MyComponent = () => {
- *    // will re-render when dark mode changes
- *    const dark = useDark();
- *
- *    return <div>{dark ? "Mode: Dark" : "Mode: Light"}</div>;
- * };
- * ```
+ * A React hook is provided in the [`pure-react`](https://jsr.io/@pistonite/pure-react/doc/pref) package
+ * to get the dark mode state from React components.
+ * 
+ * Use `setDark` to change the dark mode state from React compoenents like you would from anywhere else.
  *
  * ## Persisting to localStorage
  * You can persist the dark mode preference to by passing `persist: true` to `initDark`.
@@ -119,14 +109,15 @@ export const initDark = (options: DarkOptions = {}): void => {
         localStorage.removeItem(KEY);
     }
 
+    setDark(_dark);
+
     const selector = options.selector ?? ":root";
     if (selector) {
+        // notify immediately to update the style initially
         addDarkSubscriber((dark: boolean) => {
             updateStyle(dark, selector);
-        });
+        }, true /* notify */);
     }
-
-    setDark(_dark);
 };
 
 /**
@@ -172,41 +163,6 @@ export const removeDarkSubscriber = (
     if (index >= 0) {
         subscribers.splice(index, 1);
     }
-};
-
-/**
- * Create a useDark hook for React.
- *
- * This library does not depend on React, so you need to
- * create the hook yourself and pass in `useState` and `useEffect`.
- *
- * # Example
- * ```tsx
- * import { useState, useEffect } from "react";
- * import { createUseDark } from "@pistonite/pure/dark";
- * const useDark = createUseDark(useState, useEffect);
- * ```
- */
-export const createUseDark = (
-    useState: (initial: boolean) => [boolean, (value: boolean) => void],
-    useEffect: (callback: () => void, dep: any[]) => void,
-): (() => boolean) => {
-    return () => {
-        const [value, setValue] = useState(dark);
-        useEffect(() => {
-            if (dark !== value) {
-                setValue(dark);
-            }
-            const subscriber = (dark: boolean) => {
-                setValue(dark);
-            };
-            addDarkSubscriber(subscriber);
-            return () => {
-                removeDarkSubscriber(subscriber);
-            };
-        }, []);
-        return value;
-    };
 };
 
 const updateStyle = (dark: boolean, selector: string) => {

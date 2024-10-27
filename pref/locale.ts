@@ -44,6 +44,13 @@
  * });
  * ```
  *
+ * ## Use with React
+ * A React hook is provided in the [`pure-react`](https://jsr.io/@pistonite/pure-react/doc/pref) package
+ * to get the current locale from React components.
+ * 
+ * Changing the locale from React components is the same as from outside React,
+ * with `setLocale` or `i18next.changeLanguage`, depending on your setup.
+ *
  * @module
  */
 
@@ -159,8 +166,10 @@ export const setLocale = (newLocale: string): boolean => {
  * Returns `undefined` if no supported locale is found
  *
  * # Example
- * It will first try to find an exact match. If not found, it will loosen the requirement
- * and try to find the first supported locale with a matching language
+ * It will first try to find an exact match for a locale (not language).
+ * If not found, it will try:
+ * - the first supported locale with a matching language
+ * - the first supported language
  * ```typescript
  * import { convertToSupportedLocale } from "@pistonite/pure/pref";
  *
@@ -260,7 +269,6 @@ export const detectLocale = {
  * });
  *
  */
-
 export const connectI18next = {
     type: "3rdParty" as const,
     init: (i18next: any): void => {
@@ -270,4 +278,29 @@ export const connectI18next = {
             }
         }, true);
     },
+};
+
+const localizedLanguageNames = new Map();
+
+/**
+ * Get the localized name of a language using `Intl.DisplayNames`.
+ *
+ * The results are interanlly cached, so you don't need to cache this yourself.
+ */
+export const getLocalizedLanguageName = (language: string): string => {
+    if (language === "zh" || language === "zh-CN") {
+        return "\u7b80\u4f53\u4e2d\u6587";
+    }
+    if (language === "zh-TW") {
+        return "\u7e41\u9ad4\u4e2d\u6587";
+    }
+    if (localizedLanguageNames.has(language)) {
+        return localizedLanguageNames.get(language);
+    }
+    const languageWithoutLocale = language.split("-")[0];
+    const localized = new Intl.DisplayNames([language], {
+        type: "language",
+    }).of(languageWithoutLocale);
+    localizedLanguageNames.set(language, localized);
+    return localized || language;
 };

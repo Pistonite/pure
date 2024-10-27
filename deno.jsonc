@@ -1,6 +1,6 @@
 {
     "name": "@pistonite/pure",
-    "version": "0.0.9",
+    "version": "0.0.10",
     "exports": {
         "./fs": "./fs/index.ts",
         "./log": "./log/index.ts",
@@ -9,7 +9,13 @@
         "./pref": "./pref/index.ts",
     },
     "publish": {
-        "exclude": [".github/**", "Taskfile.yml", "bun.lockb"],
+        "exclude": [
+            ".github/**", 
+            "Taskfile.yml", 
+            "package-lock.json",
+            "react/**",
+            "node_modules/**",
+        ],
     },
     "lint": {
         "rules": {
