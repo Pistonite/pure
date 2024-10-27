@@ -9,7 +9,6 @@
     },
     "imports": {
         "@pistonite/pure": "jsr:@pistonite/pure@^0.0.10",
-        "react": "npm:react@^18",
     },
     "lint": {
         "rules": {
