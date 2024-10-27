@@ -1,0 +1,19 @@
+version: '3'
+
+tasks:
+  check:
+    desc: Check the code
+    cmds:
+      - npx tsc
+      - deno lint
+      - npx jsr publish --dry-run
+
+  test:
+    desc: Run the tests
+    cmds:
+      - echo "No tests"
+
+  publish:
+    desc: Publish the package
+    cmds:
+      - npx jsr publish

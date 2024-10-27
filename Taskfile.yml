@@ -1,6 +1,6 @@
 version: "3"
 
-include:
+includes:
   react:
     taskfile: ./react
     dir: ./react
