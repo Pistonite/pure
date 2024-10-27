@@ -10,8 +10,8 @@
     },
     "publish": {
         "exclude": [
-            ".github/**", 
-            "Taskfile.yml", 
+            ".github/**",
+            "Taskfile.yml",
             "package-lock.json",
             "react/**",
             "node_modules/**",

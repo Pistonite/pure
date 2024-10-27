@@ -47,7 +47,7 @@
  * ## Use with React
  * A React hook is provided in the [`pure-react`](https://jsr.io/@pistonite/pure-react/doc/pref) package
  * to get the current locale from React components.
- * 
+ *
  * Changing the locale from React components is the same as from outside React,
  * with `setLocale` or `i18next.changeLanguage`, depending on your setup.
  *

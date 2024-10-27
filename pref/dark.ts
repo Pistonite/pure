@@ -25,7 +25,7 @@
  * ## Use with React
  * A React hook is provided in the [`pure-react`](https://jsr.io/@pistonite/pure-react/doc/pref) package
  * to get the dark mode state from React components.
- * 
+ *
  * Use `setDark` to change the dark mode state from React compoenents like you would from anywhere else.
  *
  * ## Persisting to localStorage
