@@ -7,6 +7,9 @@
     "publish": {
         "exclude": ["package-lock.json", "node_modules/**", "Taskfile.yml"],
     },
+    "imports": {
+        "@pistonite/pure": "jsr:@pistonite/pure@^0.0.10",
+    },
     "lint": {
         "rules": {
             "include": ["no-slow-types", "missing-explicit-return-type"],
