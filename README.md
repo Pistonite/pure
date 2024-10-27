@@ -1,5 +1,6 @@
 # pure
 ![JSR Version](https://img.shields.io/jsr/v/@pistonite/pure)
+![JSR Version](https://img.shields.io/jsr/v/@pistonite/pure-react)
 
 Pure TypeScript utility library for browsers
 
@@ -12,9 +13,14 @@ Pure TypeScript utility library for browsers
 - [`pref`](https://jsr.io/@pistonite/pure/doc/pref/~): Preference utilities, for example theme and language.
 
 ## Setup
-Install the package from JSR (bunx also works)
-```
+Install the package from JSR with your package manager
+```bash
 npx jsr install @pistonite/pure
+```
+
+For React features
+```bash
+npx jsr install @pistonite/pure-react
 ```
 
 Import the things you need

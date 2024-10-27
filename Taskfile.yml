@@ -1,5 +1,10 @@
 version: "3"
 
+include:
+  react:
+    taskfile: ./react
+    dir: ./react
+
 tasks:
   check:
     desc: Check the code
@@ -7,9 +12,9 @@ tasks:
       - task: prettier
         vars:
           PRETTIER_ARGS: --check
-      - bunx tsc
+      - npx tsc
       - deno lint
-      - bunx jsr publish --dry-run
+      - npx jsr publish --dry-run
 
   test:
     desc: Run the tests
@@ -26,9 +31,9 @@ tasks:
 
   prettier:
     cmds:
-    - bunx prettier "./**/*.{ts,tsx,json,jsonc,js,jsx,cjs}" {{.PRETTIER_ARGS}}
+    - npx prettier "./**/*.{ts,tsx,json,jsonc,js,jsx,cjs}" {{.PRETTIER_ARGS}}
 
   publish:
     desc: Publish the package
     cmds:
-      - bunx jsr publish
+      - npx jsr publish
