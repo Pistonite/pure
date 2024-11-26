@@ -121,6 +121,20 @@ export const initDark = (options: DarkOptions = {}): void => {
 };
 
 /**
+ * Clears the persisted dark mode preference
+ *
+ * If you are doing this, you should probably call `setDark`
+ * with `prefersDarkMode()` or some initial value immediately before this,
+ * so the current dark mode is set to user's preferred mode.
+ *
+ * Note if `persist` is `true` when initializing,
+ * subsequence `setDark` calls will still persist the value.
+ */
+export const clearPersistedDarkPerference = (): void => {
+    localStorage.removeItem(KEY);
+};
+
+/**
  * Gets the current value of dark mode
  */
 export const isDark = (): boolean => dark;
