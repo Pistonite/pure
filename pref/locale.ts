@@ -10,7 +10,7 @@
  *
  * initLocale({
  *     // required
- *     supported: ["en", "zh-CN", "zh-TW"],
+ *     supported: ["en", "zh-CN", "zh-TW"] as const,
  *     default: "en",
  *
  *     // optional
@@ -56,8 +56,9 @@
 
 const KEY = "Pure.Locale";
 
-let supportedLocales: string[] = [];
+let supportedLocales: readonly string[] = [];
 let locale: string = "";
+let defaultLocale: string = "";
 const subscribers: ((locale: string) => void)[] = [];
 
 /**
@@ -82,15 +83,17 @@ export type LocaleOptions<TLocale extends string> = {
      * List of supported locale or languages.
      * These can be full locale strings like "en-US" or just languages like "en"
      */
-    supported: TLocale[];
+    supported: readonly TLocale[];
     /**
-     * The default locale if the user's preferred locale is not supported
+     * The default locale if the user's preferred locale is not supported.
+     * This must be one of the items in `supported`.
      */
     default: TLocale;
     /**
      * Initial value for locale
      *
-     * If not set, it will default to calling `getPreferredLocale()`.
+     * If not set, it will default to calling `getPreferredLocale()`,
+     * which is based on the browser's language settings.
      *
      * If `persist` is `true`, it will also check the value from localStorage
      *
@@ -116,6 +119,7 @@ export const initLocale = <TLocale extends string>(
         _locale =
             convertToSupportedLocale(getPreferredLocale()) || options.default;
     }
+    defaultLocale = options.default;
     if (options.persist) {
         const value = localStorage.getItem(KEY);
         if (value !== null) {
@@ -134,9 +138,29 @@ export const initLocale = <TLocale extends string>(
     setLocale(_locale);
 };
 
+/**
+ * Clear the locale preference previously presisted to localStorage
+ *
+ * If you are doing this, you should probably call `setLocale`
+ * or `i18next.changeLanguage` (depending on your setup) immediately
+ * before this with `convertToSupportedLocaleOrDefault(getPreferredLocale())`
+ * so the current locale is set to user's preferred locale.
+ *
+ * Note if `persist` is `true` when initializing,
+ * subsequence `setLocale` calls will still persist the value.
+ */
+export const clearPersistedLocalePreference = (): void => {
+    localStorage.removeItem(KEY);
+};
+
 /** Get the current selected locale */
 export const getLocale = (): string => {
     return locale;
+};
+
+/** Get the default locale when initialized */
+export const getDefaultLocale = (): string => {
+    return defaultLocale;
 };
 
 /**
@@ -181,7 +205,6 @@ export const setLocale = (newLocale: string): boolean => {
  * console.log(convertToSupportedLocale("zh-TW")); // "zh"
  * console.log(convertToSupportedLocale("es"));    // undefined
  * ```
- *
  */
 export const convertToSupportedLocale = (
     newLocale: string,
@@ -197,6 +220,19 @@ export const convertToSupportedLocale = (
         }
     }
     return undefined;
+};
+
+/**
+ * Convert a locale/language to a supported locale/language,
+ * or return the default locale if not found.
+ *
+ * This is a thin wrapper for `convertToSupportedLocale`.
+ * See that function for more details.
+ */
+export const convertToSupportedLocaleOrDefault = (
+    newLocale: string,
+): string => {
+    return convertToSupportedLocale(newLocale) || defaultLocale;
 };
 
 /**
