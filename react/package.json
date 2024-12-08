@@ -1,6 +1,6 @@
 {
     "peerDependencies": {
-        "@pistonite/pure": "npm:@jsr/pistonite__pure@^0.0.11",
+        "@pistonite/pure": "npm:@jsr/pistonite__pure@^0.0.12",
         "react": "^18"
     },
     "devDependencies": {
