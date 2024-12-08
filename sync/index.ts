@@ -5,4 +5,8 @@
  * @module
  */
 export { RwLock } from "./RwLock.ts";
-export { SerialEvent } from "./SerialEvent.ts";
+export { Serial } from "./Serial.ts";
+
+// unstable
+export { Latest } from "./Latest.ts";
+export { Debounce } from "./Debounce.ts";

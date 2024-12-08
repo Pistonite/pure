@@ -1,20 +1,20 @@
 import type { Void, Err, VoidOk } from "../result/index.ts";
 
 /**
- * # pure/sync/SerialEvent
+ * # pure/sync/Serial
  *
  * An async event that can be cancelled when a new one starts
  *
  * ## Example
  *
  * ```typescript
- * import { SerialEvent } from "@pistonite/pure/sync";
+ * import { Serial } from "@pistonite/pure/sync";
  *
  * // helper function to simulate async work
  * const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
  *
  * // Create the event
- * const event = new SerialEvent();
+ * const event = new Serial();
  *
  * // The cancellation system uses the Result type
  * // and returns an error when it is cancelled
@@ -53,9 +53,9 @@ import type { Void, Err, VoidOk } from "../result/index.ts";
  *
  * The callback function receives the current serial number as the second argument, if you need it
  * ```typescript
- * import { SerialEvent } from "@pistonite/pure/sync";
+ * import { Serial } from "@pistonite/pure/sync";
  *
- * const event = new SerialEvent();
+ * const event = new Serial();
  * const promise = event.run(async (shouldCancel, serial) => {
  *    console.log(serial);
  *    return {};
@@ -67,9 +67,9 @@ import type { Void, Err, VoidOk } from "../result/index.ts";
  * calling the `shouldCancel` function. This function returns an `Err` if it should be cancelled.
  *
  * ```typescript
- * import { SerialEvent } from "@pistonite/pure/sync";
+ * import { Serial } from "@pistonite/pure/sync";
  *
- * const event = new SerialEvent();
+ * const event = new Serial();
  * await event.run(async (shouldCancel, serial) => {
  *     // do some operations
  *     ...
@@ -84,16 +84,16 @@ import type { Void, Err, VoidOk } from "../result/index.ts";
  * });
  * ```
  * It's possible the operation is cheap enough that an outdated event should probably be let finish.
- * It's ok in that case to not call `shouldCancel`. The `SerialEvent` class checks it one
+ * It's ok in that case to not call `shouldCancel`. The `Serial` class checks it one
  * last time before returning the result after the callback finishes.
  *
  * ## Handling cancelled event
  * To check if an event is completed or cancelled, simply `await`
  * on the promise returned by `event.run` and check the `err`
  * ```typescript
- * import { SerialEvent } from "@pistonite/pure/sync";
+ * import { Serial } from "@pistonite/pure/sync";
  *
- * const event = new SerialEvent();
+ * const event = new Serial();
  * const result = await event.run(async (shouldCancel) => {
  *     // your code here ...
  * );
@@ -107,16 +107,16 @@ import type { Void, Err, VoidOk } from "../result/index.ts";
  * You can also pass in a callback to the constructor, which will be called
  * when the event is cancelled. This event is guaranteed to fire at most once per run
  * ```typescript
- * import { SerialEvent } from "@pistonite/pure/sync";
+ * import { Serial } from "@pistonite/pure/sync";
  *
- * const event = new SerialEvent((current, latest) => {
+ * const event = new Serial((current, latest) => {
  *     console.log(`Event with serial ${current} is cancelled because the latest serial is ${latest}`);
  * });
  * ```
  *
  *
  */
-export class SerialEvent {
+export class Serial {
     private serial: bigint;
     private onCancel: SerialEventCancelCallback;
 
