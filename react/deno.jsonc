@@ -1,6 +1,6 @@
 {
     "name": "@pistonite/pure-react",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "exports": {
         ".": "./src/index.ts",
     },
@@ -8,7 +8,7 @@
         "exclude": ["package-lock.json", "node_modules/**", "Taskfile.yml"],
     },
     "imports": {
-        "@pistonite/pure": "jsr:@pistonite/pure@^0.0.11",
+        "@pistonite/pure": "jsr:@pistonite/pure@^0.0.12",
     },
     "lint": {
         "rules": {
