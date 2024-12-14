@@ -1,5 +1,4 @@
 /**
- * # pure/log
  * Client side log util
  *
  * @module

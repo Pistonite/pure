@@ -1,5 +1,4 @@
 /**
- * # pure/pref/locale
  * Locale utilities and integration with i18next
  *
  * ## Initialization

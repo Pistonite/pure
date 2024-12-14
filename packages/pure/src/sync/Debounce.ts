@@ -1,5 +1,4 @@
 /**
- * # pure/sync/Debounce
  * Debounce executes an action after a certain delay. Any
  * call to the action during this delay resets the timer.
  *

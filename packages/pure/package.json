@@ -1,0 +1,33 @@
+{
+    "name": "@pistonite/pure",
+    "version": "0.0.12",
+    "description": "Pure TypeScript libraries for my projects",
+    "homepage": "https://github.com/Pistonite/pure",
+    "bugs": {
+        "url": "https://github.com/Pistonite/pure/issues"
+    },
+    "license": "MIT",
+    "author": "Pistonight <pistonknight@outlook.com>",
+    "files": [
+        "src/**/*"
+    ],
+    "exports": {
+        "./fs": "./src/fs/index.ts",
+        "./log": "./src/log/index.ts",
+        "./result": "./src/result/index.ts",
+        "./sync": "./src/sync/index.ts",
+        "./pref": "./src/pref/index.ts"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Pistonite/pure.git",
+        "directory": "packages/pure"
+    },
+    "dependencies": {
+        "denque": "2.1.0",
+        "file-saver": "2.0.5"
+    },
+    "devDependencies": {
+        "@types/file-saver": "^2.0.7"
+    }
+}

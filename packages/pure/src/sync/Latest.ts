@@ -1,8 +1,6 @@
 import type { Result } from "../result/index.ts";
 
 /**
- * # pure/sync/Latest
- *
  * Latest is a synchronization utility to allow
  * only one async operation to be executed at a time,
  * and any call will only return the result of the latest

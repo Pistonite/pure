@@ -19,5 +19,5 @@
         "noUnusedParameters": true,
         "noFallthroughCasesInSwitch": true
     },
-    "include": ["fs", "log", "result", "sync", "pref"]
+    "include": ["packages"]
 }

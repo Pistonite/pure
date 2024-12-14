@@ -1,5 +1,4 @@
 /**
- * # pure/pref/dark
  * Dark mode wrappers
  *
  * ## Detect user preference

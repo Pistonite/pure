@@ -1,8 +1,6 @@
 import type { Void, Err, VoidOk } from "../result/index.ts";
 
 /**
- * # pure/sync/Serial
- *
  * An async event that can be cancelled when a new one starts
  *
  * ## Example
