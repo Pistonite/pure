@@ -1,6 +1,4 @@
 /**
- * # pure/result
- *
  * **I once had a fancy error object with TypeScript magic that tries
  * to reduce allocation while maintaining Result-safety. It turns out
  * that was slower than allocating plain objects for every return, because

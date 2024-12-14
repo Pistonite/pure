@@ -1,10 +1,5 @@
 version: "3"
 
-includes:
-  react:
-    taskfile: ./react
-    dir: ./react
-
 tasks:
   check:
     desc: Check the code
@@ -13,8 +8,6 @@ tasks:
         vars:
           PRETTIER_ARGS: --check
       - npx tsc
-      - deno lint
-      - npx jsr publish --dry-run
 
   test:
     desc: Run the tests
@@ -24,16 +17,19 @@ tasks:
   fix:
     desc: Fix the code
     cmds:
-      - deno lint --fix
       - task: prettier
         vars:
           PRETTIER_ARGS: --write
 
   prettier:
+    vars:
+      PRETTIER_CONFIG: >
+        --tab-width 4
+        --end-of-line auto
     cmds:
-    - npx prettier "./**/*.{ts,tsx,json,jsonc,js,jsx,cjs}" {{.PRETTIER_ARGS}}
+      - npx prettier . {{.PRETTIER_ARGS}} {{.PRETTIER_CONFIG}}
 
-  publish:
-    desc: Publish the package
+  doc:
+    desc: Generate the documentation
     cmds:
-      - npx jsr publish
+      - npx typedoc

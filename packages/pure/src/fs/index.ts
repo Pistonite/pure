@@ -1,6 +1,4 @@
 /**
- * # pure/fs
- *
  * High level browser to file system integration library.
  *
  * This library integrates the `File`, `FileEntry` and `FileSystemAccess` API
@@ -13,7 +11,7 @@
  * Use `fsGetSupportStatus()` to inspect which implementation will be used.
  *
  * ```typescript
- * import { fsGetSupportStatus } from "pure/fs";
+ * import { fsGetSupportStatus } from "@pistonite/pure/fs";
  *
  * const { implementation, isSecureContext } = fsGetSupportStatus();
  * ```
@@ -37,7 +35,7 @@
  * |`FileEntry`   |No      |Yes    |
  * |`File`        |No      |No     |
  *
- * * - Need to request permission from user.
+ * `*` = Need to request permission from user.
  *
  *
  * ## Usage
@@ -50,7 +48,7 @@
  *
  * This is an example drop zone implementation in TypeScript
  * ```typescript
- * import { fsOpenReadWriteFrom } from "pure/fs";
+ * import { fsOpenReadWriteFrom } from "@pistonite/pure/fs";
  *
  * const div = document.createElement("div");
  *
@@ -86,7 +84,7 @@
  * The handler is async so you can ask user.
  *
  * ```typescript
- * import { FsError, FsResult } from "pure/fs";
+ * import { FsError, FsResult } from "@pistonite/pure/fs";
  *
  * async function shouldRetry(error: FsError, attempt: number): Promise<FsResult<boolean>> {
  *     if (attempt < 10 && error === FsError.PermissionDenied) {
