@@ -50,7 +50,7 @@ jobs:
   deploy-docs:
     name: Deploy Docs
     needs:
-      - docs
+      - build-docs
     if: github.event_name != 'pull_request'
     permissions:
       pages: write
