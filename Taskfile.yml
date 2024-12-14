@@ -27,4 +27,9 @@ tasks:
         --tab-width 4
         --end-of-line auto
     cmds:
-    - npx prettier . {{.PRETTIER_ARGS}} {{.PRETTIER_CONFIG}}
+      - npx prettier . {{.PRETTIER_ARGS}} {{.PRETTIER_CONFIG}}
+
+  doc:
+    desc: Generate the documentation
+    cmds:
+      - npx typedoc
