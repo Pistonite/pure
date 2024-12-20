@@ -33,55 +33,25 @@
  * @module
  */
 
-import { useState, useEffect } from "react";
+import { useSyncExternalStore } from "react";
 
 import {
     addDarkSubscriber,
     addLocaleSubscriber,
     getLocale,
     isDark,
-    removeDarkSubscriber,
-    removeLocaleSubscriber,
 } from "@pistonite/pure/pref";
 
 /**
  * Hook to get the current dark mode state
  */
 export const useDark = (): boolean => {
-    const [value, setValue] = useState(isDark);
-    useEffect(() => {
-        const dark = isDark();
-        if (dark !== value) {
-            setValue(dark);
-        }
-        const subscriber = (dark: boolean) => {
-            setValue(dark);
-        };
-        addDarkSubscriber(subscriber);
-        return () => {
-            removeDarkSubscriber(subscriber);
-        };
-    }, []);
-    return value;
+    return useSyncExternalStore(addDarkSubscriber, isDark);
 };
 
 /**
  * Hook to get the current locale
  */
 export const useLocale = (): string => {
-    const [locale, setLocale] = useState(getLocale);
-    useEffect(() => {
-        const l = getLocale();
-        if (l !== locale) {
-            setLocale(l);
-        }
-        const subscriber = (locale: string) => {
-            setLocale(locale);
-        };
-        addLocaleSubscriber(subscriber);
-        return () => {
-            removeLocaleSubscriber(subscriber);
-        };
-    }, []);
-    return locale;
+    return useSyncExternalStore(addLocaleSubscriber, getLocale);
 };

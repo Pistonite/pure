@@ -12,7 +12,7 @@ tasks:
   test:
     desc: Run the tests
     cmds:
-      - echo "No tests"
+      - npx -w packages/pure vitest run
 
   fix:
     desc: Fix the code
@@ -33,3 +33,8 @@ tasks:
     desc: Generate the documentation
     cmds:
       - npx typedoc
+
+  serve:
+    desc: Serve the documentation
+    cmds:
+      - npx serve docs

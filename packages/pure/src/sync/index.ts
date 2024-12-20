@@ -4,9 +4,12 @@
  *
  * @module
  */
-export { RwLock } from "./RwLock.ts";
-export { Serial } from "./Serial.ts";
+export { serial, type SerialConstructor } from "./serial.ts";
+export { latest, type LatestConstructor } from "./latest.ts";
+export { debounce, type DebounceConstructor } from "./debounce.ts";
+export { batch, type BatchConstructor } from "./batch.ts";
+export { cell, type CellConstructor, type Cell } from "./cell.ts";
+export { persist, type PersistConstructor, type Persist } from "./persist.ts";
 
 // unstable
-export { Latest } from "./Latest.ts";
-export { Debounce } from "./Debounce.ts";
+export { RwLock } from "./RwLock.ts";

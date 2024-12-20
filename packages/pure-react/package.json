@@ -1,6 +1,6 @@
 {
     "name": "@pistonite/pure-react",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "description": "React binding for pure library",
     "homepage": "https://github.com/Pistonite/pure",
     "bugs": {
@@ -20,7 +20,7 @@
         "directory": "packages/pure-react"
     },
     "dependencies": {
-        "@pistonite/pure": "^0.0.12"
+        "@pistonite/pure": "^0.0.14"
     },
     "peerDependencies": {
         "react": "^18"
