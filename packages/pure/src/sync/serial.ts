@@ -42,7 +42,8 @@ import type { Result } from "../result/index.ts";
  * TypeScript magic is used to ensure full type-safety when passing in arguments.
  *
  * ```typescript
- * import { serial } from "@pistonite/pure/sync";
+ * import { serial, type SerialCancelToken } from "@pistonite/pure/sync";
+ * import type { Result } from "@pistonite/pure/result";
  *
  * const execute = serial({
  *    fn: (checkCancel) => async (arg1: number, arg2: string) => {
@@ -55,7 +56,9 @@ import type { Result } from "../result/index.ts";
  * });
  *
  * expectTypeOf(execute)
- *     .toEqualTypeOf<(arg1: number, arg2: string) => Promise<Result<void, "cancel">>>();
+ *     .toEqualTypeOf<
+ *         (arg1: number, arg2: string) => Promise<Result<void, SerialCancelToken>>
+ *      >();
  *
  * await execute(42, "hello"); // no type error!
  * ```
@@ -69,12 +72,11 @@ import type { Result } from "../result/index.ts";
  * import { serial } from "@pistonite/pure/sync";
  *
  * const execute = serial({
- *     fn: async (checkCancel, serial) => {
- *         console.log(serial);
- *     }
+ *     fn: (checkCancel, serial) => () => { console.log(serial); }
  * });
  *
  * await execute(); // 1n
+ * await execute(); // 2n
  * ```
  *
  * ## Checking for cancel
@@ -82,29 +84,11 @@ import type { Result } from "../result/index.ts";
  * calling the `checkCancel` function. This function will throw if the event
  * is cancelled, and the error will be caught by the wrapper and returned as an `Err`
  *
- * ```typescript
- * import { Serial } from "@pistonite/pure/sync";
- *
- * const execute = serial({
- *     fn: async (shouldCancel) => {
- *         // do some operations
- *         // ...
- *
- *         const cancelResult = shouldCancel();
- *         if (cancelResult.err) {
- *             return cancelResult;
- *         }
- *
- *         // not cancelled, continue
- *         // ...
- *     }
- * });
- * ```
- *
  * Note that even if you don't check it, there is one final check before the result is returned.
  * So you will never get a result from a cancelled event. Also note that you only need to check
  * after any `await` calls. If there's no `await`, everything is executed synchronously,
- * and it's impossible to cancel the event.
+ * and it's theoretically impossible to cancel the event. However, this depends on
+ * the runtime's implementation of promises.
  *
  * ## Handling cancelled event
  * To check if an event is completed or cancelled, simply `await`
@@ -113,7 +97,7 @@ import type { Result } from "../result/index.ts";
  * import { serial } from "@pistonite/pure/sync";
  *
  * const execute = serial({
- *     fn: async (checkCancel) => {
+ *     fn: (checkCancel) => async () => {
  *         // your code here ...
  *     }
  * });
@@ -128,7 +112,7 @@ import type { Result } from "../result/index.ts";
  * You can also pass in a callback to the constructor, which will be called
  * when the event is cancelled. The cancel callback is guaranteed to only fire at most once per run
  * ```typescript
- * import { Serial } from "@pistonite/pure/sync";
+ * import { serial } from "@pistonite/pure/sync";
  *
  * const onCancel = (current: bigint, latest: bigint) => {
  *     console.log(`Event with serial ${current} is cancelled because the latest serial is ${latest}`);
@@ -138,14 +122,17 @@ import type { Result } from "../result/index.ts";
  *     fn: ...,
  *     onCancel,
  * });
+ *
+ * ## Exception handling
+ *
+ * If the underlying function throws, the exception will be re-thrown to the caller.
  * ```
  */
 
-export function serial<
-TFn extends 
-(...args: any[]) => any
-
->({fn, onCancel}: SerialConstructor<TFn>) {
+export function serial<TFn extends (...args: any[]) => any>({
+    fn,
+    onCancel,
+}: SerialConstructor<TFn>) {
     const impl = new Serial(fn, onCancel);
     return (...args: Parameters<TFn>) => impl.invoke(...args);
 }
@@ -157,21 +144,24 @@ export type SerialConstructor<TFn> = {
     /**
      * Function creator that returns the async function to be wrapped
      */
-    fn: (checkCancel: ShouldCancelFn, current?: SerialId) => TFn;
+    fn: (checkCancel: CheckCancelFn, current: SerialId) => TFn;
     /**
      * Optional callback to be called when the event is cancelled
      *
      * This is guaranteed to be only called at most once per execution
      */
     onCancel?: SerialEventCancelCallback;
-}
+};
 
 class Serial<TFn extends (...args: any[]) => any> {
     private serial: SerialId;
     private fn: SerialFnCreator<TFn>;
     private onCancel: SerialEventCancelCallback;
 
-    constructor(fn: SerialFnCreator<TFn>, onCancel?: SerialEventCancelCallback) {
+    constructor(
+        fn: SerialFnCreator<TFn>,
+        onCancel?: SerialEventCancelCallback,
+    ) {
         this.fn = fn;
         this.serial = 0n;
         if (onCancel) {
@@ -181,10 +171,12 @@ class Serial<TFn extends (...args: any[]) => any> {
         }
     }
 
-    public async invoke(...args: Parameters<TFn>): Promise<Result<Awaited<ReturnType<TFn>>, SerialCancelToken>> {
+    public async invoke(
+        ...args: Parameters<TFn>
+    ): Promise<Result<Awaited<ReturnType<TFn>>, SerialCancelToken>> {
         let cancelled = false;
         const currentSerial = ++this.serial;
-        const shouldCancel = () => {
+        const checkCancel = () => {
             if (currentSerial !== this.serial) {
                 if (!cancelled) {
                     cancelled = true;
@@ -196,13 +188,11 @@ class Serial<TFn extends (...args: any[]) => any> {
         const fn = this.fn;
         // note: no typechecking for "result"
         try {
-            const result = await fn(shouldCancel, currentSerial)(...args);
-            if (cancelled) {
-                return { err: "cancel" };
-            }
+            const result = await fn(checkCancel, currentSerial)(...args);
+            checkCancel();
             return { val: result };
         } catch (e) {
-            if (cancelled) {
+            if (currentSerial !== this.serial) {
                 return { err: "cancel" };
             }
             throw e;
@@ -211,8 +201,8 @@ class Serial<TFn extends (...args: any[]) => any> {
 }
 
 type SerialId = bigint;
-type ShouldCancelFn = () => void;
-type SerialFnCreator<T> = (checkCancel: ShouldCancelFn, serial: SerialId) => T;
+type CheckCancelFn = () => void;
+type SerialFnCreator<T> = (checkCancel: CheckCancelFn, serial: SerialId) => T;
 
 /**
  * The callback type passed to SerialEvent constructor to be called
