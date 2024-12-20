@@ -9,7 +9,8 @@
     "license": "MIT",
     "author": "Pistonight <pistonknight@outlook.com>",
     "files": [
-        "src/**/*"
+        "src/**/*",
+        "!src/**/*.test.ts"
     ],
     "exports": {
         "./fs": "./src/fs/index.ts",

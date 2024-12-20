@@ -38,3 +38,7 @@ tasks:
     desc: Serve the documentation
     cmds:
       - npx serve docs
+
+  publish:
+    cmds:
+      - npm publish -w packages/{{.CLI_ARGS}} --access public
