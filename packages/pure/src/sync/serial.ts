@@ -125,11 +125,11 @@ import type { Result } from "../result/index.ts";
  *     fn: ...,
  *     onCancel,
  * });
+ * ```
  *
  * ## Exception handling
  *
  * If the underlying function throws, the exception will be re-thrown to the caller.
- * ```
  */
 
 export function serial<TFn extends (...args: any[]) => any>({
