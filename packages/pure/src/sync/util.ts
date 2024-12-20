@@ -5,5 +5,19 @@ export const makePromise = <T>() => {
         resolve = res;
         reject = rej;
     });
-    return { promise, resolve, reject };
+    if (!resolve || !reject) {
+        throw new Error(
+            "Promise callbacks not set. This is a bug in the JS engine!",
+        );
+    }
+    return {
+        promise,
+        resolve,
+        reject,
+    };
 };
+
+/** Shorthand for Awaited<ReturnType<T>> */
+export type AwaitRet<T> = T extends (...args: any[]) => infer R
+    ? Awaited<R>
+    : never;

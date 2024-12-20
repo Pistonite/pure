@@ -1,7 +1,7 @@
-import { makePromise } from "./util.ts";
+import { type AwaitRet, makePromise } from "./util.ts";
 
 /**
- * An async event that is guaranteed to:
+ * An async event wrapper that is guaranteed to:
  * - Not re-fire in a minimal interval after it's initialially fired.
  * - All calls will eventually fire
  *
@@ -78,8 +78,12 @@ import { makePromise } from "./util.ts";
  * });
  * ```
  */
-export function debounce<TFn extends (...args: any[]) => any>({ fn, interval, disregardExecutionTime }: DebounceConstructor<TFn>) {
-    const impl = new Debounce(fn, interval, disregardExecutionTime || false);
+export function debounce<TFn extends (...args: any[]) => any>({
+    fn,
+    interval,
+    disregardExecutionTime,
+}: DebounceConstructor<TFn>) {
+    const impl = new DebounceImpl(fn, interval, !!disregardExecutionTime);
     return (...args: Parameters<TFn>) => impl.invoke(...args);
 }
 
@@ -109,15 +113,13 @@ export type DebounceConstructor<TFn> = {
     disregardExecutionTime?: boolean;
 };
 
-
-class Debounce<TFn extends (...args: any[]) => any> {
+class DebounceImpl<TFn extends (...args: any[]) => any> {
     private idle: boolean;
-    private next?: { 
-        args: Parameters<TFn>,
-        promise: 
-        Promise<Awaited<ReturnType<TFn>>>, 
-        resolve?: (result: Awaited<ReturnType<TFn>>) => void, 
-        reject?: (error: any) => void
+    private next?: {
+        args: Parameters<TFn>;
+        promise: Promise<AwaitRet<TFn>>;
+        resolve: (result: AwaitRet<TFn>) => void;
+        reject: (error: any) => void;
     };
     constructor(
         private fn: TFn,
@@ -127,13 +129,13 @@ class Debounce<TFn extends (...args: any[]) => any> {
         this.idle = true;
     }
 
-    public invoke(...args: Parameters<TFn>): Promise<Awaited<ReturnType<TFn>>> {
+    public invoke(...args: Parameters<TFn>): Promise<AwaitRet<TFn>> {
         if (this.idle) {
             this.idle = false;
             return this.execute(...args);
         }
         if (!this.next) {
-            this.next = { args, ...makePromise<Awaited<ReturnType<TFn>>>()};
+            this.next = { args, ...makePromise<AwaitRet<TFn>>() };
         } else {
             this.next.args = args;
         }
@@ -151,7 +153,7 @@ class Debounce<TFn extends (...args: any[]) => any> {
         this.idle = true;
     }
 
-    private async execute(...args: Parameters<TFn>): Promise<Awaited<ReturnType<TFn>>> {
+    private async execute(...args: Parameters<TFn>): Promise<AwaitRet<TFn>> {
         const fn = this.fn;
         let done = this.disregardExecutionTime;
         setTimeout(() => {
@@ -173,5 +175,5 @@ class Debounce<TFn extends (...args: any[]) => any> {
                 }
             }
         }
-  }
+    }
 }

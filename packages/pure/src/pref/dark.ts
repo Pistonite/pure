@@ -50,12 +50,16 @@
  * @module
  */
 
+import { persist } from "../sync/persist.ts";
 import { injectStyle } from "./injectStyle.ts";
 
-const KEY = "Pure.Dark";
-
-let dark = false;
-const subscribers: ((dark: boolean) => void)[] = [];
+const dark = persist({
+    initial: false,
+    key: "Pure.Dark",
+    storage: localStorage,
+    serialize: (value) => (value ? "1" : ""),
+    deserialize: (value) => !!value,
+});
 
 /**
  * Returns if dark mode is prefered in the browser environment
@@ -96,26 +100,18 @@ export type DarkOptions = {
 export const initDark = (options: DarkOptions = {}): void => {
     let _dark = options.initial || prefersDarkMode();
 
-    if (options.persist) {
-        const value = localStorage.getItem(KEY);
-        if (value !== null) {
-            _dark = !!value;
-        }
-        addDarkSubscriber((dark: boolean) => {
-            localStorage.setItem(KEY, dark ? "1" : "");
-        });
-    } else {
-        localStorage.removeItem(KEY);
-    }
-
-    setDark(_dark);
-
     const selector = options.selector ?? ":root";
     if (selector) {
         // notify immediately to update the style initially
         addDarkSubscriber((dark: boolean) => {
             updateStyle(dark, selector);
         }, true /* notify */);
+    }
+
+    if (options.persist) {
+        dark.init(_dark);
+    } else {
+        dark.disable();
     }
 };
 
@@ -130,55 +126,33 @@ export const initDark = (options: DarkOptions = {}): void => {
  * subsequence `setDark` calls will still persist the value.
  */
 export const clearPersistedDarkPerference = (): void => {
-    localStorage.removeItem(KEY);
+    dark.clear();
 };
 
 /**
  * Gets the current value of dark mode
  */
-export const isDark = (): boolean => dark;
+export const isDark = (): boolean => dark.get();
 
 /**
  * Set the value of dark mode
  */
 export const setDark = (value: boolean): void => {
-    if (dark === value) {
-        return;
-    }
-    dark = value;
-    const len = subscribers.length;
-    for (let i = 0; i < len; i++) {
-        subscribers[i](dark);
-    }
+    dark.set(value);
 };
 /**
- * Add a subscriber to dark mode changes
+ * Add a subscriber to dark mode changes and return a function to remove the subscriber
  *
  * If `notifyImmediately` is `true`, the subscriber will be called immediately with the current value
  */
 export const addDarkSubscriber = (
     subscriber: (dark: boolean) => void,
     notifyImmediately?: boolean,
-): void => {
-    subscribers.push(subscriber);
-    if (notifyImmediately) {
-        subscriber(dark);
-    }
-};
-
-/**
- * Remove a subscriber from dark mode changes
- */
-export const removeDarkSubscriber = (
-    subscriber: (dark: boolean) => void,
-): void => {
-    const index = subscribers.indexOf(subscriber);
-    if (index >= 0) {
-        subscribers.splice(index, 1);
-    }
+): (() => void) => {
+    return dark.subscribe(subscriber, notifyImmediately);
 };
 
 const updateStyle = (dark: boolean, selector: string) => {
     const text = `${selector} { color-scheme: ${dark ? "dark" : "light"}; }`;
-    injectStyle(KEY, text);
+    injectStyle("pure-pref-dark", text);
 };

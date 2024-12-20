@@ -1,7 +1,7 @@
 import type { Result } from "../result/index.ts";
 
 /**
- * An async event that is cancelled when a new one starts.
+ * An async event wrapper that is cancelled when a new one starts.
  * When a new event is started, the previous caller will receive a
  * cancellation error, instead of being hung up indefinitely.
  *
@@ -136,7 +136,7 @@ export function serial<TFn extends (...args: any[]) => any>({
     fn,
     onCancel,
 }: SerialConstructor<TFn>) {
-    const impl = new Serial(fn, onCancel);
+    const impl = new SerialImpl(fn, onCancel);
     return (...args: Parameters<TFn>) => impl.invoke(...args);
 }
 
@@ -156,7 +156,7 @@ export type SerialConstructor<TFn> = {
     onCancel?: SerialEventCancelCallback;
 };
 
-class Serial<TFn extends (...args: any[]) => any> {
+class SerialImpl<TFn extends (...args: any[]) => any> {
     private serial: SerialId;
     private fn: SerialFnCreator<TFn>;
     private onCancel: SerialEventCancelCallback;

@@ -53,12 +53,20 @@
  * @module
  */
 
-const KEY = "Pure.Locale";
+import { persist } from "../sync/persist.ts";
 
 let supportedLocales: readonly string[] = [];
-let locale: string = "";
 let defaultLocale: string = "";
-const subscribers: ((locale: string) => void)[] = [];
+const locale = persist<string>({
+    initial: "",
+    key: "Pure.Locale",
+    storage: localStorage,
+    serialize: (value) => value,
+    deserialize: (value) => {
+        const supported = convertToSupportedLocale(value);
+        return supported || null;
+    },
+});
 
 /**
  * Use browser API to guess user's preferred locale
@@ -120,21 +128,10 @@ export const initLocale = <TLocale extends string>(
     }
     defaultLocale = options.default;
     if (options.persist) {
-        const value = localStorage.getItem(KEY);
-        if (value !== null) {
-            const supported = convertToSupportedLocale(value);
-            if (supported) {
-                _locale = supported;
-            }
-        }
-        addLocaleSubscriber((locale: string) => {
-            localStorage.setItem(KEY, locale);
-        });
+        locale.init(_locale);
     } else {
-        localStorage.removeItem(KEY);
+        locale.disable();
     }
-
-    setLocale(_locale);
 };
 
 /**
@@ -149,13 +146,11 @@ export const initLocale = <TLocale extends string>(
  * subsequence `setLocale` calls will still persist the value.
  */
 export const clearPersistedLocalePreference = (): void => {
-    localStorage.removeItem(KEY);
+    locale.clear();
 };
 
 /** Get the current selected locale */
-export const getLocale = (): string => {
-    return locale;
-};
+export const getLocale = (): string => locale.get();
 
 /** Get the default locale when initialized */
 export const getDefaultLocale = (): string => {
@@ -172,14 +167,7 @@ export const setLocale = (newLocale: string): boolean => {
     if (!supported) {
         return false;
     }
-    if (supported === locale) {
-        return true;
-    }
-    locale = supported;
-    const len = subscribers.length;
-    for (let i = 0; i < len; i++) {
-        subscribers[i](locale);
-    }
+    locale.set(supported);
     return true;
 };
 
@@ -235,28 +223,16 @@ export const convertToSupportedLocaleOrDefault = (
 };
 
 /**
- * Add a subscriber to be notified when the locale changes
+ * Add a subscriber to be notified when the locale changes.
+ * Returns a function to remove the subscriber
  *
  * If `notifyImmediately` is `true`, the subscriber will be called immediately with the current locale
  */
 export const addLocaleSubscriber = (
     fn: (locale: string) => void,
     notifyImmediately?: boolean,
-): void => {
-    subscribers.push(fn);
-    if (notifyImmediately) {
-        fn(locale);
-    }
-};
-
-/**
- * Remove a subscriber from locale changes
- */
-export const removeLocaleSubscriber = (fn: (locale: string) => void): void => {
-    const index = subscribers.indexOf(fn);
-    if (index !== -1) {
-        subscribers.splice(index, 1);
-    }
+): (() => void) => {
+    return locale.subscribe(fn, notifyImmediately);
 };
 
 /**

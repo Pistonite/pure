@@ -1,7 +1,7 @@
 import { makePromise } from "./util.ts";
 
 /**
- * An async event that always resolve to the result of the latest
+ * An async event wrapper that always resolve to the result of the latest
  * call
  *
  * ## Example
@@ -12,7 +12,7 @@ import { makePromise } from "./util.ts";
  *
  * let counter = 0;
  *
- * const execute = latest({ 
+ * const execute = latest({
  *     fn: async () => {
  *         counter++;
  *         await new Promise((resolve) => setTimeout(() => {
@@ -27,27 +27,32 @@ import { makePromise } from "./util.ts";
  * console.log(await result2); // 2
  * ```
  */
-export function latest<TFn extends (...args: any[]) => Promise<any>>({ fn }: LatestConstructor<TFn>) {
-    const impl = new Latest(fn);
+export function latest<TFn extends (...args: any[]) => any>({
+    fn,
+}: LatestConstructor<TFn>) {
+    const impl = new LatestImpl(fn);
     return (...args: Parameters<TFn>) => impl.invoke(...args);
-};
+}
 
 export type LatestConstructor<TFn> = {
+    /** Function to be wrapped */
     fn: TFn;
 };
-export class Latest<TFn extends (...args: any[]) => any> {
+export class LatestImpl<TFn extends (...args: any[]) => any> {
     private hasNewer: boolean;
     private pending?: {
         promise: Promise<Awaited<ReturnType<TFn>>>;
-        resolve?: (result: Awaited<ReturnType<TFn>>) => void;
-        reject?: (error: unknown) => void;
+        resolve: (result: Awaited<ReturnType<TFn>>) => void;
+        reject: (error: unknown) => void;
     };
 
-    constructor(private fn: TFn) { 
+    constructor(private fn: TFn) {
         this.hasNewer = false;
     }
 
-    public async invoke(...args: Parameters<TFn>): Promise<Awaited<ReturnType<TFn>>> {
+    public async invoke(
+        ...args: Parameters<TFn>
+    ): Promise<Awaited<ReturnType<TFn>>> {
         if (this.pending) {
             this.hasNewer = true;
             return this.pending.promise;
@@ -70,10 +75,10 @@ export class Latest<TFn extends (...args: any[]) => any> {
         const pending = this.pending;
         this.pending = undefined;
         if (error) {
-            pending.reject?.(error);
+            pending.reject(error);
             throw error;
         } else {
-            pending.resolve?.(result);
+            pending.resolve(result);
             return result;
         }
     }

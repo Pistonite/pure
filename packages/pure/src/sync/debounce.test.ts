@@ -12,20 +12,26 @@ describe("debounce", () => {
     });
     test("initial call executed immediately", async () => {
         const fn = vi.fn();
-        const execute = debounce({fn: () => {
-            fn();
-            return 42;
-        }, interval: 100});
+        const execute = debounce({
+            fn: () => {
+                fn();
+                return 42;
+            },
+            interval: 100,
+        });
         const result = await execute();
         expect(result).toStrictEqual(42);
         expect(fn).toHaveBeenCalledTimes(1);
     });
     test("debounce call executed after interval", async () => {
         const fn = vi.fn();
-        const execute = debounce({fn: () => {
-            fn();
-            return 42;
-        }, interval: 100});
+        const execute = debounce({
+            fn: () => {
+                fn();
+                return 42;
+            },
+            interval: 100,
+        });
         await execute();
         expect(fn).toHaveBeenCalledTimes(1);
         const promise2 = execute();
@@ -38,10 +44,13 @@ describe("debounce", () => {
     });
     test("discard extra calls", async () => {
         const fn = vi.fn();
-        const execute = debounce({fn: () => {
-            fn();
-            return 42;
-        }, interval: 100});
+        const execute = debounce({
+            fn: () => {
+                fn();
+                return 42;
+            },
+            interval: 100,
+        });
         await execute();
         expect(fn).toHaveBeenCalledTimes(1);
         const promise2 = execute();
@@ -56,11 +65,14 @@ describe("debounce", () => {
     });
     test("function takes long to run", async () => {
         const fn = vi.fn();
-        const execute = debounce({fn: async (i: string) => {
-            fn(i);
-            await new Promise((resolve) => setTimeout(resolve, 150));
-            return i+ "out";
-        }, interval: 100});
+        const execute = debounce({
+            fn: async (i: string) => {
+                fn(i);
+                await new Promise((resolve) => setTimeout(resolve, 150));
+                return i + "out";
+            },
+            interval: 100,
+        });
 
         const promise1 = execute("");
         expect(fn).toHaveBeenCalledTimes(1);
@@ -82,11 +94,15 @@ describe("debounce", () => {
     });
     test("function takes long to run, disregardExecutionTime", async () => {
         const fn = vi.fn();
-        const execute = debounce({fn: async (i: string) => {
-            fn(i);
-            await new Promise((resolve) => setTimeout(resolve, 150));
-            return i+ "out";
-        }, interval: 100, disregardExecutionTime: true});
+        const execute = debounce({
+            fn: async (i: string) => {
+                fn(i);
+                await new Promise((resolve) => setTimeout(resolve, 150));
+                return i + "out";
+            },
+            interval: 100,
+            disregardExecutionTime: true,
+        });
 
         // 0 - 1 called
         // 100 - 2 called
@@ -105,4 +121,3 @@ describe("debounce", () => {
         await promise2;
     });
 });
-
