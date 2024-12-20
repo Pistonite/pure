@@ -5,6 +5,9 @@ import type { Result } from "../result/index.ts";
  * When a new event is started, the previous caller will receive a
  * cancellation error, instead of being hung up indefinitely.
  *
+ * If you want every caller to receive the latest result
+ * instead of a cancellation error, use `latest` instead.
+ *
  * ## Example
  *
  * ```typescript

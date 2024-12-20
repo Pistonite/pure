@@ -5,8 +5,8 @@
  * @module
  */
 export { serial } from "./serial.ts";
+export { debounce } from "./debounce.ts";
 
 // unstable
 export { RwLock } from "./RwLock.ts";
 export { Latest } from "./Latest.ts";
-export { Debounce } from "./Debounce.ts";
