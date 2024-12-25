@@ -259,7 +259,7 @@ export const addLocaleSubscriber = (
  */
 export const detectLocale = {
     type: "languageDetector" as const,
-    detect: () => locale,
+    detect: (): string => locale.get(),
     cacheUserLanguage: (lng: string): void => {
         setLocale(lng);
     },
