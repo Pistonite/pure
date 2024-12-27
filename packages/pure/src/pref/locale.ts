@@ -131,6 +131,7 @@ export const initLocale = <TLocale extends string>(
         locale.init(_locale);
     } else {
         locale.disable();
+        locale.set(_locale);
     }
 };
 
