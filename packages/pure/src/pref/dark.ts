@@ -112,6 +112,7 @@ export const initDark = (options: DarkOptions = {}): void => {
         dark.init(_dark);
     } else {
         dark.disable();
+        dark.set(_dark);
     }
 };
 
