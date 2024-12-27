@@ -86,10 +86,10 @@ class PersistImpl<T> implements Persist<T> {
                 const loadedValue = deserialize(data);
                 if (loadedValue !== null) {
                     value = loadedValue;
-                    this.cell.set(value);
                 }
             }
         } catch {}
+        this.cell.set(value);
         this.unsubscribe = this.cell.subscribe((value) => {
             this.storage.setItem(this.key, serialize(value));
         });
