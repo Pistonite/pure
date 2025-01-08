@@ -1,4 +1,8 @@
-export const makePromise = <T>() => {
+export const makePromise = <T>(): {
+    promise: Promise<T>;
+    resolve: (value: T | PromiseLike<T>) => void;
+    reject: (reason?: any) => void;
+} => {
     let resolve;
     let reject;
     const promise = new Promise<T>((res, rej) => {
