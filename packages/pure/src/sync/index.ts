@@ -10,6 +10,7 @@ export { debounce, type DebounceConstructor } from "./debounce.ts";
 export { batch, type BatchConstructor } from "./batch.ts";
 export { cell, type CellConstructor, type Cell } from "./cell.ts";
 export { persist, type PersistConstructor, type Persist } from "./persist.ts";
+export { once, type OnceConstructor } from "./once.ts";
 
 // unstable
 export { RwLock } from "./RwLock.ts";
