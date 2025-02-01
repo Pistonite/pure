@@ -66,6 +66,7 @@ import { makePromise } from "./util";
  * This is not an issue if the resource doesn't leak other resources,
  * since it will eventually be GC'd.
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function once<TFn extends (...args: any[]) => any>({
     fn,
 }: OnceConstructor<TFn>) {
@@ -79,6 +80,7 @@ export type OnceConstructor<TFn> = {
     fn: TFn;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export class OnceImpl<TFn extends (...args: any[]) => any> {
     private promise: Promise<Awaited<ReturnType<TFn>>> | undefined;
 

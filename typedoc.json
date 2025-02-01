@@ -1,5 +1,7 @@
 {
-    "entryPoints": ["packages/*"],
+    "entryPoints": [
+        "packages/pure*"
+    ],
     "name": "pure",
     "entryPointStrategy": "packages",
     "includeVersion": false

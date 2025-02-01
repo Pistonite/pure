@@ -1,7 +1,7 @@
 export const makePromise = <T>(): {
     promise: Promise<T>;
     resolve: (value: T | PromiseLike<T>) => void;
-    reject: (reason?: any) => void;
+    reject: (reason?: unknown) => void;
 } => {
     let resolve;
     let reject;
@@ -22,6 +22,7 @@ export const makePromise = <T>(): {
 };
 
 /** Shorthand for Awaited<ReturnType<T>> */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type AwaitRet<T> = T extends (...args: any[]) => infer R
     ? Awaited<R>
     : never;

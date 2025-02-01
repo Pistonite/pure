@@ -88,7 +88,9 @@ class PersistImpl<T> implements Persist<T> {
                     value = loadedValue;
                 }
             }
-        } catch {}
+        } catch {
+            /* ignore */
+        }
         this.cell.set(value);
         this.unsubscribe = this.cell.subscribe((value) => {
             this.storage.setItem(this.key, serialize(value));

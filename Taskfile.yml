@@ -1,44 +1,60 @@
 version: "3"
 
+includes:
+  pure:
+    taskfile: ./packages/pure
+    dir: ./packages/pure
+    internal: true
+
+  pure-react:
+    taskfile: ./packages/pure-react
+    dir: ./packages/pure-react
+    internal: true
+
+  pure-i18next:
+    taskfile: ./packages/pure-i18next
+    dir: ./packages/pure-i18next
+    internal: true
+
 tasks:
+  install:
+    cmds:
+      - pnpm install
+
+  install-ci:
+    cmds:
+      - pnpm install --frozen-lockfile
+
   check:
     desc: Check the code
-    cmds:
-      - task: prettier
-        vars:
-          PRETTIER_ARGS: --check
-      - npx tsc
+    deps:
+      - pure:check
+      - pure-react:check
+      - pure-i18next:check
 
   test:
     desc: Run the tests
     cmds:
-      - npx -w packages/pure vitest run
+      - task: pure:test
 
   fix:
     desc: Fix the code
-    cmds:
-      - task: prettier
-        vars:
-          PRETTIER_ARGS: --write
-
-  prettier:
-    vars:
-      PRETTIER_CONFIG: >
-        --tab-width 4
-        --end-of-line auto
-    cmds:
-      - npx prettier . {{.PRETTIER_ARGS}} {{.PRETTIER_CONFIG}}
+    deps:
+      - pure:fix
+      - pure-react:fix
+      - pure-i18next:fix
 
   doc:
     desc: Generate the documentation
     cmds:
-      - npx typedoc
+      - pnpm exec typedoc
 
   serve:
     desc: Serve the documentation
     cmds:
-      - npx serve docs
+      - pnpm exec serve docs
 
   publish:
+    deps: [check, test, doc]
     cmds:
-      - npm publish -w packages/{{.CLI_ARGS}} --access public
+      - pnpm -r publish --access public

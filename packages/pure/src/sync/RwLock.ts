@@ -44,12 +44,14 @@ export class RwLock<TRead, TWrite extends TRead = TRead> {
             if (this.writeWaiters.length > 0) {
                 if (this.readers === 0) {
                     // notify one writer
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                     this.writeWaiters.shift()!();
                 }
                 // don't notify anyone if there are still readers
             } else {
                 // notify all readers
                 while (this.readWaiters.length > 0) {
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                     this.readWaiters.shift()!();
                 }
             }
@@ -85,9 +87,11 @@ export class RwLock<TRead, TWrite extends TRead = TRead> {
             this.isWriting = false;
             if (this.readWaiters.length > 0) {
                 // notify one reader
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 this.readWaiters.shift()!();
             } else if (this.writeWaiters.length > 0) {
                 // notify one writer
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 this.writeWaiters.shift()!();
             }
         }
