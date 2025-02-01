@@ -27,6 +27,7 @@ import { makePromise } from "./util.ts";
  * console.log(await result2); // 2
  * ```
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function latest<TFn extends (...args: any[]) => any>({
     fn,
 }: LatestConstructor<TFn>) {
@@ -38,6 +39,7 @@ export type LatestConstructor<TFn> = {
     /** Function to be wrapped */
     fn: TFn;
 };
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export class LatestImpl<TFn extends (...args: any[]) => any> {
     private hasNewer: boolean;
     private pending?: {

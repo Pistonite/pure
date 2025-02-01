@@ -1,7 +1,7 @@
 import { test, expect, expectTypeOf, vi } from "vitest";
 
-import { serial, SerialCancelToken } from "./serial.ts";
-import { Result } from "../result/index.ts";
+import { serial, type SerialCancelToken } from "./serial.ts";
+import type { Result } from "../result/index.ts";
 
 test("example", async () => {
     // helper function to simulate async work

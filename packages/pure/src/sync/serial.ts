@@ -132,6 +132,7 @@ import type { Result } from "../result/index.ts";
  * If the underlying function throws, the exception will be re-thrown to the caller.
  */
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function serial<TFn extends (...args: any[]) => any>({
     fn,
     onCancel,
@@ -156,6 +157,7 @@ export type SerialConstructor<TFn> = {
     onCancel?: SerialEventCancelCallback;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 class SerialImpl<TFn extends (...args: any[]) => any> {
     private serial: SerialId;
     private fn: SerialFnCreator<TFn>;

@@ -1,5 +1,47 @@
+import { persist } from "../sync/persist.ts";
+import { injectStyle } from "./injectStyle.ts";
+
+const dark = persist({
+    initial: false,
+    key: "Pure.Dark",
+    storage: localStorage,
+    serialize: (value) => (value ? "1" : ""),
+    deserialize: (value) => !!value,
+});
+
 /**
- * Dark mode wrappers
+ * Returns if dark mode is prefered in the browser environment
+ *
+ * If `window.matchMedia` is not available, it will return `false`
+ */
+export const prefersDarkMode = (): boolean => {
+    return !!globalThis.matchMedia?.("(prefers-color-scheme: dark)").matches;
+};
+
+/** Value for the `color-scheme` CSS property */
+export type ColorScheme = "light" | "dark";
+/** Option for initializing dark mode */
+export type DarkOptions = {
+    /**
+     * Initial value for dark mode
+     *
+     * If not set, it will default to calling `prefersDarkMode()`.
+     *
+     * If `persist` is `true`, it will also check the value from localStorage
+     */
+    initial?: boolean;
+    /** Persist the dark mode preference to localStorage */
+    persist?: boolean;
+    /**
+     * The selector to set `color-scheme` property
+     *
+     * Defaults to `:root`. If set to empty string, CSS will not be updated
+     */
+    selector?: string;
+};
+
+/**
+ * Init Dark mode wrappers
  *
  * ## Detect user preference
  * User preference is detected with `matchMedia` API, if available.
@@ -46,59 +88,9 @@
  * // will set `.my-app { color-scheme: dark }`
  * initDark({ selector: ".my-app" });
  * ```
- *
- * @module
- */
-
-import { persist } from "../sync/persist.ts";
-import { injectStyle } from "./injectStyle.ts";
-
-const dark = persist({
-    initial: false,
-    key: "Pure.Dark",
-    storage: localStorage,
-    serialize: (value) => (value ? "1" : ""),
-    deserialize: (value) => !!value,
-});
-
-/**
- * Returns if dark mode is prefered in the browser environment
- *
- * If `window.matchMedia` is not available, it will return `false`
- */
-export const prefersDarkMode = (): boolean => {
-    return !!globalThis.matchMedia?.("(prefers-color-scheme: dark)").matches;
-};
-
-/** Value for the `color-scheme` CSS property */
-export type ColorScheme = "light" | "dark";
-/** Option for initializing dark mode */
-export type DarkOptions = {
-    /**
-     * Initial value for dark mode
-     *
-     * If not set, it will default to calling `prefersDarkMode()`.
-     *
-     * If `persist` is `true`, it will also check the value from localStorage
-     */
-    initial?: boolean;
-    /** Persist the dark mode preference to localStorage */
-    persist?: boolean;
-    /**
-     * The selector to set `color-scheme` property
-     *
-     * Defaults to `:root`. If set to empty string, CSS will not be updated
-     */
-    selector?: string;
-};
-
-/**
- * Initializes dark mode
- *
- * @param options Options for initializing dark mode
  */
 export const initDark = (options: DarkOptions = {}): void => {
-    let _dark = options.initial || prefersDarkMode();
+    const _dark = options.initial || prefersDarkMode();
 
     const selector = options.selector ?? ":root";
     if (selector) {

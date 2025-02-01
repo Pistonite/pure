@@ -1,58 +1,3 @@
-/**
- * Locale utilities and integration with i18next
- *
- * ## Initialization
- * `initLocale` must be called before using the other functions.
- *
- * ```typescript
- * import { initLocale } from "@pistonite/pure/pref";
- *
- * initLocale({
- *     // required
- *     supported: ["en", "zh-CN", "zh-TW"] as const,
- *     default: "en",
- *
- *     // optional
- *     persist: true, // save to localStorage
- *     initial: "en-US", // initial value, instead of detecting
- * });
- * ```
- *
- * ## Connecting with i18next
- * The typical usage for this component is to use i18next for localization.
- * This module provides 2 plugins:
- * - `detectLocale`:
- *   - Provide the current language to i18next (as a language detector)
- *   - Update the global locale state whenever `i18next.changeLanguage` is called
- * - `connectI18next`:
- *   - Call `i18next.changeLanguage` whenever `setLocale` is called
- *
- * You might only need one of these plugins, depending on your use case.
- * For example, if you will never call `setLocale` manually, then you don't need `connectI18next`.
- *
- * ```typescript
- * import i18next from "i18next";
- * import { initLocale, detectLocale, connectI18next } from "@pistonite/pure/pref";
- *
- * // initialize locale
- * initLocale({ supported: ["en", "es"], default: "en", persist: true });
- *
- * // connect with i18next
- * i18next.use(detectLocale).use(connectI18next).init({
- *   // ...other options not shown
- * });
- * ```
- *
- * ## Use with React
- * A React hook is provided in the [`pure-react`](https://jsr.io/@pistonite/pure-react/doc/pref) package
- * to get the current locale from React components.
- *
- * Changing the locale from React components is the same as from outside React,
- * with `setLocale` or `i18next.changeLanguage`, depending on your setup.
- *
- * @module
- */
-
 import { persist } from "../sync/persist.ts";
 
 let supportedLocales: readonly string[] = [];
@@ -114,7 +59,37 @@ export type LocaleOptions<TLocale extends string> = {
     persist?: boolean;
 };
 
-/** Initialize locale global state */
+/**
+ * Initialize Locale utilities
+ *
+ * `initLocale` must be called before using the other functions.
+ *
+ * ```typescript
+ * import { initLocale } from "@pistonite/pure/pref";
+ *
+ * initLocale({
+ *     // required
+ *     supported: ["en", "zh-CN", "zh-TW"] as const,
+ *     default: "en",
+ *
+ *     // optional
+ *     persist: true, // save to localStorage
+ *     initial: "en-US", // initial value, instead of detecting
+ * });
+ * ```
+ *
+ * ## Connecting with i18next
+ * The `@pistonite/pure-i18next` package provides additional wrapper
+ * for connecting with i18next. See the documentation there for more details.
+ * You will use `initLocaleWithI18next` instead of `initLocale`.
+ *
+ * ## Use with React
+ * A React hook is provided in the [`pure-react`](https://jsr.io/@pistonite/pure-react/doc/pref) package
+ * to get the current locale from React components.
+ *
+ * Changing the locale from React components is the same as from outside React,
+ * with `setLocale` or `i18next.changeLanguage`, depending on your setup.
+ */
 export const initLocale = <TLocale extends string>(
     options: LocaleOptions<TLocale>,
 ): void => {
@@ -236,62 +211,6 @@ export const addLocaleSubscriber = (
     return locale.subscribe(fn, notifyImmediately);
 };
 
-/**
- * Language detector plugin for i18next
- *
- * **Must call `initLocale` before initializaing i18next**
- *
- * This also sets the global locale state whenever `i18next.changeLanguage` is called.
- *
- * # Example
- * ```typescript
- * import i18next from "i18next";
- * import { initLocale, detectLocale } from "@pistonite/pure/pref";
- *
- * initLocale({ supported: ["en", "es"], default: "en", persist: true });
- *
- * i18next.use(detectLocale).init({
- *   // don't need to specify `lng` here
- *
- *   // ...other options not shown
- * });
- * ```
- *
- */
-export const detectLocale = {
-    type: "languageDetector" as const,
-    detect: (): string => locale.get(),
-    cacheUserLanguage: (lng: string): void => {
-        setLocale(lng);
-    },
-};
-
-/**
- * Bind the locale state to i18next, so whenever `setLocale`
- * is called, it will also call `i18next.changeLanguage`.
- *
- * # Example
- * ```typescript
- * import i18next from "i18next";
- * import { connectI18next, initLocale } from "@pistonite/pure/pref";
- *
- * initLocale({ supported: ["en", "es"], default: "en", persist: true });
- * i18next.use(connectI18next).init({
- *  // ...options
- * });
- *
- */
-export const connectI18next = {
-    type: "3rdParty" as const,
-    init: (i18next: any): void => {
-        addLocaleSubscriber((locale) => {
-            if (i18next.language !== locale) {
-                i18next.changeLanguage(locale);
-            }
-        }, true);
-    },
-};
-
 const localizedLanguageNames = new Map();
 
 /**
@@ -316,3 +235,6 @@ export const getLocalizedLanguageName = (language: string): string => {
     localizedLanguageNames.set(language, localized);
     return localized || language;
 };
+
+/** Get the array of supported locales passed to init */
+export const getSupportedLocales = (): readonly string[] => supportedLocales;

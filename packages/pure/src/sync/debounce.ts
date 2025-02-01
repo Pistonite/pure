@@ -78,6 +78,7 @@ import { type AwaitRet, makePromise } from "./util.ts";
  * });
  * ```
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function debounce<TFn extends (...args: any[]) => any>({
     fn,
     interval,
@@ -113,13 +114,14 @@ export type DebounceConstructor<TFn> = {
     disregardExecutionTime?: boolean;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 class DebounceImpl<TFn extends (...args: any[]) => any> {
     private idle: boolean;
     private next?: {
         args: Parameters<TFn>;
         promise: Promise<AwaitRet<TFn>>;
         resolve: (result: AwaitRet<TFn>) => void;
-        reject: (error: any) => void;
+        reject: (error: unknown) => void;
     };
     constructor(
         private fn: TFn,

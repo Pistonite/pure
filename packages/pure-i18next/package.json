@@ -1,8 +1,8 @@
 {
-    "name": "@pistonite/pure-react",
-    "version": "0.0.6",
+    "name": "@pistonite/pure-i18next",
+    "version": "0.0.1",
     "type": "module",
-    "description": "React binding for pure library",
+    "description": "I18next binding for pure library",
     "homepage": "https://github.com/Pistonite/pure",
     "bugs": {
         "url": "https://github.com/Pistonite/pure/issues"
@@ -18,10 +18,12 @@
     "repository": {
         "type": "git",
         "url": "git+https://github.com/Pistonite/pure.git",
-        "directory": "packages/pure-react"
+        "directory": "packages/pure-i18next"
     },
     "dependencies": {
-        "@pistonite/pure": "workspace:*"
+        "@pistonite/pure": "workspace:*",
+        "i18next": "^24.2.2",
+        "react-i18next": "^15.4.0"
     },
     "peerDependencies": {
         "react": "catalog:"

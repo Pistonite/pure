@@ -87,6 +87,7 @@ import { makePromise, type AwaitRet } from "./util.ts";
  * ```
  *
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function batch<TFn extends (...args: any[]) => any>({
     fn,
     batch,
@@ -107,6 +108,7 @@ export function batch<TFn extends (...args: any[]) => any>({
 /**
  * Options to construct a  `batch` function
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type BatchConstructor<TFn extends (...args: any[]) => any> = {
     /** Function to be wrapped */
     fn: TFn;
@@ -133,6 +135,7 @@ export type BatchConstructor<TFn extends (...args: any[]) => any> = {
     disregardExecutionTime?: boolean;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 class BatchImpl<TFn extends (...args: any[]) => any> {
     private idle: boolean;
     private scheduled: {
