@@ -21,10 +21,6 @@ tasks:
     cmds:
       - pnpm install
 
-  install-ci:
-    cmds:
-      - pnpm install --frozen-lockfile
-
   check:
     desc: Check the code
     deps:
