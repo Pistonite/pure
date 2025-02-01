@@ -21,9 +21,12 @@ export const createBackend = (
             const locale = convertToSupportedLocale(language) || fallbackLocale;
             const loader = loaders[namespace];
             if (!loader) {
-                console.error(
-                    `[pure-i18next] no loader found for namespace ${namespace}`,
-                );
+                if (namespace !== "translation") {
+                    // only log an error if the namespace is not the default
+                    console.error(
+                        `[pure-i18next] no loader found for namespace ${namespace}`,
+                    );
+                }
                 return undefined;
             }
             try {
