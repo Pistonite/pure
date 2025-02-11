@@ -1,4 +1,9 @@
-import { type AwaitRet, makePromise } from "./util.ts";
+import {
+    type AnyFn,
+    type AwaitRet,
+    makePromise,
+    type PromiseHandle,
+} from "./util.ts";
 
 /**
  * An async event wrapper that is guaranteed to:
@@ -78,8 +83,7 @@ import { type AwaitRet, makePromise } from "./util.ts";
  * });
  * ```
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function debounce<TFn extends (...args: any[]) => any>({
+export function debounce<TFn extends AnyFn>({
     fn,
     interval,
     disregardExecutionTime,
@@ -114,14 +118,10 @@ export type DebounceConstructor<TFn> = {
     disregardExecutionTime?: boolean;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-class DebounceImpl<TFn extends (...args: any[]) => any> {
+class DebounceImpl<TFn extends AnyFn> {
     private idle: boolean;
-    private next?: {
+    private next?: PromiseHandle<AwaitRet<TFn>> & {
         args: Parameters<TFn>;
-        promise: Promise<AwaitRet<TFn>>;
-        resolve: (result: AwaitRet<TFn>) => void;
-        reject: (error: unknown) => void;
     };
     constructor(
         private fn: TFn,

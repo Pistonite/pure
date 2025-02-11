@@ -1,4 +1,9 @@
-import { makePromise, type AwaitRet } from "./util.ts";
+import {
+    type AnyFn,
+    makePromise,
+    type PromiseHandle,
+    type AwaitRet,
+} from "./util.ts";
 
 /**
  * An async event wrapper that allows multiple calls in an interval
@@ -87,8 +92,7 @@ import { makePromise, type AwaitRet } from "./util.ts";
  * ```
  *
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function batch<TFn extends (...args: any[]) => any>({
+export function batch<TFn extends AnyFn>({
     fn,
     batch,
     unbatch,
@@ -108,8 +112,7 @@ export function batch<TFn extends (...args: any[]) => any>({
 /**
  * Options to construct a  `batch` function
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type BatchConstructor<TFn extends (...args: any[]) => any> = {
+export type BatchConstructor<TFn extends AnyFn> = {
     /** Function to be wrapped */
     fn: TFn;
     /** Function to batch the inputs across multiple calls */
@@ -135,15 +138,11 @@ export type BatchConstructor<TFn extends (...args: any[]) => any> = {
     disregardExecutionTime?: boolean;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-class BatchImpl<TFn extends (...args: any[]) => any> {
+class BatchImpl<TFn extends AnyFn> {
     private idle: boolean;
-    private scheduled: {
+    private scheduled: (PromiseHandle<AwaitRet<TFn>> & {
         input: Parameters<TFn>;
-        promise: Promise<AwaitRet<TFn>>;
-        resolve: (value: AwaitRet<TFn>) => void;
-        reject: (error: unknown) => void;
-    }[];
+    })[];
 
     constructor(
         private fn: TFn,
@@ -166,7 +165,7 @@ class BatchImpl<TFn extends (...args: any[]) => any> {
             this.idle = false;
             return this.execute(...args);
         }
-        const { promise, reject, resolve } = makePromise<AwaitRet<TFn>>();
+        const { promise, resolve, reject } = makePromise<AwaitRet<TFn>>();
         this.scheduled.push({
             input: args,
             promise,

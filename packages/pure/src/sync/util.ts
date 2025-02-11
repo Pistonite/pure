@@ -21,8 +21,14 @@ export const makePromise = <T>(): {
     };
 };
 
+export type PromiseHandle<T> = ReturnType<typeof makePromise<T>>;
+
 /** Shorthand for Awaited<ReturnType<T>> */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type AwaitRet<T> = T extends (...args: any[]) => infer R
     ? Awaited<R>
     : never;
+
+/** Type for any function */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type AnyFn = (...args: any[]) => any;
