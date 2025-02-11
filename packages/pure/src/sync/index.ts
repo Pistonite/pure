@@ -4,7 +4,12 @@
  *
  * @module
  */
-export { serial, type SerialConstructor, type SerialEventCancelCallback, type SerialCancelToken } from "./serial.ts";
+export {
+    serial,
+    type SerialConstructor,
+    type SerialEventCancelCallback,
+    type SerialCancelToken,
+} from "./serial.ts";
 export { latest, type LatestConstructor, type UpdateArgsFn } from "./latest.ts";
 export { debounce, type DebounceConstructor } from "./debounce.ts";
 export { batch, type BatchConstructor } from "./batch.ts";
