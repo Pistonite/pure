@@ -1,4 +1,4 @@
-import { makePromise } from "./util";
+import { type AnyFn, type AwaitRet, makePromise } from "./util.ts";
 
 /**
  * An async event wrapper that ensures an async initialization is only ran once.
@@ -66,13 +66,9 @@ import { makePromise } from "./util";
  * This is not an issue if the resource doesn't leak other resources,
  * since it will eventually be GC'd.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function once<TFn extends (...args: any[]) => any>({
-    fn,
-}: OnceConstructor<TFn>) {
+export function once<TFn extends AnyFn>({ fn }: OnceConstructor<TFn>) {
     const impl = new OnceImpl(fn);
-    return (...args: Parameters<TFn>): Promise<Awaited<ReturnType<TFn>>> =>
-        impl.invoke(...args);
+    return (...args: Parameters<TFn>) => impl.invoke(...args);
 }
 
 export type OnceConstructor<TFn> = {
@@ -80,22 +76,18 @@ export type OnceConstructor<TFn> = {
     fn: TFn;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export class OnceImpl<TFn extends (...args: any[]) => any> {
-    private promise: Promise<Awaited<ReturnType<TFn>>> | undefined;
+export class OnceImpl<TFn extends AnyFn> {
+    private promise: Promise<AwaitRet<TFn>> | undefined;
 
     constructor(private fn: TFn) {
         this.fn = fn;
     }
 
-    public async invoke(
-        ...args: Parameters<TFn>
-    ): Promise<Awaited<ReturnType<TFn>>> {
+    public async invoke(...args: Parameters<TFn>): Promise<AwaitRet<TFn>> {
         if (this.promise) {
             return this.promise;
         }
-        const { promise, resolve, reject } =
-            makePromise<Awaited<ReturnType<TFn>>>();
+        const { promise, resolve, reject } = makePromise<AwaitRet<TFn>>();
         this.promise = promise;
         try {
             const result = await this.fn(...args);

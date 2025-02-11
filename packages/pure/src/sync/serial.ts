@@ -1,4 +1,5 @@
 import type { Result } from "../result/index.ts";
+import type { AnyFn } from "./util.ts";
 
 /**
  * An async event wrapper that is cancelled when a new one starts.
@@ -132,8 +133,7 @@ import type { Result } from "../result/index.ts";
  * If the underlying function throws, the exception will be re-thrown to the caller.
  */
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function serial<TFn extends (...args: any[]) => any>({
+export function serial<TFn extends AnyFn>({
     fn,
     onCancel,
 }: SerialConstructor<TFn>) {
@@ -157,8 +157,7 @@ export type SerialConstructor<TFn> = {
     onCancel?: SerialEventCancelCallback;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-class SerialImpl<TFn extends (...args: any[]) => any> {
+class SerialImpl<TFn extends AnyFn> {
     private serial: SerialId;
     private fn: SerialFnCreator<TFn>;
     private onCancel: SerialEventCancelCallback;

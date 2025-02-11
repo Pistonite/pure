@@ -23,3 +23,8 @@ tasks:
     desc: Run tests
     cmds:
       - pnpm exec vitest run
+
+  dev:
+    desc: Run tests
+    cmds:
+      - pnpm exec vitest --watch
