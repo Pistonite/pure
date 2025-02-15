@@ -1,6 +1,6 @@
 {
     "name": "@pistonite/pure",
-    "version": "0.21.0",
+    "version": "0.22.0",
     "type": "module",
     "description": "Pure TypeScript libraries for my projects",
     "homepage": "https://github.com/Pistonite/pure",
@@ -16,6 +16,7 @@
     "exports": {
         "./fs": "./src/fs/index.ts",
         "./log": "./src/log/index.ts",
+        "./memory": "./src/memory/index.ts",
         "./result": "./src/result/index.ts",
         "./sync": "./src/sync/index.ts",
         "./pref": "./src/pref/index.ts"
