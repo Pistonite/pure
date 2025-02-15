@@ -126,6 +126,7 @@ export const makeExternalWeakRefType = <TUnderlying, TType>({
                 if (weakRefObj.ref !== undefined) {
                     free(weakRefObj.ref);
                 }
+                weakRefObj.ref = undefined;
             },
             set: (value: TUnderlying | undefined) => {
                 if (weakRefObj.ref !== undefined && weakRefObj.ref !== value) {
