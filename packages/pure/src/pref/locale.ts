@@ -1,4 +1,4 @@
-import { persist } from "../sync/persist.ts";
+import { persist } from "../memory/persist.ts";
 
 let supportedLocales: readonly string[] = [];
 let defaultLocale: string = "";

@@ -1,4 +1,4 @@
-import { persist } from "../sync/persist.ts";
+import { persist } from "../memory/persist.ts";
 import { injectStyle } from "./injectStyle.ts";
 
 const dark = persist({
