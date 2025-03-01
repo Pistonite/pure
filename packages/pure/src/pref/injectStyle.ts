@@ -4,7 +4,7 @@
  * Will remove the old style tag(s) if exist
  */
 export function injectStyle(id: string, style: string) {
-    const styleTags = document.querySelectorAll(`style[data-inject="${id}"`);
+    const styleTags = document.querySelectorAll(`style[data-inject="${id}"]`);
     if (styleTags.length !== 1) {
         const styleTag = document.createElement("style");
         styleTag.setAttribute("data-inject", id);
