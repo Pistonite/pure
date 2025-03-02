@@ -8,6 +8,9 @@ export const createBackend = (
     loaders: Record<string, LoadLanguageFn>,
     fallbackLocale: string,
 ): BackendModule => {
+    const hasNonDefaultNamespace = Object.keys(loaders).some(
+        (x) => x !== "translation",
+    );
     const backend: BackendModule = {
         type: "backend",
         init: () => {
@@ -21,8 +24,9 @@ export const createBackend = (
             const locale = convertToSupportedLocale(language) || fallbackLocale;
             const loader = loaders[namespace];
             if (!loader) {
-                if (namespace !== "translation") {
+                if (namespace !== "translation" || !hasNonDefaultNamespace) {
                     // only log an error if the namespace is not the default
+                    // if there are non-default namespaces
                     console.error(
                         `[pure-i18next] no loader found for namespace ${namespace}`,
                     );

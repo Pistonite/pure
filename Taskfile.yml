@@ -1,17 +1,25 @@
 version: "3"
 
 includes:
+  common:
+    taskfile: ./packages/mono-dev/task/common.yaml
+    flatten: true
+    optional: true
+
   pure:
+    aliases: [p]
     taskfile: ./packages/pure
     dir: ./packages/pure
     internal: true
 
   pure-react:
+    aliases: [pr]
     taskfile: ./packages/pure-react
     dir: ./packages/pure-react
     internal: true
 
   pure-i18next:
+    aliases: [pi]
     taskfile: ./packages/pure-i18next
     dir: ./packages/pure-i18next
     internal: true
