@@ -41,7 +41,7 @@ export const initLocaleWithI18next = async <TLocale extends string>(
 
     const loader = options.loader;
     if (typeof loader === "function") {
-        const backend = createBackend({ translations: loader }, defaultLocale);
+        const backend = createBackend({ translation: loader }, defaultLocale);
         instance = instance.use(backend);
     } else {
         const backend = createBackend(loader, defaultLocale);

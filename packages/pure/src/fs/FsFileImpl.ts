@@ -206,7 +206,7 @@ class FsFileImpl implements FsFile {
                 this.buffer,
             );
             this.isText = true;
-        } catch (_) {
+        } catch {
             this.content = undefined;
             this.isText = false;
         }
