@@ -106,6 +106,7 @@ export {
     fsOpenReadFrom,
     fsOpenReadWriteFrom,
 } from "./FsOpen.ts";
+export { fsOpenFile, fsOpenFileMultiple } from "./FsOpenFile.ts";
 export { fsGetSupportStatus } from "./FsSupportStatus.ts";
 export {
     fsRoot,
@@ -119,6 +120,7 @@ export {
 export { FsErr, fsErr, fsFail } from "./FsError.ts";
 
 export type { FsOpenRetryHandler } from "./FsOpen.ts";
+export type * from "./FsOpenFile.ts";
 export type { FsSupportStatus } from "./FsSupportStatus.ts";
 export type {
     FsFileSystem,
@@ -126,4 +128,5 @@ export type {
     FsCapabilities,
 } from "./FsFileSystem.ts";
 export type { FsFile } from "./FsFile.ts";
+export type { FsFileStandalone } from "./FsFileStandalone.ts";
 export type { FsError, FsResult, FsVoid } from "./FsError.ts";

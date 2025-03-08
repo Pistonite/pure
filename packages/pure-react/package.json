@@ -1,6 +1,6 @@
 {
     "name": "@pistonite/pure-react",
-    "version": "0.7.0",
+    "version": "0.7.1",
     "type": "module",
     "description": "React binding for pure library",
     "homepage": "https://github.com/Pistonite/pure",
@@ -28,8 +28,6 @@
     },
     "devDependencies": {
         "@types/react": "catalog:",
-        "eslint": "catalog:",
-        "mono-dev": "workspace:*",
-        "typescript": "catalog:"
+        "mono-dev": "workspace:*"
     }
 }

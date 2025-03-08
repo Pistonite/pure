@@ -1,6 +1,6 @@
 {
     "name": "@pistonite/pure",
-    "version": "0.22.3",
+    "version": "0.23.0",
     "type": "module",
     "description": "Pure TypeScript libraries for my projects",
     "homepage": "https://github.com/Pistonite/pure",
@@ -32,9 +32,7 @@
     },
     "devDependencies": {
         "@types/file-saver": "^2.0.7",
-        "eslint": "catalog:",
         "mono-dev": "workspace:*",
-        "typescript": "catalog:",
         "vitest": "^3.0.5"
     }
 }

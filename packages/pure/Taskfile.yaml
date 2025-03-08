@@ -6,25 +6,22 @@ includes:
     internal: true
 
 tasks:
-  check:
-    desc: Run Linter and Formatter
+  install:
     cmds:
-      - task: ecma:tsc-check
-      - task: ecma:eslint-check
-      - task: ecma:prettier-check
+      - task: ecma:mono-config
+
+  check:
+    cmds:
+      - task: ecma:mono-check
 
   fix:
-    desc: Fix issues in code
     cmds:
-      - task: ecma:eslint-fix
-      - task: ecma:prettier-fix
+      - task: ecma:mono-fix
 
   test:
-    desc: Run tests
     cmds:
-      - pnpm exec vitest run
+      - task: ecma:vitest
 
   dev:
-    desc: Run tests
     cmds:
-      - pnpm exec vitest --watch
+      - task: ecma:vitest-watch

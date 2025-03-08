@@ -117,6 +117,14 @@ async function createWithPicker(
                     }
                     resolve(createFromFileList(files));
                 });
+                inputElement.addEventListener("cancel", () => {
+                    resolve({
+                        err: fsErr(
+                            FsErr.UserAbort,
+                            "User cancelled the operation",
+                        ),
+                    });
+                });
                 inputElement.click();
             },
         );

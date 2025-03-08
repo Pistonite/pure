@@ -50,6 +50,10 @@ tasks:
 
   doc:
     desc: Generate the documentation
+    deps:
+      - pure:install
+      - pure-react:install
+      - pure-i18next:install
     cmds:
       - pnpm exec typedoc
 
