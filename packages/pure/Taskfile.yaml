@@ -7,24 +7,17 @@ includes:
 
 tasks:
   check:
-    desc: Run Linter and Formatter
     cmds:
-      - task: ecma:tsc-check
-      - task: ecma:eslint-check
-      - task: ecma:prettier-check
+      - task: ecma:mono-check
 
   fix:
-    desc: Fix issues in code
     cmds:
-      - task: ecma:eslint-fix
-      - task: ecma:prettier-fix
+      - task: ecma:mono-fix
 
   test:
-    desc: Run tests
     cmds:
-      - pnpm exec vitest run
+      - task: ecma:vitest
 
   dev:
-    desc: Run tests
     cmds:
-      - pnpm exec vitest --watch
+      - task: ecma:vitest-watch

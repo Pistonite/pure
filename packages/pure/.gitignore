@@ -1,0 +1,3 @@
+.prettierignore
+/eslint.config.js
+/tsconfig*.json
