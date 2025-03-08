@@ -6,6 +6,10 @@ includes:
     internal: true
 
 tasks:
+  install:
+    cmds:
+      - task: ecma:mono-config
+
   check:
     cmds:
       - task: ecma:mono-check
