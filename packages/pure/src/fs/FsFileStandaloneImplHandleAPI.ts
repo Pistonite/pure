@@ -76,8 +76,8 @@ export class FsFileStandaloneImplHandleAPI implements FsFileStandalone {
             return file;
         }
         try {
-            const data = await file.val.bytes();
-            return { val: data };
+            const data = await file.val.arrayBuffer();
+            return { val: new Uint8Array(data) };
         } catch (e) {
             console.error(e);
             return { err: fsFail(errstr(e)) };
