@@ -26,8 +26,8 @@ export class FsFileStandaloneImplFileAPI implements FsFileStandalone {
 
     public async getBytes(): Promise<FsResult<Uint8Array>> {
         try {
-            const data = await this.file.bytes();
-            return { val: data };
+            const data = await this.file.arrayBuffer();
+            return { val: new Uint8Array(data) };
         } catch (e) {
             console.error(e);
             return { err: fsFail(errstr(e)) };
