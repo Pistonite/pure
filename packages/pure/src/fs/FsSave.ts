@@ -1,10 +1,19 @@
+import { fsFail, type FsVoid } from "./FsError.ts";
+
 /** Save (download) a file using Blob */
-export function fsSave(content: string | Uint8Array, filename: string) {
+export function fsSave(content: string | Uint8Array, filename: string): FsVoid {
     const blob = new Blob([content], {
         // maybe lying, but should be fine
         type: "text/plain;charset=utf-8",
     });
-    saveAs(blob, filename);
+
+    try {
+        saveAs(blob, filename);
+        return {};
+    } catch (e) {
+        console.error(e);
+        return { err: fsFail("save failed") };
+    }
 }
 
 // The following code is adopted from
@@ -45,16 +54,17 @@ type SaveAsFnOptions = {
  * source  : http://purl.eligrey.com/github/FileSaver.js
  */
 
+// adoption note: this is now ECMA standard - https://github.com/tc39/proposal-global
 // The one and only way of getting global scope in all environments
 // https://stackoverflow.com/q/3277182/1008999
-const _global =
-    typeof window === "object" && window.window === window
-        ? window
-        : typeof self === "object" && self.self === self
-          ? self
-          : typeof global === "object" && global.global === global
-            ? global
-            : this;
+// const _global =
+//     typeof window === "object" && window.window === window
+//         ? window
+//         : typeof self === "object" && self.self === self
+//           ? self
+//           : typeof global === "object" && global.global === global
+//             ? global
+//             : this;
 
 const download = (url: string | URL, name?: string, opts?: SaveAsFnOptions) => {
     const xhr = new XMLHttpRequest();
@@ -97,16 +107,16 @@ const corsEnabled = (url: string | URL) => {
 // adoption note: converted to check at call time, no need to
 // do this check at boot load
 const saveAs: SaveAsFn = (blob, name?, opts?) => {
-    if (typeof window !== "object" || window !== _global) {
+    // adoption note: this is likely to throw if window is not defined.. ?
+    if (typeof window !== "object" || window !== globalThis) {
         // probably in some web worker
-        console.warn("saveAs is not supported in this environment");
         return;
     }
     // Detect WebView inside a native macOS app by ruling out all browsers
     // We just need to check for 'Safari' because all other browsers (besides Firefox) include that too
     // https://www.whatismybrowser.com/guides/the-latest-user-agent/macos
     const isMacOSWebView =
-        _global.navigator &&
+        globalThis.navigator &&
         /Macintosh/.test(navigator.userAgent) &&
         /AppleWebKit/.test(navigator.userAgent) &&
         !/Safari/.test(navigator.userAgent);
@@ -114,7 +124,7 @@ const saveAs: SaveAsFn = (blob, name?, opts?) => {
     name = name || "download";
 
     if ("download" in HTMLAnchorElement.prototype && !isMacOSWebView) {
-        const URL = _global.URL || _global.webkitURL;
+        const URL = globalThis.URL || globalThis.webkitURL;
         // Namespace is used to prevent conflict w/ Chrome Poper Blocker extension (Issue #561)
         const a = document.createElementNS(
             "http://www.w3.org/1999/xhtml",
@@ -172,9 +182,10 @@ const saveAs: SaveAsFn = (blob, name?, opts?) => {
     }
 
     const force = blob.type === "application/octet-stream";
+    // adoption note: add any
     const isSafari =
-        /constructor/i.test((_global as any).HTMLElement) ||
-        (_global as any).safari;
+        /constructor/i.test((globalThis as any).HTMLElement) ||
+        (globalThis as any).safari;
     const isChromeIOS = /CriOS\/[\d]+/.test(navigator.userAgent);
 
     if (
@@ -197,7 +208,7 @@ const saveAs: SaveAsFn = (blob, name?, opts?) => {
         };
         reader.readAsDataURL(blob);
     } else {
-        const URL = _global.URL || _global.webkitURL;
+        const URL = globalThis.URL || globalThis.webkitURL;
         const url = URL.createObjectURL(blob);
         if (popup) {
             popup.location = url;

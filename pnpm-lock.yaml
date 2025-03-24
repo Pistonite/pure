@@ -9,9 +9,6 @@ catalogs:
     '@types/react':
       specifier: ^18.3.12
       version: 18.3.18
-    eslint:
-      specifier: ^9.21.0
-      version: 9.22.0
     react:
       specifier: ^18
       version: 18.3.1
@@ -21,7 +18,7 @@ importers:
   .:
     devDependencies:
       eslint:
-        specifier: 'catalog:'
+        specifier: ^9.21.0
         version: 9.22.0
       serve:
         specifier: ^14.2.4
