@@ -1,6 +1,6 @@
 {
     "name": "@pistonite/pure",
-    "version": "0.23.1",
+    "version": "0.24.0",
     "type": "module",
     "description": "Pure TypeScript libraries for my projects",
     "homepage": "https://github.com/Pistonite/pure",
@@ -27,12 +27,10 @@
         "directory": "packages/pure"
     },
     "dependencies": {
-        "denque": "2.1.0",
-        "file-saver": "2.0.5"
+        "denque": "2.1.0"
     },
     "devDependencies": {
-        "@types/file-saver": "^2.0.7",
         "mono-dev": "workspace:*",
-        "vitest": "^3.0.5"
+        "vitest": "^3.0.9"
     }
 }
