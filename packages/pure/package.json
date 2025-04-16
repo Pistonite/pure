@@ -1,6 +1,6 @@
 {
     "name": "@pistonite/pure",
-    "version": "0.24.1",
+    "version": "0.24.2",
     "type": "module",
     "description": "Pure TypeScript libraries for my projects",
     "homepage": "https://github.com/Pistonite/pure",
@@ -31,6 +31,6 @@
     },
     "devDependencies": {
         "mono-dev": "workspace:*",
-        "vitest": "^3.0.9"
+        "vitest": "^3.1.1"
     }
 }
