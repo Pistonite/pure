@@ -1,6 +1,6 @@
 {
     "name": "@pistonite/pure",
-    "version": "0.24.2",
+    "version": "0.25.0",
     "type": "module",
     "description": "Pure TypeScript libraries for my projects",
     "homepage": "https://github.com/Pistonite/pure",
