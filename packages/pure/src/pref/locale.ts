@@ -78,6 +78,8 @@ export type LocaleOptions<TLocale extends string> = {
      *
      * If there are race conditions in the hook, `checkCancel` should be used after any async operations,
      * which will throw an error if another call happened.
+     *
+     * Note that this hook will not be called during initialization.
      */
     onBeforeChange?: (
         newLocale: string,
@@ -137,19 +139,12 @@ export const initLocale = <TLocale extends string>(
             convertToSupportedLocale(getPreferredLocale()) || options.default;
     }
     defaultLocale = options.default;
-    settingLocale = _locale;
-    onBeforeChangeHook(_locale).then((result) => {
-        if (result.err) {
-            return;
-        }
-        settingLocale = "";
-        if (options.persist) {
-            locale.init(_locale);
-        } else {
-            locale.disable();
-            locale.set(_locale);
-        }
-    });
+    if (options.persist) {
+        locale.init(_locale);
+    } else {
+        locale.disable();
+        locale.set(_locale);
+    }
 };
 
 /**
