@@ -1,7 +1,15 @@
 import { persist } from "../memory/persist.ts";
+import type { Result } from "../result/index.ts";
+import { serial } from "../sync/serial.ts";
 
 let supportedLocales: readonly string[] = [];
 let defaultLocale: string = "";
+let settingLocale: string = ""; // if locale is being set (setLocale called)
+let onBeforeChangeHook: (
+    newLocale: string,
+) => Promise<Result<void, "cancel">> = () => {
+    return Promise.resolve({} as Result<void, "cancel">);
+};
 const locale = persist<string>({
     initial: "",
     key: "Pure.Locale",
@@ -36,11 +44,13 @@ export type LocaleOptions<TLocale extends string> = {
      * These can be full locale strings like "en-US" or just languages like "en"
      */
     supported: readonly TLocale[];
+
     /**
      * The default locale if the user's preferred locale is not supported.
      * This must be one of the items in `supported`.
      */
     default: TLocale;
+
     /**
      * Initial value for locale
      *
@@ -57,6 +67,22 @@ export type LocaleOptions<TLocale extends string> = {
      * Persist the locale preference to localStorage
      */
     persist?: boolean;
+
+    /**
+     * Hook to be called by `setLocale`, but before setting the locale and thus notifying
+     * the subscribers.
+     *
+     * Internally, this is synchronized by the `serial` function, which means
+     * if another `setLocale` is called before the hook finishes, the set operation of the current
+     * call will not happen and the locale will only be set after the hook finishes in the new call.
+     *
+     * If there are race conditions in the hook, `checkCancel` should be used after any async operations,
+     * which will throw an error if another call happened.
+     */
+    onBeforeChange?: (
+        newLocale: string,
+        checkCancel: () => void,
+    ) => void | Promise<void>;
 };
 
 /**
@@ -93,6 +119,15 @@ export type LocaleOptions<TLocale extends string> = {
 export const initLocale = <TLocale extends string>(
     options: LocaleOptions<TLocale>,
 ): void => {
+    if (options.onBeforeChange) {
+        const onBeforeChange = options.onBeforeChange;
+        onBeforeChangeHook = serial({
+            fn: (checkCancel) => async (newLocale: string) => {
+                await onBeforeChange(newLocale, checkCancel);
+            },
+        });
+    }
+
     let _locale = "";
     supportedLocales = options.supported;
     if (options.initial) {
@@ -102,12 +137,19 @@ export const initLocale = <TLocale extends string>(
             convertToSupportedLocale(getPreferredLocale()) || options.default;
     }
     defaultLocale = options.default;
-    if (options.persist) {
-        locale.init(_locale);
-    } else {
-        locale.disable();
-        locale.set(_locale);
-    }
+    settingLocale = _locale;
+    onBeforeChangeHook(_locale).then((result) => {
+        if (result.err) {
+            return;
+        }
+        settingLocale = "";
+        if (options.persist) {
+            locale.init(_locale);
+        } else {
+            locale.disable();
+            locale.set(_locale);
+        }
+    });
 };
 
 /**
@@ -136,14 +178,29 @@ export const getDefaultLocale = (): string => {
 /**
  * Set the selected locale
  *
- * Returns `false` if the locale is not supported
+ * Returns `false` if the locale is not supported.
+ *
+ * onBeforeChange hook is called regardless of if the new locale
+ * is the same as the current locale. If the hook is asynchronous and
+ * another `setLocale` is called before it finishes, the locale will not be set
+ * with the current call and will be set with the new call instead.
  */
 export const setLocale = (newLocale: string): boolean => {
     const supported = convertToSupportedLocale(newLocale);
     if (!supported) {
         return false;
     }
-    locale.set(supported);
+    if (supported === settingLocale) {
+        return true;
+    }
+    settingLocale = supported;
+    onBeforeChangeHook(supported).then((result) => {
+        if (result.err) {
+            return;
+        }
+        settingLocale = "";
+        locale.set(supported);
+    });
     return true;
 };
 
@@ -202,7 +259,10 @@ export const convertToSupportedLocaleOrDefault = (
  * Add a subscriber to be notified when the locale changes.
  * Returns a function to remove the subscriber
  *
- * If `notifyImmediately` is `true`, the subscriber will be called immediately with the current locale
+ * If `notifyImmediately` is `true`, the subscriber will be called immediately with the current locale.
+ * Note that it's not guaranteed that the new locale is ready when the subscriber is notified.
+ * Any async operations such as loading the language files should be done in the
+ * `onBeforeChange` hook if the subscribers need to wait for it.
  */
 export const addLocaleSubscriber = (
     fn: (locale: string) => void,
