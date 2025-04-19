@@ -3,7 +3,7 @@
  *
  * See {@link makeErcType} for how to use
  */
-export type Erc<TName, TRepr=number> = {
+export type Erc<TName, TRepr = number> = {
     readonly type: TName;
 
     /**
@@ -55,7 +55,7 @@ export type Erc<TName, TRepr=number> = {
  *
  * See {@link makeErcType} for how to use
  */
-export type ErcRef<TName, TRepr=number> = {
+export type ErcRef<TName, TRepr = number> = {
     readonly type: TName;
 
     /**
@@ -65,9 +65,6 @@ export type ErcRef<TName, TRepr=number> = {
      * is invalidated
      */
     readonly value: TRepr | undefined;
-
-    /** Invalidate the weak reference. */
-    invalidate: () => void;
 
     /**
      * Create a strong reference to the inner value, essentially
@@ -253,18 +250,18 @@ export const makeErcType = <TName, TRepr>({
     value: TRepr | undefined,
 ) => Erc<TName, TRepr>) => {
     const createStrongRef = (value: TRepr | undefined): Erc<TName, TRepr> => {
-        let weakRefs: ErcRef<TName, TRepr>[] = [];
-        const invalidateAllWeakRefs = () => {
-            const oldWeakRefs = weakRefs;
-            weakRefs = [];
-            const len = oldWeakRefs.length;
-            for (let i = 0; i < len; i++) {
-                oldWeakRefs[i].invalidate();
+        let weakRef:
+            | (ErcRef<TName, TRepr> & { invalidate: () => void })
+            | undefined = undefined;
+        const invalidateWeakRef = () => {
+            if (!weakRef) {
+                return;
             }
+            const oldWeakRef = weakRef;
+            weakRef = undefined;
+            oldWeakRef.invalidate();
         };
-        const createWeakRef = (
-            initialValue: TRepr | undefined,
-        ): ErcRef<TName, TRepr> => {
+        const createWeakRef = (initialValue: TRepr | undefined) => {
             const weak = {
                 type: marker,
                 value: initialValue,
@@ -285,7 +282,7 @@ export const makeErcType = <TName, TRepr>({
             value,
             free: () => {
                 if (erc.value !== undefined) {
-                    invalidateAllWeakRefs();
+                    invalidateWeakRef();
                     free(erc.value);
                     erc.value = undefined;
                 }
@@ -295,15 +292,16 @@ export const makeErcType = <TName, TRepr>({
                 erc.value = newValue;
             },
             take: () => {
-                invalidateAllWeakRefs();
+                invalidateWeakRef();
                 const oldValue = erc.value;
                 erc.value = undefined;
                 return oldValue;
             },
             getWeak: () => {
-                const weak = createWeakRef(erc.value);
-                weakRefs.push(weak);
-                return weak;
+                if (!weakRef) {
+                    weakRef = createWeakRef(erc.value);
+                }
+                return weakRef;
             },
             getStrong: () => {
                 if (erc.value === undefined) {
