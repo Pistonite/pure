@@ -1,6 +1,6 @@
 {
     "name": "@pistonite/pure-react",
-    "version": "0.7.5",
+    "version": "0.7.6",
     "type": "module",
     "description": "React binding for pure library",
     "homepage": "https://github.com/Pistonite/pure",
