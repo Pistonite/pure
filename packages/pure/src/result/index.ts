@@ -197,19 +197,38 @@ export async function tryAsync<T, E = unknown>(
 }
 
 /** Try best effort converting an error to a string */
-export function errstr(e: unknown): string {
+export function errstr(e: unknown, recursing?: boolean): string {
     if (typeof e === "string") {
         return e;
     }
-    if (e) {
-        if (typeof e === "object" && "message" in e) {
-            if (typeof e.message === "string") {
-                return e.message;
-            }
+    if (!e) {
+        return `${e}`;
+    }
+    if (typeof e === "object" && "message" in e) {
+        if (!recursing) {
+            return errstr(e.message, true);
         }
-        if (typeof e === "object" && "toString" in e) {
-            return e.toString();
+        return `${e.message}`;
+    }
+    if (typeof e === "object" && "toString" in e) {
+        const s = e.toString();
+        if (!recursing) {
+            return errstr(s, true);
         }
+        return `${s}`;
+    }
+    // try less-likely fields
+    if (typeof e === "object" && "msg" in e) {
+        if (!recursing) {
+            return errstr(e.msg, true);
+        }
+        return `${e.msg}`;
+    }
+    if (typeof e === "object" && "code" in e) {
+        if (!recursing) {
+            return `error code: ${errstr(e.code, true)}`;
+        }
+        return `${e.code}`;
     }
     return `${e}`;
 }
