@@ -227,10 +227,10 @@ export const convertToSupportedLocale = (
     return convertToSupportedLocaleIn(newLocale, supportedLocales);
 };
 
-/** 
+/**
  * See {@link convertToSupportedLocale}
  *
- * This takes the supported locale array so it can be used 
+ * This takes the supported locale array so it can be used
  * outside of the locale system
  */
 export const convertToSupportedLocaleIn = (
