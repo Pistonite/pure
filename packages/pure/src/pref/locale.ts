@@ -224,14 +224,27 @@ export const setLocale = (newLocale: string): boolean => {
 export const convertToSupportedLocale = (
     newLocale: string,
 ): string | undefined => {
-    if (supportedLocales.includes(newLocale)) {
+    return convertToSupportedLocaleIn(newLocale, supportedLocales);
+};
+
+/**
+ * See {@link convertToSupportedLocale}
+ *
+ * This takes the supported locale array so it can be used
+ * outside of the locale system
+ */
+export const convertToSupportedLocaleIn = (
+    newLocale: string,
+    supportedLocalesToCheck: string[] | readonly string[],
+): string | undefined => {
+    if (supportedLocalesToCheck.includes(newLocale)) {
         return newLocale;
     }
     const language = newLocale.split("-", 2)[0];
-    const len = supportedLocales.length;
+    const len = supportedLocalesToCheck.length;
     for (let i = 0; i < len; i++) {
-        if (supportedLocales[i].startsWith(language)) {
-            return supportedLocales[i];
+        if (supportedLocalesToCheck[i].startsWith(language)) {
+            return supportedLocalesToCheck[i];
         }
     }
     return undefined;
