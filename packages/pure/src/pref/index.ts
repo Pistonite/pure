@@ -8,5 +8,5 @@
  * @module
  */
 export * from "./dark.ts";
-export * from "./injectStyle.ts";
+export * from "./inject_style.ts";
 export * from "./locale.ts";

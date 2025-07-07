@@ -214,7 +214,7 @@ class BatchImpl<TFn extends AnyFn> {
         let done = this.disregardExecutionTime;
         setTimeout(() => {
             if (done) {
-                this.scheduleNext();
+                void this.scheduleNext();
             } else {
                 done = true;
             }
@@ -225,7 +225,7 @@ class BatchImpl<TFn extends AnyFn> {
             if (!this.disregardExecutionTime) {
                 if (done) {
                     // interval already passed, we need to call it
-                    this.scheduleNext();
+                    void this.scheduleNext();
                 } else {
                     done = true;
                 }
