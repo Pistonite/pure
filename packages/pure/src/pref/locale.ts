@@ -189,7 +189,7 @@ export const setLocale = (newLocale: string): boolean => {
         return true;
     }
     settingLocale = supported;
-    onBeforeChangeHook(supported).then((result) => {
+    void onBeforeChangeHook(supported).then((result) => {
         if (result.err) {
             return;
         }

@@ -1,5 +1,5 @@
 import { persist } from "../memory/persist.ts";
-import { injectStyle } from "./injectStyle.ts";
+import { injectStyle } from "./inject_style.ts";
 
 const dark = persist({
     initial: false,
