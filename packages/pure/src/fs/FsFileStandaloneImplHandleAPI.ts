@@ -1,3 +1,4 @@
+import { ilog } from "../log/internal.ts";
 import { errstr } from "../result";
 
 import { fsErr, FsErr, fsFail, type FsVoid, type FsResult } from "./FsError.ts";
@@ -39,7 +40,7 @@ export class FsFileStandaloneImplHandleAPI implements FsFileStandalone {
             });
             return requestedPermission === "granted";
         } catch (e) {
-            console.error(e);
+            ilog.error(e);
             return false;
         }
     }
@@ -58,7 +59,7 @@ export class FsFileStandaloneImplHandleAPI implements FsFileStandalone {
                     return { err: fsErr(FsErr.NotFound, "File not found") };
                 }
             }
-            console.error(e);
+            ilog.error(e);
             return { err: fsFail(errstr(e)) };
         }
     }
@@ -79,7 +80,7 @@ export class FsFileStandaloneImplHandleAPI implements FsFileStandalone {
             const data = await file.val.arrayBuffer();
             return { val: new Uint8Array(data) };
         } catch (e) {
-            console.error(e);
+            ilog.error(e);
             return { err: fsFail(errstr(e)) };
         }
     }
@@ -99,7 +100,7 @@ export class FsFileStandaloneImplHandleAPI implements FsFileStandalone {
             const data = await file.val.text();
             return { val: data };
         } catch (e) {
-            console.error(e);
+            ilog.error(e);
             return { err: fsFail(errstr(e)) };
         }
     }
@@ -145,7 +146,7 @@ export class FsFileStandaloneImplHandleAPI implements FsFileStandalone {
                     };
                 }
             }
-            console.error(e);
+            ilog.error(e);
             return { err: fsFail(errstr(e)) };
         }
     }

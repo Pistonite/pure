@@ -166,12 +166,7 @@ class BatchImpl<TFn extends AnyFn> {
             return this.execute(...args);
         }
         const { promise, resolve, reject } = makePromise<AwaitRet<TFn>>();
-        this.scheduled.push({
-            input: args,
-            promise,
-            resolve,
-            reject,
-        });
+        this.scheduled.push({ input: args, promise, resolve, reject });
 
         return promise;
     }

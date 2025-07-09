@@ -49,10 +49,7 @@ export class FsImplHandleAPI
         this.rootHandle = rootHandle;
         this.writeMode = write;
         this.permissionStatus = "prompt";
-        this.capabilities = {
-            write,
-            live: true,
-        };
+        this.capabilities = { write, live: true };
         this.mgr = new FsFileMgr();
     }
 

@@ -47,9 +47,7 @@ test("passing in arguments", async () => {
 });
 
 test("current serial number", async () => {
-    const execute = serial({
-        fn: (_, serial) => () => serial,
-    });
+    const execute = serial({ fn: (_, serial) => () => serial });
 
     const one = await execute();
     expect(one).toStrictEqual({ val: 1n });

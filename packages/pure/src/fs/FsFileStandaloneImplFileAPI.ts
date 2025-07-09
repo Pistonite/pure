@@ -1,3 +1,4 @@
+import { ilog } from "../log/internal.ts";
 import { errstr } from "../result";
 
 import { fsErr, FsErr, fsFail, type FsVoid, type FsResult } from "./FsError.ts";
@@ -29,7 +30,7 @@ export class FsFileStandaloneImplFileAPI implements FsFileStandalone {
             const data = await this.file.arrayBuffer();
             return { val: new Uint8Array(data) };
         } catch (e) {
-            console.error(e);
+            ilog.error(e);
             return { err: fsFail(errstr(e)) };
         }
     }
@@ -41,7 +42,7 @@ export class FsFileStandaloneImplFileAPI implements FsFileStandalone {
             const data = await this.file.text();
             return { val: data };
         } catch (e) {
-            console.error(e);
+            ilog.error(e);
             return { err: fsFail(errstr(e)) };
         }
     }
