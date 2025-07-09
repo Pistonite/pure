@@ -5,6 +5,8 @@ export {
     logger,
     type LoggerFactory,
     type Logger,
+    resettableLogger,
+    type ResettableLogger,
 } from "./logger.ts";
 export {
     internalLogOff,
