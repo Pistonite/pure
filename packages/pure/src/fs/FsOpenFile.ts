@@ -160,10 +160,7 @@ const fsOpenFileWithFileSystemAccessAPI = async (
         if (anyMimeType.length) {
             convertedAccept["*/*"] = anyMimeType;
         }
-        return {
-            description,
-            accept: convertedAccept,
-        };
+        return { description, accept: convertedAccept };
     });
     try {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any

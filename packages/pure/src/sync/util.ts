@@ -14,11 +14,7 @@ export const makePromise = <T>(): {
             "Promise callbacks not set. This is a bug in the JS engine!",
         );
     }
-    return {
-        promise,
-        resolve,
-        reject,
-    };
+    return { promise, resolve, reject };
 };
 
 export type PromiseHandle<T> = ReturnType<typeof makePromise<T>>;

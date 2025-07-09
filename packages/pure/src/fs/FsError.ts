@@ -34,10 +34,7 @@ export const FsErr = {
 export type FsErr = (typeof FsErr)[keyof typeof FsErr];
 
 /** Fs error type with a code and message */
-export type FsError = {
-    readonly code: FsErr;
-    readonly message: string;
-};
+export type FsError = { readonly code: FsErr; readonly message: string };
 
 /** Helper to create a FsError */
 export function fsErr(code: FsErr, message: string): FsError {

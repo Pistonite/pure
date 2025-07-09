@@ -30,10 +30,7 @@ export class FsImplFileAPI
     constructor(files: FileList) {
         // this seems to also work for windows
         this.root = files[0].webkitRelativePath.split("/", 1)[0];
-        this.capabilities = {
-            write: false,
-            live: false,
-        };
+        this.capabilities = { write: false, live: false };
         this.files = {};
         this.directories = {};
         this.mgr = new FsFileMgr();

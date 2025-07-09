@@ -37,9 +37,7 @@ type SaveAsFn = (
     filename?: string,
     options?: SaveAsFnOptions,
 ) => void;
-type SaveAsFnOptions = {
-    autoBom: boolean;
-};
+type SaveAsFnOptions = { autoBom: boolean };
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 

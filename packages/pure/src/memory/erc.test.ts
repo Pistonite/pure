@@ -2,10 +2,7 @@ import { describe, afterEach, expect, it } from "vitest";
 
 import { type Erc, makeErcType } from "./erc.ts";
 
-type Rc = {
-    value: string;
-    refCount: number;
-};
+type Rc = { value: string; refCount: number };
 const Marker = Symbol("test");
 type Marker = typeof Marker;
 class Allocator {
@@ -74,10 +71,7 @@ class Allocator {
     }
 
     allocValue(value: string): number {
-        const rc: Rc = {
-            value,
-            refCount: 1,
-        };
+        const rc: Rc = { value, refCount: 1 };
         for (let i = 0; i < this.mockMemory.length; i++) {
             if (this.mockMemory[i] === undefined) {
                 this.mockMemory[i] = rc;

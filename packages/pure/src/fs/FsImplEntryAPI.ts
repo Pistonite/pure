@@ -25,10 +25,7 @@ export class FsImplEntryAPI
     constructor(root: string, rootEntry: FileSystemDirectoryEntry) {
         this.root = root;
         this.rootEntry = rootEntry;
-        this.capabilities = {
-            write: false,
-            live: true,
-        };
+        this.capabilities = { write: false, live: true };
         this.mgr = new FsFileMgr();
     }
 

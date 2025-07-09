@@ -120,9 +120,7 @@ export type DebounceConstructor<TFn> = {
 
 class DebounceImpl<TFn extends AnyFn> {
     private idle: boolean;
-    private next?: PromiseHandle<AwaitRet<TFn>> & {
-        args: Parameters<TFn>;
-    };
+    private next?: PromiseHandle<AwaitRet<TFn>> & { args: Parameters<TFn> };
     constructor(
         private fn: TFn,
         private interval: number,

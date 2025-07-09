@@ -28,12 +28,7 @@
 
 import { errstr } from "../result/index.ts";
 
-export const LogLevel = {
-    Off: 0,
-    High: 1,
-    Info: 2,
-    Debug: 3,
-} as const;
+export const LogLevel = { Off: 0, High: 1, Info: 2, Debug: 3 } as const;
 export type LogLevel = (typeof LogLevel)[keyof typeof LogLevel];
 
 let globalLevel: LogLevel = LogLevel.High;
