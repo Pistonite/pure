@@ -1,23 +1,28 @@
-export const makePromise = <T>(): {
-    promise: Promise<T>;
-    resolve: (value: T | PromiseLike<T>) => void;
-    reject: (reason?: unknown) => void;
-} => {
-    let resolve;
-    let reject;
+/**
+ * Make a {@link PromiseHandle} with the promise object separate from
+ * its resolve and reject methods
+ */
+export const makePromise = <T>(): PromiseHandle<T> => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let resolve: any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let reject: any;
     const promise = new Promise<T>((res, rej) => {
         resolve = res;
         reject = rej;
     });
-    if (!resolve || !reject) {
-        throw new Error(
-            "Promise callbacks not set. This is a bug in the JS engine!",
-        );
-    }
     return { promise, resolve, reject };
 };
 
-export type PromiseHandle<T> = ReturnType<typeof makePromise<T>>;
+/**
+ * A handle of the promise that breaks down the promise object
+ * and its resolve and reject functions
+ */
+export type PromiseHandle<T> = {
+    promise: Promise<T>;
+    resolve: (value: T | PromiseLike<T>) => void;
+    reject: (reason?: unknown) => void;
+};
 
 /** Shorthand for Awaited<ReturnType<T>> */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
