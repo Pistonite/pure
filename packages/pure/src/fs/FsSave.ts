@@ -1,3 +1,5 @@
+import { ilog } from "../log/internal.ts";
+
 import { fsFail, type FsVoid } from "./FsError.ts";
 
 /** Save (download) a file using Blob */
@@ -11,7 +13,7 @@ export function fsSave(content: string | Uint8Array, filename: string): FsVoid {
         saveAs(blob, filename);
         return {};
     } catch (e) {
-        console.error(e);
+        ilog.error(e);
         return { err: fsFail("save failed") };
     }
 }

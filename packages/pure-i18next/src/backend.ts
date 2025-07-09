@@ -2,6 +2,7 @@ import type { BackendModule } from "i18next";
 import { convertToSupportedLocale } from "@pistonite/pure/pref";
 
 import type { LoadLanguageFn } from "./types.ts";
+import { log } from "./util.ts";
 
 /** Create an i18next backend module given the loader functions */
 export const createBackend = (
@@ -27,9 +28,7 @@ export const createBackend = (
                 if (namespace !== "translation" || !hasNonDefaultNamespace) {
                     // only log an error if the namespace is not the default
                     // if there are non-default namespaces
-                    console.error(
-                        `[pure-i18next] no loader found for namespace ${namespace}`,
-                    );
+                    log.error(`no loader found for namespace ${namespace}`);
                 }
                 return undefined;
             }
@@ -39,16 +38,14 @@ export const createBackend = (
                     return strings;
                 }
             } catch (e) {
-                console.error(e);
+                log.error(e);
             }
             if (locale === fallbackLocale) {
-                console.warn(
-                    `[pure-i18next] failed to load ${namespace} for ${locale}`,
-                );
+                log.warn(`failed to load ${namespace} for ${locale}`);
                 return undefined;
             }
-            console.warn(
-                `[pure-i18next] failed to load ${namespace} for ${locale}, falling back to ${fallbackLocale}`,
+            log.warn(
+                `failed to load ${namespace} for ${locale}, falling back to ${fallbackLocale}`,
             );
             try {
                 const strings = await loader(fallbackLocale);
@@ -56,10 +53,10 @@ export const createBackend = (
                     return strings;
                 }
             } catch (e) {
-                console.error(e);
+                log.error(e);
             }
-            console.warn(
-                `[pure-i18next] failed to load ${namespace} for fallback locale ${fallbackLocale}`,
+            log.warn(
+                `failed to load ${namespace} for fallback locale ${fallbackLocale}`,
             );
             return undefined;
         },

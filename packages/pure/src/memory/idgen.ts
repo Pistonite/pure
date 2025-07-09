@@ -6,7 +6,7 @@ export const safeidgen = (n: number): (() => number) => {
     let x = 1;
     return () => {
         x += 1;
-        if (x === n) {
+        if (x >= n) {
             x = 1;
         }
         return x;

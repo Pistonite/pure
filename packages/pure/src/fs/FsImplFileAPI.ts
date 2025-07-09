@@ -1,3 +1,5 @@
+import { ilog } from "../log/internal.ts";
+
 import type { FsFile } from "./FsFile.ts";
 import type {
     FsFileSystem,
@@ -43,7 +45,7 @@ export class FsImplFileAPI
             const normalized = fsNormalize(path);
             if (normalized.err) {
                 // shouldn't happen since the path is from the File API
-                console.error("Invalid path: " + path);
+                ilog.error("invalid path: " + path);
                 continue;
             }
             this.files[normalized.val] = file;
