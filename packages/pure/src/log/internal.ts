@@ -1,18 +1,14 @@
-import { LoggerImpl, LogLevel } from "./logger.ts";
+import { resettableLogger } from "./logger.ts";
 
-export const ilog: LoggerImpl = new LoggerImpl("pure", "gray", LogLevel.High);
+const { logger, off, debug, info } = resettableLogger("pure", "gray");
+
+export const ilog = logger;
 
 /** Set the internal log level of calls in this library to off */
-export const internalLogOff = () => {
-    ilog.level = LogLevel.Off;
-};
+export const internalLogOff = off;
 
 /** Set the internal log level of calls in this library to debug */
-export const internalLogDebug = () => {
-    ilog.level = LogLevel.Debug;
-};
+export const internalLogDebug = debug;
 
 /** Set the internal log level of calls in this library to info */
-export const internalLogInfo = () => {
-    ilog.level = LogLevel.Info;
-};
+export const internalLogInfo = info;

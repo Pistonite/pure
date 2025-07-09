@@ -1,3 +1,6 @@
-import { logger } from "@pistonite/pure/log";
+import { resettableLogger } from "@pistonite/pure/log";
 
-export const log = logger("pure-i18next", "gray").default();
+const { logger, ...rest } = resettableLogger("pure-i18next", "gray");
+export const log = logger;
+/** Change the log level of this library */
+export const logLevel = rest;

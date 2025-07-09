@@ -37,19 +37,25 @@ let globalLevel: LogLevel = LogLevel.High;
  *
  * This overrides logger-level settings
  */
-export const globalLogOff = () => (globalLevel = 0);
+export const globalLogOff = () => {
+    globalLevel = LogLevel.Off;
+};
 /**
  * Enable +info logging for ALL loggers
  *
  * This overrides logger-level settings
  */
-export const globalLogInfo = () => (globalLevel = 2);
+export const globalLogInfo = () => {
+    globalLevel = LogLevel.Info;
+};
 /**
  * Enable +debug logging for ALL loggers
  *
  * This overrides logger-level settings
  */
-export const globalLogDebug = () => (globalLevel = 3);
+export const globalLogDebug = () => {
+    globalLevel = LogLevel.Debug;
+};
 
 /** Create a logger creator. Use the factory methods to finish making the logger */
 export const logger = (name: string, color?: string): LoggerFactory => {
@@ -59,6 +65,31 @@ export const logger = (name: string, color?: string): LoggerFactory => {
         info: () => new LoggerImpl(name, color, LogLevel.Info),
         off: () => new LoggerImpl(name, color, LogLevel.Off),
     };
+};
+
+/** Create a {@link ResettableLogger} that can be easily reconfigured */
+export const resettableLogger = (
+    name: string,
+    color?: string,
+): ResettableLogger => {
+    const logger = new LoggerImpl(name, color, LogLevel.High);
+    return {
+        logger,
+        debug: () => (logger.level = LogLevel.Debug),
+        info: () => (logger.level = LogLevel.Info),
+        off: () => (logger.level = LogLevel.Off),
+    };
+};
+
+/**
+ * A logger whose level can be changed later. Useful for libraries to expose,
+ * so users can easily debug calls in the library
+ */
+export type ResettableLogger = {
+    logger: Logger;
+    debug(): void;
+    info(): void;
+    off(): void;
 };
 
 export type LoggerFactory = {
