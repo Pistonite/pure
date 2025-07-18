@@ -98,14 +98,14 @@ importers:
         specifier: workspace:*
         version: link:../pure
       i18next:
-        specifier: ^25.3.1
-        version: 25.3.1(typescript@5.8.3)
+        specifier: ^25.3.2
+        version: 25.3.2(typescript@5.8.3)
       react:
         specifier: 'catalog:'
         version: 18.3.1
       react-i18next:
         specifier: ^15.6.0
-        version: 15.6.0(i18next@25.3.1(typescript@5.8.3))(react@18.3.1)(typescript@5.8.3)
+        version: 15.6.0(i18next@25.3.2(typescript@5.8.3))(react@18.3.1)(typescript@5.8.3)
     devDependencies:
       '@types/react':
         specifier: 'catalog:'
@@ -1372,8 +1372,8 @@ packages:
     resolution: {integrity: sha512-B4FFZ6q/T2jhhksgkbEW3HBvWIfDW85snkQgawt07S7J5QXTk6BkNV+0yAeZrM5QpMAdYlocGoljn0sJ/WQkFw==}
     engines: {node: '>=10.17.0'}
 
-  i18next@25.3.1:
-    resolution: {integrity: sha512-S4CPAx8LfMOnURnnJa8jFWvur+UX/LWcl6+61p9VV7SK2m0445JeBJ6tLD0D5SR0H29G4PYfWkEhivKG5p4RDg==}
+  i18next@25.3.2:
+    resolution: {integrity: sha512-JSnbZDxRVbphc5jiptxr3o2zocy5dEqpVm9qCGdJwRNO+9saUJS0/u4LnM/13C23fUEWxAylPqKU/NpMV/IjqA==}
     peerDependencies:
       typescript: ^5
     peerDependenciesMeta:
@@ -3775,7 +3775,7 @@ snapshots:
 
   human-signals@2.1.0: {}
 
-  i18next@25.3.1(typescript@5.8.3):
+  i18next@25.3.2(typescript@5.8.3):
     dependencies:
       '@babel/runtime': 7.27.6
     optionalDependencies:
@@ -4215,11 +4215,11 @@ snapshots:
       minimist: 1.2.8
       strip-json-comments: 2.0.1
 
-  react-i18next@15.6.0(i18next@25.3.1(typescript@5.8.3))(react@18.3.1)(typescript@5.8.3):
+  react-i18next@15.6.0(i18next@25.3.2(typescript@5.8.3))(react@18.3.1)(typescript@5.8.3):
     dependencies:
       '@babel/runtime': 7.27.6
       html-parse-stringify: 3.0.1
-      i18next: 25.3.1(typescript@5.8.3)
+      i18next: 25.3.2(typescript@5.8.3)
       react: 18.3.1
     optionalDependencies:
       typescript: 5.8.3
