@@ -3,6 +3,8 @@
  * operations are asynchronous.
  *
  * See {@link makeErcType} for how to use
+ *
+ * @deprecated use Emp
  */
 export type AsyncErc<TName, TRepr = number> = {
     readonly type: TName;
@@ -55,6 +57,8 @@ export type AsyncErc<TName, TRepr = number> = {
  * Weak reference to an externally ref-counted object.
  *
  * See {@link makeErcType} for how to use
+ *
+ * @deprecated use Emp
  */
 export type AsyncErcRef<TName, TRepr = number> = {
     readonly type: TName;
@@ -74,11 +78,17 @@ export type AsyncErcRef<TName, TRepr = number> = {
     getStrong: () => Promise<AsyncErc<TName, TRepr>>;
 };
 
+/**
+ * @deprecated use Emp
+ */
 export type AsyncErcRefType<T> =
     T extends AsyncErc<infer TName, infer TRepr>
         ? AsyncErcRef<TName, TRepr>
         : never;
 
+/**
+ * @deprecated use Emp
+ */
 export type AsyncErcTypeConstructor<TName, TRepr> = {
     /**
      * A marker value for the underlying object type.
@@ -101,7 +111,9 @@ export type AsyncErcTypeConstructor<TName, TRepr> = {
     addRef: (value: TRepr) => Promise<TRepr> | TRepr;
 };
 
-/** See {@link makeErcType} */
+/**
+ * @deprecated use Emp
+ */
 export const makeAsyncErcType = <TName, TRepr>({
     marker,
     free,

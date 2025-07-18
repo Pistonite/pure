@@ -2,6 +2,7 @@
  * A holder for an externally ref-counted object.
  *
  * See {@link makeErcType} for how to use
+ * @deprecated use Emp
  */
 export type Erc<TName, TRepr = number> = {
     readonly type: TName;
@@ -54,6 +55,7 @@ export type Erc<TName, TRepr = number> = {
  * Weak reference to an externally ref-counted object.
  *
  * See {@link makeErcType} for how to use
+ * @deprecated use Emp
  */
 export type ErcRef<TName, TRepr = number> = {
     readonly type: TName;
@@ -73,9 +75,15 @@ export type ErcRef<TName, TRepr = number> = {
     getStrong: () => Erc<TName, TRepr>;
 };
 
+/**
+ * @deprecated use Emp
+ */
 export type ErcRefType<T> =
     T extends Erc<infer TName, infer TRepr> ? ErcRef<TName, TRepr> : never;
 
+/**
+ * @deprecated use Emp
+ */
 export type ErcTypeConstructor<TName, TRepr> = {
     /**
      * A marker value for the underlying object type.
@@ -241,6 +249,7 @@ export type ErcTypeConstructor<TName, TRepr> = {
  * myFoo1.assign(myFoo1.value); // this will free the value since ref count is 0, and result in a dangling pointer
  * ```
  *
+ * @deprecated use Emp
  */
 export const makeErcType = <TName, TRepr>({
     marker,

@@ -6,6 +6,8 @@ import Deque from "denque";
  * Only guaranteed if no one else has reference to the inner object
  *
  * It can take a second type parameter to specify interface with write methods
+ *
+ * @deprecated unstable API
  */
 export class RwLock<TRead, TWrite extends TRead = TRead> {
     /**
