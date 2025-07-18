@@ -30,6 +30,28 @@
  * };
  * ```
  *
+ * ## Display mode
+ * The `useDisplayMode` hook returns the current display mode, and subscribes to changes.
+ *
+ * You should make a custom typed export to make sure it's type safe.
+ *
+ * ```typescript
+ * import { useDisplayMode as pureUseDisplayMode } from "@pistonite/pure-react";
+ * export const useDisplayMode = pureUseDisplayMode<MyDisplayMode>;
+ * ```
+ *
+ * See documentation for pure for more examples.
+ *
+ * ```tsx
+ * import { useDisplayMode } from "@pistonite/pure-react";
+ *
+ * const MyComponent = () => {
+ *    const displayMode = useDisplayMode();
+ *
+ *    return <div>Current Locale is: {displayMode}</div>;
+ * };
+ * ```
+ *
  * @module
  */
 
@@ -38,8 +60,10 @@ import { useSyncExternalStore } from "react";
 import {
     addDarkSubscriber,
     addLocaleSubscriber,
+    addDisplayModeSubscriber,
     getLocale,
     isDark,
+    getDisplayMode,
 } from "@pistonite/pure/pref";
 
 /**
@@ -54,4 +78,11 @@ export const useDark = (): boolean => {
  */
 export const useLocale = (): string => {
     return useSyncExternalStore(addLocaleSubscriber, getLocale);
+};
+
+/**
+ * Hook to get the display mode
+ */
+export const useDisplayMode = <T extends string>(): T => {
+    return useSyncExternalStore(addDisplayModeSubscriber<T>, getDisplayMode<T>);
 };

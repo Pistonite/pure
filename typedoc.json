@@ -6,6 +6,7 @@
     "entryPointStrategy": "packages",
     "highlightLanguages": [
         "typescript",
+        "css",
         "rust",
         "bash"
     ],

@@ -10,3 +10,4 @@
 export * from "./dark.ts";
 export * from "./inject_style.ts";
 export * from "./locale.ts";
+export * from "./device.ts";
