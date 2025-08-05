@@ -82,15 +82,9 @@ export type DisplayModeOptions<T extends string> = {
  *
  * Use this only if the display mode needs to be detected programmatically.
  */
-export const initDisplayMode = <T extends string>(
-    options: DisplayModeOptions<T>,
-) => {
+export const initDisplayMode = <T extends string>(options: DisplayModeOptions<T>) => {
     const detectCallback = () => {
-        const mode = options.detect(
-            window.innerWidth,
-            window.innerHeight,
-            isMobile(),
-        );
+        const mode = options.detect(window.innerWidth, window.innerHeight, isMobile());
         displayMode.set(mode);
     };
     if (
@@ -115,10 +109,7 @@ export const addDisplayModeSubscriber = <T extends string>(
     subscriber: (mode: T) => void,
     notifyImmediately?: boolean,
 ) => {
-    return displayMode.subscribe(
-        subscriber as (x: string) => void,
-        notifyImmediately,
-    );
+    return displayMode.subscribe(subscriber as (x: string) => void, notifyImmediately);
 };
 
 /** Get the current display mode */

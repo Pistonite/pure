@@ -106,10 +106,7 @@ class PersistImpl<T> implements Persist<T> {
         this.cell.set(value);
     }
 
-    public subscribe(
-        callback: (value: T) => void,
-        notifyImmediately?: boolean,
-    ): () => void {
+    public subscribe(callback: (value: T) => void, notifyImmediately?: boolean): () => void {
         return this.cell.subscribe(callback, notifyImmediately);
     }
 

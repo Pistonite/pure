@@ -1,7 +1,8 @@
 {
     "devDependencies": {
-        "eslint": "^9.31.0",
+        "eslint": "^9.32.0",
         "serve": "^14.2.4",
-        "typedoc": "^0.28.7"
+        "typedoc": "^0.28.9",
+        "typescript": "=5.8.3"
     }
 }

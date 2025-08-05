@@ -119,143 +119,140 @@ describe.each`
     indirection | allocator
     ${"single"} | ${new Allocator(false)}
     ${"double"} | ${new Allocator(true)}
-`(
-    "Erc - $indirection indirection",
-    ({ allocator }: { allocator: Allocator }) => {
-        afterEach(() => {
-            allocator.cleanup();
-        });
+`("Erc - $indirection indirection", ({ allocator }: { allocator: Allocator }) => {
+    afterEach(() => {
+        allocator.cleanup();
+    });
 
-        it("allocate and deallocate correctly", () => {
-            const test = allocator.makeTestErc(allocator.allocValue("Hello"));
-            expect(allocator.getValue(test.value)).toBe("Hello");
-            test.free();
-            allocator.expectNoLeak();
-        });
+    it("allocate and deallocate correctly", () => {
+        const test = allocator.makeTestErc(allocator.allocValue("Hello"));
+        expect(allocator.getValue(test.value)).toBe("Hello");
+        test.free();
+        allocator.expectNoLeak();
+    });
 
-        it("frees if assigned new value", () => {
-            const test = allocator.makeTestErc(allocator.allocValue("Hello"));
-            test.assign(allocator.allocValue("World"));
-            expect(allocator.getValue(test.value)).toBe("World");
-            test.free();
-            allocator.expectNoLeak();
-        });
+    it("frees if assigned new value", () => {
+        const test = allocator.makeTestErc(allocator.allocValue("Hello"));
+        test.assign(allocator.allocValue("World"));
+        expect(allocator.getValue(test.value)).toBe("World");
+        test.free();
+        allocator.expectNoLeak();
+    });
 
-        it("does not free when taking value", () => {
-            const test = allocator.makeTestErc(allocator.allocValue("Hello"));
-            const raw = test.take();
-            expect(allocator.getValue(raw)).toBe("Hello");
-            expect(test.value).toBeUndefined();
-            if (raw === undefined) {
-                throw new Error("Raw value is undefined");
-            }
-            allocator.makeTestErc(raw).free();
-            allocator.expectNoLeak();
-        });
+    it("does not free when taking value", () => {
+        const test = allocator.makeTestErc(allocator.allocValue("Hello"));
+        const raw = test.take();
+        expect(allocator.getValue(raw)).toBe("Hello");
+        expect(test.value).toBeUndefined();
+        if (raw === undefined) {
+            throw new Error("Raw value is undefined");
+        }
+        allocator.makeTestErc(raw).free();
+        allocator.expectNoLeak();
+    });
 
-        it("invalidates weak references on free", () => {
-            const test = allocator.makeTestErc(allocator.allocValue("Hello"));
-            const testWeak = test.getWeak();
-            expect(allocator.getValue(testWeak.value)).toBe("Hello");
-            test.free();
-            expect(testWeak.value).toBeUndefined();
-            allocator.expectNoLeak();
-        });
+    it("invalidates weak references on free", () => {
+        const test = allocator.makeTestErc(allocator.allocValue("Hello"));
+        const testWeak = test.getWeak();
+        expect(allocator.getValue(testWeak.value)).toBe("Hello");
+        test.free();
+        expect(testWeak.value).toBeUndefined();
+        allocator.expectNoLeak();
+    });
 
-        it("invalidates weak references on assign", () => {
-            const test = allocator.makeTestErc(allocator.allocValue("Hello"));
-            const testWeak = test.getWeak();
-            expect(allocator.getValue(testWeak.value)).toBe("Hello");
-            test.assign(allocator.allocValue("World"));
-            expect(testWeak.value).toBeUndefined();
-            test.free();
-            allocator.expectNoLeak();
-        });
+    it("invalidates weak references on assign", () => {
+        const test = allocator.makeTestErc(allocator.allocValue("Hello"));
+        const testWeak = test.getWeak();
+        expect(allocator.getValue(testWeak.value)).toBe("Hello");
+        test.assign(allocator.allocValue("World"));
+        expect(testWeak.value).toBeUndefined();
+        test.free();
+        allocator.expectNoLeak();
+    });
 
-        it("handles assign and take of different references correctly", () => {
-            const test1 = allocator.makeTestErc(allocator.allocValue("Hello"));
-            const test2 = allocator.makeTestErc(allocator.allocValue("World"));
-            expect(allocator.getValue(test1.value)).toBe("Hello");
-            expect(allocator.getValue(test2.value)).toBe("World");
-            test1.assign(test2.take());
-            expect(allocator.getValue(test1.value)).toBe("World");
-            test1.free();
-            allocator.expectNoLeak();
-        });
+    it("handles assign and take of different references correctly", () => {
+        const test1 = allocator.makeTestErc(allocator.allocValue("Hello"));
+        const test2 = allocator.makeTestErc(allocator.allocValue("World"));
+        expect(allocator.getValue(test1.value)).toBe("Hello");
+        expect(allocator.getValue(test2.value)).toBe("World");
+        test1.assign(test2.take());
+        expect(allocator.getValue(test1.value)).toBe("World");
+        test1.free();
+        allocator.expectNoLeak();
+    });
 
-        it("handles assign and take of same references correctly", () => {
-            const test1 = allocator.makeTestErc(allocator.allocValue("Hello"));
-            const test2 = test1.getStrong();
-            test1.assign(test2.take());
-            expect(allocator.getValue(test1.value)).toBe("Hello");
-            test1.free();
-            test2.free(); // should be no-op
-            allocator.expectNoLeak();
-        });
+    it("handles assign and take of same references correctly", () => {
+        const test1 = allocator.makeTestErc(allocator.allocValue("Hello"));
+        const test2 = test1.getStrong();
+        test1.assign(test2.take());
+        expect(allocator.getValue(test1.value)).toBe("Hello");
+        test1.free();
+        test2.free(); // should be no-op
+        allocator.expectNoLeak();
+    });
 
-        it("assigning another Erc directly should cause double free", async () => {
-            const test1 = allocator.makeTestErc(allocator.allocValue("Hello"));
-            const test2 = test1.getStrong();
-            test1.assign(test2.value);
-            expect(allocator.getValue(test1.value)).toBe("Hello");
-            test1.free();
+    it("assigning another Erc directly should cause double free", async () => {
+        const test1 = allocator.makeTestErc(allocator.allocValue("Hello"));
+        const test2 = test1.getStrong();
+        test1.assign(test2.value);
+        expect(allocator.getValue(test1.value)).toBe("Hello");
+        test1.free();
 
-            const freeTest2 = async () => {
-                test2.free();
-            };
-            await expect(freeTest2).rejects.toThrow("Double free detected");
-            allocator.expectNoLeak();
-        });
-
-        it("handles assign and take of same references correctly (same Erc)", () => {
-            const test1 = allocator.makeTestErc(allocator.allocValue("Hello"));
-            test1.assign(test1.take());
-            expect(allocator.getValue(test1.value)).toBe("Hello");
-            test1.free();
-            allocator.expectNoLeak();
-        });
-
-        it("assigning another Erc directly should cause double free (same Erc)", async () => {
-            const test1 = allocator.makeTestErc(allocator.allocValue("Hello"));
-            test1.assign(test1.value);
-            const getTest1Value = async () => {
-                allocator.getValue(test1.value);
-            };
-            await expect(getTest1Value).rejects.toThrow("Dangling pointer");
-
-            const freeTest1 = async () => {
-                test1.free();
-            };
-            await expect(freeTest1).rejects.toThrow("Double free detected");
-            allocator.expectNoLeak();
-        });
-
-        it("inc ref count with strong reference", () => {
-            const test = allocator.makeTestErc(allocator.allocValue("Hello"));
-            const test2 = test.getStrong();
-            expect(allocator.getValue(test.value)).toBe("Hello");
-            expect(allocator.getValue(test2.value)).toBe("Hello");
-            test.free();
-            expect(allocator.getValue(test2.value)).toBe("Hello");
+        const freeTest2 = async () => {
             test2.free();
-            allocator.expectNoLeak();
-        });
+        };
+        await expect(freeTest2).rejects.toThrow("Double free detected");
+        allocator.expectNoLeak();
+    });
 
-        it("inc ref count with strong reference from weak reference", () => {
-            const test = allocator.makeTestErc(allocator.allocValue("Hello"));
-            const testWeak = test.getWeak();
-            expect(allocator.getValue(testWeak.value)).toBe("Hello");
-            const test2 = testWeak.getStrong();
-            expect(allocator.getValue(testWeak.value)).toBe("Hello");
-            expect(allocator.getValue(test2.value)).toBe("Hello");
-            const test2Weak = test2.getWeak();
-            test.free();
-            expect(testWeak.value).toBeUndefined();
-            expect(allocator.getValue(test2.value)).toBe("Hello");
-            expect(allocator.getValue(test2Weak.value)).toBe("Hello");
-            test2.free();
-            expect(test2Weak.value).toBeUndefined();
-            allocator.expectNoLeak();
-        });
-    },
-);
+    it("handles assign and take of same references correctly (same Erc)", () => {
+        const test1 = allocator.makeTestErc(allocator.allocValue("Hello"));
+        test1.assign(test1.take());
+        expect(allocator.getValue(test1.value)).toBe("Hello");
+        test1.free();
+        allocator.expectNoLeak();
+    });
+
+    it("assigning another Erc directly should cause double free (same Erc)", async () => {
+        const test1 = allocator.makeTestErc(allocator.allocValue("Hello"));
+        test1.assign(test1.value);
+        const getTest1Value = async () => {
+            allocator.getValue(test1.value);
+        };
+        await expect(getTest1Value).rejects.toThrow("Dangling pointer");
+
+        const freeTest1 = async () => {
+            test1.free();
+        };
+        await expect(freeTest1).rejects.toThrow("Double free detected");
+        allocator.expectNoLeak();
+    });
+
+    it("inc ref count with strong reference", () => {
+        const test = allocator.makeTestErc(allocator.allocValue("Hello"));
+        const test2 = test.getStrong();
+        expect(allocator.getValue(test.value)).toBe("Hello");
+        expect(allocator.getValue(test2.value)).toBe("Hello");
+        test.free();
+        expect(allocator.getValue(test2.value)).toBe("Hello");
+        test2.free();
+        allocator.expectNoLeak();
+    });
+
+    it("inc ref count with strong reference from weak reference", () => {
+        const test = allocator.makeTestErc(allocator.allocValue("Hello"));
+        const testWeak = test.getWeak();
+        expect(allocator.getValue(testWeak.value)).toBe("Hello");
+        const test2 = testWeak.getStrong();
+        expect(allocator.getValue(testWeak.value)).toBe("Hello");
+        expect(allocator.getValue(test2.value)).toBe("Hello");
+        const test2Weak = test2.getWeak();
+        test.free();
+        expect(testWeak.value).toBeUndefined();
+        expect(allocator.getValue(test2.value)).toBe("Hello");
+        expect(allocator.getValue(test2Weak.value)).toBe("Hello");
+        test2.free();
+        expect(test2Weak.value).toBeUndefined();
+        allocator.expectNoLeak();
+    });
+});

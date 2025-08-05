@@ -1,9 +1,4 @@
-import {
-    type AnyFn,
-    type AwaitRet,
-    makePromise,
-    type PromiseHandle,
-} from "./util.ts";
+import { type AnyFn, type AwaitRet, makePromise, type PromiseHandle } from "./util.ts";
 
 /**
  * An async event wrapper that always resolve to the result of the latest
@@ -112,12 +107,7 @@ export class LatestImpl<TFn extends AnyFn> {
         if (this.pending) {
             // pending means currentArgs is not undefined
             const currentArgs = this.currentArgs as Parameters<TFn>;
-            const nextArgs = this.updateArgs(
-                currentArgs,
-                this.middleArgs,
-                args,
-                this.nextArgs,
-            );
+            const nextArgs = this.updateArgs(currentArgs, this.middleArgs, args, this.nextArgs);
             if (this.areArgsEqual(nextArgs, currentArgs)) {
                 // do not schedule new call
                 this.nextArgs = undefined;

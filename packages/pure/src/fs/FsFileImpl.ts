@@ -97,9 +97,7 @@ class FsFileImpl implements FsFile {
             }
         }
         if (this.buffer === undefined) {
-            const err = fsFail(
-                "Read was successful, but content was undefined",
-            );
+            const err = fsFail("Read was successful, but content was undefined");
             return { err };
         }
         return { val: this.buffer };
@@ -155,9 +153,7 @@ class FsFileImpl implements FsFile {
         }
         this.lastModified = file.lastModified;
         // load the buffer
-        const buffer = await tryAsync(
-            async () => new Uint8Array(await file.arrayBuffer()),
-        );
+        const buffer = await tryAsync(async () => new Uint8Array(await file.arrayBuffer()));
         if ("err" in buffer) {
             const err = fsFail(errstr(buffer.err));
             return { err };
@@ -202,9 +198,7 @@ class FsFileImpl implements FsFile {
 
     private decodeBuffer() {
         try {
-            this.content = new TextDecoder("utf-8", { fatal: true }).decode(
-                this.buffer,
-            );
+            this.content = new TextDecoder("utf-8", { fatal: true }).decode(this.buffer);
             this.isText = true;
         } catch {
             this.content = undefined;

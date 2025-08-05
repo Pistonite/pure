@@ -108,10 +108,7 @@ export class FsFileStandaloneImplHandleAPI implements FsFileStandalone {
         const writable = await this.isWritable();
         if (!writable) {
             return {
-                err: fsErr(
-                    FsErr.NotSupported,
-                    "Permission was not granted or API not supported",
-                ),
+                err: fsErr(FsErr.NotSupported, "Permission was not granted or API not supported"),
             };
         }
         try {
@@ -131,10 +128,7 @@ export class FsFileStandaloneImplHandleAPI implements FsFileStandalone {
                 }
                 if (e.name === "NoMidificationAllowedError") {
                     return {
-                        err: fsErr(
-                            FsErr.PermissionDenied,
-                            "Failed to acquire write lock",
-                        ),
+                        err: fsErr(FsErr.PermissionDenied, "Failed to acquire write lock"),
                     };
                 }
                 if (e.name === "AbortError") {

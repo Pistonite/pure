@@ -81,12 +81,10 @@ describe("batch", () => {
     });
     test("unbatch", async () => {
         const fn = vi.fn();
-        const unbatch = vi.fn(
-            (inputs: [number][], output: number): number[] => {
-                // not actual meaningful unbatching
-                return [output / inputs.length, output / inputs.length];
-            },
-        );
+        const unbatch = vi.fn((inputs: [number][], output: number): number[] => {
+            // not actual meaningful unbatching
+            return [output / inputs.length, output / inputs.length];
+        });
         const execute = batch({
             fn: (x: number) => {
                 fn(x);

@@ -1,9 +1,4 @@
-import {
-    type AnyFn,
-    makePromise,
-    type PromiseHandle,
-    type AwaitRet,
-} from "./util.ts";
+import { type AnyFn, makePromise, type PromiseHandle, type AwaitRet } from "./util.ts";
 
 /**
  * An async event wrapper that allows multiple calls in an interval
@@ -99,13 +94,7 @@ export function batch<TFn extends AnyFn>({
     interval,
     disregardExecutionTime,
 }: BatchConstructor<TFn>) {
-    const impl = new BatchImpl(
-        fn,
-        batch,
-        unbatch,
-        interval,
-        !!disregardExecutionTime,
-    );
+    const impl = new BatchImpl(fn, batch, unbatch, interval, !!disregardExecutionTime);
     return (...args: Parameters<TFn>) => impl.invoke(...args);
 }
 
@@ -124,10 +113,7 @@ export type BatchConstructor<TFn extends AnyFn> = {
      *
      * By default, each input will receive the same output from the batched call
      */
-    unbatch?: (
-        inputs: Parameters<TFn>[],
-        output: AwaitRet<TFn>,
-    ) => AwaitRet<TFn>[];
+    unbatch?: (inputs: Parameters<TFn>[], output: AwaitRet<TFn>) => AwaitRet<TFn>[];
 
     /**
      * Interval between each batched call
@@ -148,10 +134,7 @@ class BatchImpl<TFn extends AnyFn> {
         private fn: TFn,
         private batch: (inputs: Parameters<TFn>[]) => Parameters<TFn>,
         private unbatch:
-            | ((
-                  input: Parameters<TFn>[],
-                  output: AwaitRet<TFn>,
-              ) => AwaitRet<TFn>[])
+            | ((input: Parameters<TFn>[], output: AwaitRet<TFn>) => AwaitRet<TFn>[])
             | undefined,
         private interval: number,
         private disregardExecutionTime: boolean,

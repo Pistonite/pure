@@ -82,9 +82,7 @@ export type AsyncErcRef<TName, TRepr = number> = {
  * @deprecated use Emp
  */
 export type AsyncErcRefType<T> =
-    T extends AsyncErc<infer TName, infer TRepr>
-        ? AsyncErcRef<TName, TRepr>
-        : never;
+    T extends AsyncErc<infer TName, infer TRepr> ? AsyncErcRef<TName, TRepr> : never;
 
 /**
  * @deprecated use Emp
@@ -121,12 +119,9 @@ export const makeAsyncErcType = <TName, TRepr>({
 }: AsyncErcTypeConstructor<TName, TRepr>): ((
     value: TRepr | undefined,
 ) => AsyncErc<TName, TRepr>) => {
-    const createStrongRef = (
-        value: TRepr | undefined,
-    ): AsyncErc<TName, TRepr> => {
-        let weakRef:
-            | (AsyncErcRef<TName, TRepr> & { invalidate: () => void })
-            | undefined = undefined;
+    const createStrongRef = (value: TRepr | undefined): AsyncErc<TName, TRepr> => {
+        let weakRef: (AsyncErcRef<TName, TRepr> & { invalidate: () => void }) | undefined =
+            undefined;
         const invalidateWeakRef = () => {
             if (!weakRef) {
                 return;

@@ -133,10 +133,7 @@ import type { AnyFn } from "./util.ts";
  * If the underlying function throws, the exception will be re-thrown to the caller.
  */
 
-export function serial<TFn extends AnyFn>({
-    fn,
-    onCancel,
-}: SerialConstructor<TFn>) {
+export function serial<TFn extends AnyFn>({ fn, onCancel }: SerialConstructor<TFn>) {
     const impl = new SerialImpl(fn, onCancel);
     return (...args: Parameters<TFn>) => impl.invoke(...args);
 }
@@ -162,10 +159,7 @@ class SerialImpl<TFn extends AnyFn> {
     private fn: SerialFnCreator<TFn>;
     private onCancel: SerialEventCancelCallback;
 
-    constructor(
-        fn: SerialFnCreator<TFn>,
-        onCancel?: SerialEventCancelCallback,
-    ) {
+    constructor(fn: SerialFnCreator<TFn>, onCancel?: SerialEventCancelCallback) {
         this.fn = fn;
         this.serial = 0n;
         if (onCancel) {
@@ -212,10 +206,7 @@ type SerialFnCreator<T> = (checkCancel: CheckCancelFn, serial: SerialId) => T;
  * The callback type passed to SerialEvent constructor to be called
  * when the event is cancelled
  */
-export type SerialEventCancelCallback = (
-    current: SerialId,
-    latest: SerialId,
-) => void;
+export type SerialEventCancelCallback = (current: SerialId, latest: SerialId) => void;
 
 /** The error type received by caller when an event is cancelled */
 export type SerialCancelToken = "cancel";

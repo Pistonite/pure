@@ -9,9 +9,7 @@ export const createBackend = (
     loaders: Record<string, LoadLanguageFn>,
     fallbackLocale: string,
 ): BackendModule => {
-    const hasNonDefaultNamespace = Object.keys(loaders).some(
-        (x) => x !== "translation",
-    );
+    const hasNonDefaultNamespace = Object.keys(loaders).some((x) => x !== "translation");
     const backend: BackendModule = {
         type: "backend",
         init: () => {
@@ -55,9 +53,7 @@ export const createBackend = (
             } catch (e) {
                 log.error(e);
             }
-            log.warn(
-                `failed to load ${namespace} for fallback locale ${fallbackLocale}`,
-            );
+            log.warn(`failed to load ${namespace} for fallback locale ${fallbackLocale}`);
             return undefined;
         },
     };
