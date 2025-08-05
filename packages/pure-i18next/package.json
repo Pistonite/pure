@@ -1,6 +1,6 @@
 {
     "name": "@pistonite/pure-i18next",
-    "version": "0.4.8",
+    "version": "0.4.9",
     "type": "module",
     "description": "I18next binding for pure library",
     "homepage": "https://github.com/Pistonite/pure",
@@ -23,7 +23,7 @@
     "dependencies": {
         "@pistonite/pure": "workspace:*",
         "i18next": "^25.3.2",
-        "react-i18next": "^15.6.0"
+        "react-i18next": "^15.6.1"
     },
     "peerDependencies": {
         "react": "catalog:"
