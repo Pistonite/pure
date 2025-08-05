@@ -1,9 +1,4 @@
-import {
-    type AnyFn,
-    type AwaitRet,
-    makePromise,
-    type PromiseHandle,
-} from "./util.ts";
+import { type AnyFn, type AwaitRet, makePromise, type PromiseHandle } from "./util.ts";
 
 /**
  * An async event wrapper that is guaranteed to:

@@ -17,10 +17,8 @@ export const initLocaleWithI18next = async <TLocale extends string>(
     const defaultLocale = options.default;
     let instance = i18next;
     const syncMode = options.sync || "full";
-    const syncPureToI18next =
-        syncMode === "full" || syncMode === "pure-i18next";
-    const syncI18nextToPure =
-        syncMode === "full" || syncMode === "i18next-pure";
+    const syncPureToI18next = syncMode === "full" || syncMode === "pure-i18next";
+    const syncI18nextToPure = syncMode === "full" || syncMode === "i18next-pure";
 
     if (syncPureToI18next) {
         const onBeforeChangeOriginal = options.onBeforeChange;

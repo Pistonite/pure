@@ -68,10 +68,7 @@ export const logger = (name: string, color?: string): LoggerFactory => {
 };
 
 /** Create a {@link ResettableLogger} that can be easily reconfigured */
-export const resettableLogger = (
-    name: string,
-    color?: string,
-): ResettableLogger => {
+export const resettableLogger = (name: string, color?: string): ResettableLogger => {
     const logger = new LoggerImpl(name, color, LogLevel.High);
     return {
         logger,
@@ -121,8 +118,7 @@ export class LoggerImpl implements Logger {
 
     constructor(name: string, color: string | undefined, level: LogLevel) {
         this.name = name;
-        this.color =
-            "padding:0 3x;color:white" + (color ? `;background:${color}` : "");
+        this.color = "padding:0 3x;color:white" + (color ? `;background:${color}` : "");
         this.level = level;
     }
 

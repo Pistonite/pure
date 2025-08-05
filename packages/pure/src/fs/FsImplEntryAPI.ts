@@ -1,20 +1,14 @@
 import { type Ok, tryAsync, errstr } from "../result/index.ts";
 
 import { FsErr, type FsResult, type FsVoid, fsErr, fsFail } from "./FsError.ts";
-import type {
-    FsFileSystem,
-    FsFileSystemUninit,
-    FsCapabilities,
-} from "./FsFileSystem.ts";
+import type { FsFileSystem, FsFileSystemUninit, FsCapabilities } from "./FsFileSystem.ts";
 import type { FsFile } from "./FsFile.ts";
 import { fsIsRoot, fsNormalize } from "./FsPath.ts";
 import { FsFileMgr } from "./FsFileMgr.ts";
 import type { FsFileSystemInternal } from "./FsFileSystemInternal.ts";
 
 /** FsFileSystem implementation that uses FileEntry API */
-export class FsImplEntryAPI
-    implements FsFileSystemUninit, FsFileSystem, FsFileSystemInternal
-{
+export class FsImplEntryAPI implements FsFileSystemUninit, FsFileSystem, FsFileSystemInternal {
     public root: string;
     public capabilities: FsCapabilities;
 
@@ -53,12 +47,7 @@ export class FsImplEntryAPI
                 }),
         );
         if ("err" in entries) {
-            const err = fsFail(
-                "Failed to list directory `" +
-                    path +
-                    "`: " +
-                    errstr(entries.err),
-            );
+            const err = fsFail("Failed to list directory `" + path + "`: " + errstr(entries.err));
             return { err };
         }
 
@@ -91,9 +80,7 @@ export class FsImplEntryAPI
                 }),
         );
         if ("err" in file) {
-            const err = fsFail(
-                "Failed to read file `" + path + "`: " + errstr(file.err),
-            );
+            const err = fsFail("Failed to read file `" + path + "`: " + errstr(file.err));
             return { err };
         }
 
@@ -101,10 +88,7 @@ export class FsImplEntryAPI
     }
 
     public write(): Promise<FsVoid> {
-        const err = fsErr(
-            FsErr.NotSupported,
-            "Write not supported in FileEntry API",
-        );
+        const err = fsErr(FsErr.NotSupported, "Write not supported in FileEntry API");
         return Promise.resolve({ err });
     }
 
@@ -119,9 +103,7 @@ export class FsImplEntryAPI
     }
 
     /** Resolve a directory entry. Path must be normalized */
-    private async resolveDir(
-        path: string,
-    ): Promise<FsResult<FileSystemDirectoryEntry>> {
+    private async resolveDir(path: string): Promise<FsResult<FileSystemDirectoryEntry>> {
         if (fsIsRoot(path)) {
             return { val: this.rootEntry };
         }
@@ -132,33 +114,20 @@ export class FsImplEntryAPI
                 }),
         );
         if ("err" in entry) {
-            const err = fsFail(
-                "Failed to resolve directory `" +
-                    path +
-                    "`: " +
-                    errstr(entry.err),
-            );
+            const err = fsFail("Failed to resolve directory `" + path + "`: " + errstr(entry.err));
             return { err };
         }
         if (!entry.val.isDirectory) {
-            const err = fsErr(
-                FsErr.IsFile,
-                "Path `" + path + "` is not a directory",
-            );
+            const err = fsErr(FsErr.IsFile, "Path `" + path + "` is not a directory");
             return { err };
         }
         return entry as Ok<FileSystemDirectoryEntry>;
     }
 
     /** Resolve a file entry. Path must be normalized */
-    private async resolveFile(
-        path: string,
-    ): Promise<FsResult<FileSystemFileEntry>> {
+    private async resolveFile(path: string): Promise<FsResult<FileSystemFileEntry>> {
         if (fsIsRoot(path)) {
-            const err = fsErr(
-                FsErr.IsDirectory,
-                "Path `" + path + "` is not a file",
-            );
+            const err = fsErr(FsErr.IsDirectory, "Path `" + path + "` is not a file");
             return { err };
         }
         const entry = await tryAsync(
@@ -168,16 +137,11 @@ export class FsImplEntryAPI
                 }),
         );
         if ("err" in entry) {
-            const err = fsFail(
-                "Failed to resolve file `" + path + "`: " + errstr(entry.err),
-            );
+            const err = fsFail("Failed to resolve file `" + path + "`: " + errstr(entry.err));
             return { err };
         }
         if (!entry.val.isFile) {
-            const err = fsErr(
-                FsErr.IsDirectory,
-                "Path `" + path + "` is not a file",
-            );
+            const err = fsErr(FsErr.IsDirectory, "Path `" + path + "` is not a file");
             return { err };
         }
         return entry as Ok<FileSystemFileEntry>;

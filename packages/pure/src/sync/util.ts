@@ -26,9 +26,7 @@ export type PromiseHandle<T> = {
 
 /** Shorthand for Awaited<ReturnType<T>> */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type AwaitRet<T> = T extends (...args: any[]) => infer R
-    ? Awaited<R>
-    : never;
+export type AwaitRet<T> = T extends (...args: any[]) => infer R ? Awaited<R> : never;
 
 /** Type for any function */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

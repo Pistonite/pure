@@ -71,11 +71,7 @@ function isFileEntrySupported(): boolean {
     // Chrome/Edge has this but it's named DirectoryEntry
     // AND, they don't work (I forgot how exactly they don't work)
 
-    if (
-        navigator &&
-        navigator.userAgent &&
-        navigator.userAgent.includes("Chrome")
-    ) {
+    if (navigator && navigator.userAgent && navigator.userAgent.includes("Chrome")) {
         return false;
     }
 

@@ -14,10 +14,7 @@ export type CellConstructor<T> = {
 export type Cell<T> = {
     get(): T;
     set(value: T): void;
-    subscribe(
-        callback: (value: T) => void,
-        notifyImmediately?: boolean,
-    ): () => void;
+    subscribe(callback: (value: T) => void, notifyImmediately?: boolean): () => void;
 };
 
 class CellImpl<T> implements Cell<T> {
@@ -41,10 +38,7 @@ class CellImpl<T> implements Cell<T> {
         }
     }
 
-    public subscribe(
-        callback: (value: T) => void,
-        notifyImmediately?: boolean,
-    ): () => void {
+    public subscribe(callback: (value: T) => void, notifyImmediately?: boolean): () => void {
         this.subscribers.push(callback);
         const unsubscribe = () => {
             const index = this.subscribers.indexOf(callback);

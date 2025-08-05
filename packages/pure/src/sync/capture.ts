@@ -4,10 +4,7 @@ const captured = new Set<unknown>();
  * Execute an async closure `fn`, and guarantee that `obj` will not be
  * garbage-collected, until the promise is resolved.
  */
-export const scopedCapture = async <T>(
-    fn: () => Promise<T>,
-    obj: unknown,
-): Promise<T> => {
+export const scopedCapture = async <T>(fn: () => Promise<T>, obj: unknown): Promise<T> => {
     // captures the object
     // technically, this is not needed, as the delete() call above
     // should make sure the captured object is not GC'ed.

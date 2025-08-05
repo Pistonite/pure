@@ -1,11 +1,7 @@
 import { ilog } from "../log/internal.ts";
 
 import type { FsFile } from "./FsFile.ts";
-import type {
-    FsFileSystem,
-    FsFileSystemUninit,
-    FsCapabilities,
-} from "./FsFileSystem.ts";
+import type { FsFileSystem, FsFileSystemUninit, FsCapabilities } from "./FsFileSystem.ts";
 import { FsErr, type FsResult, type FsVoid, fsErr } from "./FsError.ts";
 import { fsIsRoot, fsNormalize } from "./FsPath.ts";
 import { FsFileMgr } from "./FsFileMgr.ts";
@@ -17,9 +13,7 @@ import type { FsFileSystemInternal } from "./FsFileSystemInternal.ts";
  * It's used for Firefox when the File Entries API is not available
  * i.e. opened from <input type="file">
  */
-export class FsImplFileAPI
-    implements FsFileSystemUninit, FsFileSystem, FsFileSystemInternal
-{
+export class FsImplFileAPI implements FsFileSystemUninit, FsFileSystem, FsFileSystemInternal {
     public root: string;
     public capabilities: FsCapabilities;
 
@@ -106,10 +100,7 @@ export class FsImplFileAPI
     }
 
     public write(): Promise<FsVoid> {
-        const err = fsErr(
-            FsErr.NotSupported,
-            "Write not supported in File API",
-        );
+        const err = fsErr(FsErr.NotSupported, "Write not supported in File API");
         return Promise.resolve({ err });
     }
 

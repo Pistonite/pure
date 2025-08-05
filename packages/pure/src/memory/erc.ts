@@ -78,8 +78,7 @@ export type ErcRef<TName, TRepr = number> = {
 /**
  * @deprecated use Emp
  */
-export type ErcRefType<T> =
-    T extends Erc<infer TName, infer TRepr> ? ErcRef<TName, TRepr> : never;
+export type ErcRefType<T> = T extends Erc<infer TName, infer TRepr> ? ErcRef<TName, TRepr> : never;
 
 /**
  * @deprecated use Emp
@@ -255,13 +254,9 @@ export const makeErcType = <TName, TRepr>({
     marker,
     free,
     addRef,
-}: ErcTypeConstructor<TName, TRepr>): ((
-    value: TRepr | undefined,
-) => Erc<TName, TRepr>) => {
+}: ErcTypeConstructor<TName, TRepr>): ((value: TRepr | undefined) => Erc<TName, TRepr>) => {
     const createStrongRef = (value: TRepr | undefined): Erc<TName, TRepr> => {
-        let weakRef:
-            | (ErcRef<TName, TRepr> & { invalidate: () => void })
-            | undefined = undefined;
+        let weakRef: (ErcRef<TName, TRepr> & { invalidate: () => void }) | undefined = undefined;
         const invalidateWeakRef = () => {
             if (!weakRef) {
                 return;

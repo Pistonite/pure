@@ -5,9 +5,7 @@ import { serial } from "../sync/serial.ts";
 let supportedLocales: readonly string[] = [];
 let defaultLocale: string = "";
 let settingLocale: string = ""; // if locale is being set (setLocale called)
-let onBeforeChangeHook: (
-    newLocale: string,
-) => Promise<Result<void, "cancel">> = () => {
+let onBeforeChangeHook: (newLocale: string) => Promise<Result<void, "cancel">> = () => {
     return Promise.resolve({} as Result<void, "cancel">);
 };
 const locale = persist<string>({
@@ -81,10 +79,7 @@ export type LocaleOptions<TLocale extends string> = {
      *
      * Note that this hook will not be called during initialization.
      */
-    onBeforeChange?: (
-        newLocale: string,
-        checkCancel: () => void,
-    ) => void | Promise<void>;
+    onBeforeChange?: (newLocale: string, checkCancel: () => void) => void | Promise<void>;
 };
 
 /**
@@ -118,9 +113,7 @@ export type LocaleOptions<TLocale extends string> = {
  * Changing the locale from React components is the same as from outside React,
  * with `setLocale` or `i18next.changeLanguage`, depending on your setup.
  */
-export const initLocale = <TLocale extends string>(
-    options: LocaleOptions<TLocale>,
-): void => {
+export const initLocale = <TLocale extends string>(options: LocaleOptions<TLocale>): void => {
     if (options.onBeforeChange) {
         const onBeforeChange = options.onBeforeChange;
         onBeforeChangeHook = serial({
@@ -135,8 +128,7 @@ export const initLocale = <TLocale extends string>(
     if (options.initial) {
         _locale = options.initial;
     } else {
-        _locale =
-            convertToSupportedLocale(getPreferredLocale()) || options.default;
+        _locale = convertToSupportedLocale(getPreferredLocale()) || options.default;
     }
     defaultLocale = options.default;
     if (options.persist) {
@@ -221,9 +213,7 @@ export const setLocale = (newLocale: string): boolean => {
  * console.log(convertToSupportedLocale("es"));    // undefined
  * ```
  */
-export const convertToSupportedLocale = (
-    newLocale: string,
-): string | undefined => {
+export const convertToSupportedLocale = (newLocale: string): string | undefined => {
     return convertToSupportedLocaleIn(newLocale, supportedLocales);
 };
 
@@ -257,9 +247,7 @@ export const convertToSupportedLocaleIn = (
  * This is a thin wrapper for `convertToSupportedLocale`.
  * See that function for more details.
  */
-export const convertToSupportedLocaleOrDefault = (
-    newLocale: string,
-): string => {
+export const convertToSupportedLocaleOrDefault = (newLocale: string): string => {
     return convertToSupportedLocale(newLocale) || defaultLocale;
 };
 

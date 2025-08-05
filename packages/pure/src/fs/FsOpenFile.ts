@@ -52,10 +52,7 @@ const fsOpenFileInternal = async (
     options: FsFileOpenOptions,
 ): Promise<FsResult<FsFileStandalone[]>> => {
     if (isFileSystemAccessAPISupportedForStandaloneFileOpen()) {
-        const result = await fsOpenFileWithFileSystemAccessAPI(
-            multiple,
-            options,
-        );
+        const result = await fsOpenFileWithFileSystemAccessAPI(multiple, options);
         if (result.val || result.err.code === FsErr.UserAbort) {
             return result;
         }
@@ -116,9 +113,7 @@ const fsOpenFileWithFileAPI = async (
                 }
                 const array = [];
                 for (let i = 0; i < element.files.length; i++) {
-                    array.push(
-                        new FsFileStandaloneImplFileAPI(element.files[i]),
-                    );
+                    array.push(new FsFileStandaloneImplFileAPI(element.files[i]));
                 }
                 resolve({ val: array });
             });

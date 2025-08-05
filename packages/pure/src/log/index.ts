@@ -8,8 +8,4 @@ export {
     resettableLogger,
     type ResettableLogger,
 } from "./logger.ts";
-export {
-    internalLogOff,
-    internalLogDebug,
-    internalLogInfo,
-} from "./internal.ts";
+export { internalLogOff, internalLogDebug, internalLogInfo } from "./internal.ts";

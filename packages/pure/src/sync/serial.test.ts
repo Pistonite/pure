@@ -5,8 +5,7 @@ import type { Result } from "../result/index.ts";
 
 test("example", async () => {
     // helper function to simulate async work
-    const wait = (ms: number) =>
-        new Promise((resolve) => setTimeout(resolve, ms));
+    const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
     // Create the wrapped function
     const doWork = serial({
         fn: (checkCancel) => async () => {

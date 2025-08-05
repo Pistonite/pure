@@ -32,11 +32,7 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-type SaveAsFn = (
-    data: Blob | string,
-    filename?: string,
-    options?: SaveAsFnOptions,
-) => void;
+type SaveAsFn = (data: Blob | string, filename?: string, options?: SaveAsFnOptions) => void;
 type SaveAsFnOptions = { autoBom: boolean };
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -184,8 +180,7 @@ const saveAs: SaveAsFn = (blob, name?, opts?) => {
     const force = blob.type === "application/octet-stream";
     // adoption note: add any
     const isSafari =
-        /constructor/i.test((globalThis as any).HTMLElement) ||
-        (globalThis as any).safari;
+        /constructor/i.test((globalThis as any).HTMLElement) || (globalThis as any).safari;
     const isChromeIOS = /CriOS\/[\d]+/.test(navigator.userAgent);
 
     if (
@@ -196,9 +191,7 @@ const saveAs: SaveAsFn = (blob, name?, opts?) => {
         const reader = new FileReader();
         reader.onloadend = function () {
             let url = reader.result as string;
-            url = isChromeIOS
-                ? url
-                : url.replace(/^data:[^;]*;/, "data:attachment/file;");
+            url = isChromeIOS ? url : url.replace(/^data:[^;]*;/, "data:attachment/file;");
             if (popup) {
                 popup.location.href = url;
             } else {

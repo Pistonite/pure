@@ -186,9 +186,7 @@ export function tryCatch<T, E = unknown>(fn: () => T): Result<T, E> {
 }
 
 /** Wrap an async function with try-catch and return a Promise<Result>. */
-export async function tryAsync<T, E = unknown>(
-    fn: () => Promise<T>,
-): Promise<Result<T, E>> {
+export async function tryAsync<T, E = unknown>(fn: () => Promise<T>): Promise<Result<T, E>> {
     try {
         return { val: await fn() };
     } catch (e) {
