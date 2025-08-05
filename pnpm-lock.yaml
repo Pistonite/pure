@@ -25,7 +25,10 @@ importers:
         version: 14.2.4
       typedoc:
         specifier: ^0.28.9
-        version: 0.28.9(typescript@5.9.2)
+        version: 0.28.9(typescript@5.8.3)
+      typescript:
+        specifier: '=5.8.3'
+        version: 5.8.3
 
   packages/mono-dev:
     dependencies:
@@ -4645,13 +4648,13 @@ snapshots:
       possible-typed-array-names: 1.1.0
       reflect.getprototypeof: 1.0.10
 
-  typedoc@0.28.9(typescript@5.9.2):
+  typedoc@0.28.9(typescript@5.8.3):
     dependencies:
       '@gerrit0/mini-shiki': 3.9.2
       lunr: 2.3.9
       markdown-it: 14.1.0
       minimatch: 9.0.5
-      typescript: 5.9.2
+      typescript: 5.8.3
       yaml: 2.8.0
 
   typescript-eslint@8.39.0(eslint@9.32.0)(typescript@5.8.3):
@@ -4667,7 +4670,8 @@ snapshots:
 
   typescript@5.8.3: {}
 
-  typescript@5.9.2: {}
+  typescript@5.9.2:
+    optional: true
 
   uc.micro@2.1.0: {}
 
