@@ -104,7 +104,7 @@ export class FsFileStandaloneImplHandleAPI implements FsFileStandalone {
             return { err: fsFail(errstr(e)) };
         }
     }
-    public async write(content: Uint8Array | string): Promise<FsVoid> {
+    public async write(content: Uint8Array<ArrayBuffer> | string): Promise<FsVoid> {
         const writable = await this.isWritable();
         if (!writable) {
             return {
