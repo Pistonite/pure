@@ -21,7 +21,7 @@ export interface FsFileSystemInternal {
      * Returns NotSupported if the browser does not support this
      * Returns PermissionDenied if the operation is supported, but permission is not given
      */
-    write: (path: string, content: Uint8Array) => Promise<FsVoid>;
+    write: (path: string, content: Uint8Array<ArrayBuffer>) => Promise<FsVoid>;
 
     /**
      * Forget about a file

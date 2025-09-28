@@ -33,7 +33,7 @@ export interface FsFile {
      * Set the content in memory. Does not save to disk.
      * Does nothing if file is closed
      */
-    setBytes(content: Uint8Array): void;
+    setBytes(content: Uint8Array<ArrayBuffer>): void;
 
     /**
      * Load the file's content if it's not newer than fs

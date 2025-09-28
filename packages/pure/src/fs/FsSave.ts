@@ -3,7 +3,7 @@ import { ilog } from "../log/internal.ts";
 import { fsFail, type FsVoid } from "./FsError.ts";
 
 /** Save (download) a file using Blob */
-export function fsSave(content: string | Uint8Array, filename: string): FsVoid {
+export function fsSave(content: string | Uint8Array<ArrayBuffer>, filename: string): FsVoid {
     const blob = new Blob([content], {
         // maybe lying, but should be fine
         type: "text/plain;charset=utf-8",

@@ -24,7 +24,7 @@ class FsFileImpl implements FsFile {
     /** If the file is text */
     private isText: boolean;
     /** Bytes of the file */
-    private buffer: Uint8Array | undefined;
+    private buffer: Uint8Array<ArrayBuffer> | undefined;
     /** If the content in the buffer is different from the content on FS */
     private isBufferDirty: boolean;
     /** The content string of the file */
@@ -115,7 +115,7 @@ class FsFileImpl implements FsFile {
         this.lastModified = new Date().getTime();
     }
 
-    public setBytes(content: Uint8Array): void {
+    public setBytes(content: Uint8Array<ArrayBuffer>): void {
         if (this.closed) {
             return;
         }

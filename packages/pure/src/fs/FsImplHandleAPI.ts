@@ -103,7 +103,7 @@ export class FsImplHandleAPI implements FsFileSystemUninit, FsFileSystem, FsFile
         return file;
     }
 
-    public async write(path: string, content: Uint8Array): Promise<FsVoid> {
+    public async write(path: string, content: Uint8Array<ArrayBuffer>): Promise<FsVoid> {
         if (!this.writeMode) {
             const err = fsErr(FsErr.PermissionDenied, "Write mode not requested");
             return { err };
