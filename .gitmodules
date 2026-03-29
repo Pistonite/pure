@@ -1,4 +1,0 @@
-[submodule "mono-dev"]
-	path = packages/mono-dev
-	url = https://github.com/Pistonight/mono-dev
-	branch = main
