@@ -19,12 +19,6 @@ importers:
         specifier: link:./mono-dev
         version: link:mono-dev
 
-  packages/pure: {}
-
-  packages/pure-i18next: {}
-
-  packages/pure-react: {}
-
 packages:
 
   '@eslint-community/eslint-utils@4.9.1':
