@@ -1,4 +1,6 @@
 /**
+ * Rust-like `Result<T, E>` type and error handling utils
+ *
  * **I once had a fancy error object with TypeScript magic that tries
  * to reduce allocation while maintaining Result-safety. It turns out
  * that was slower than allocating plain objects for every return, because
@@ -177,7 +179,7 @@ export type Void<E> = { val?: never; err?: never } | { err: E };
 export type VoidOk = Record<string, never>;
 
 /** Wrap a function with try-catch and return a Result. */
-export function tryCatch<T, E = unknown>(fn: () => T): Result<T, E> {
+export function tryCatch<T, E = Error>(fn: () => T): Result<T, E> {
     try {
         return { val: fn() };
     } catch (e) {
@@ -186,7 +188,7 @@ export function tryCatch<T, E = unknown>(fn: () => T): Result<T, E> {
 }
 
 /** Wrap an async function with try-catch and return a Promise<Result>. */
-export async function tryAsync<T, E = unknown>(fn: () => Promise<T>): Promise<Result<T, E>> {
+export async function tryAsync<T, E = Error>(fn: () => Promise<T>): Promise<Result<T, E>> {
     try {
         return { val: await fn() };
     } catch (e) {

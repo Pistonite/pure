@@ -1,6 +1,5 @@
 /**
- * # pure/sync
- * JS synchronization utilities
+ * Synchronization utilities
  *
  * @module
  */

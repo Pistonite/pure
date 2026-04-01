@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, test, vi } from "mono-dev/vitest";
 
 import { debounce } from "./debounce.ts";
 

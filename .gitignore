@@ -2,4 +2,9 @@ node_modules
 package-lock.json
 /docs
 .eslintcache
+.prettierignore
+eslint.config.js
+tsconfig*.json
+/mono-dev
+/dist
 

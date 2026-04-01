@@ -1,4 +1,4 @@
-import { test, expect, expectTypeOf, vi } from "vitest";
+import { test, expect, expectTypeOf, vi } from "mono-dev/vitest";
 
 import { serial, type SerialCancelToken } from "./serial.ts";
 import type { Result } from "../result/index.ts";

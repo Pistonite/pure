@@ -1,4 +1,4 @@
-import { expect, test } from "vitest";
+import { expect, test } from "mono-dev/vitest";
 
 import { once } from "./once.ts";
 

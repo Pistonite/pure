@@ -1,6 +1,0 @@
-packages:
-  - packages/*
-
-catalog:
-  "@types/react": ^18.3.12
-  react: ^18
