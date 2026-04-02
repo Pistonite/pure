@@ -1,7 +1,16 @@
 import { type AnyFn, makePromise, type PromiseHandle, type AwaitRet } from "./util.ts";
 
+/** Factory for batched function. See {@link BatchConstructor} for usage. */
+export function batch<TFn extends AnyFn>(args: BatchConstructor<TFn>) {
+    const { fn, batch, unbatch, interval, disregardExecutionTime } = args;
+    const impl = new BatchImpl(fn, batch, unbatch, interval, !!disregardExecutionTime);
+    return (...args: Parameters<TFn>) => impl.invoke(...args);
+}
+
 /**
- * An async event wrapper that allows multiple calls in an interval
+ * Options to construct a `batch` function
+ *
+ * A batch function is an async event wrapper that allows multiple calls in an interval
  * to be batched together, and only call the underlying function once.
  *
  * Optionally, the output can be unbatched to match the inputs.
@@ -87,21 +96,7 @@ import { type AnyFn, makePromise, type PromiseHandle, type AwaitRet } from "./ut
  * ```
  *
  */
-export function batch<TFn extends AnyFn>({
-    fn,
-    batch,
-    unbatch,
-    interval,
-    disregardExecutionTime,
-}: BatchConstructor<TFn>) {
-    const impl = new BatchImpl(fn, batch, unbatch, interval, !!disregardExecutionTime);
-    return (...args: Parameters<TFn>) => impl.invoke(...args);
-}
-
-/**
- * Options to construct a  `batch` function
- */
-export type BatchConstructor<TFn extends AnyFn> = {
+export interface BatchConstructor<TFn extends AnyFn> {
     /** Function to be wrapped */
     fn: TFn;
     /** Function to batch the inputs across multiple calls */
@@ -122,7 +117,7 @@ export type BatchConstructor<TFn extends AnyFn> = {
 
     /** See `debounce` for more information */
     disregardExecutionTime?: boolean;
-};
+}
 
 class BatchImpl<TFn extends AnyFn> {
     private idle: boolean;

@@ -1,7 +1,17 @@
 import { type AnyFn, type AwaitRet, makePromise } from "./util.ts";
 
 /**
- * An async event wrapper that ensures an async initialization is only ran once.
+ * Factory function for `once`. See {@link OnceConstructor} for usage
+ */
+export function once<TFn extends AnyFn>(args: OnceConstructor<TFn>) {
+    const impl = new OnceImpl(args.fn);
+    return (...args: Parameters<TFn>) => impl.invoke(...args);
+}
+
+/**
+ * Args for constructing a `once`
+ *
+ * `once` is an async event wrapper that ensures an async initialization is only ran once.
  * Any subsequent calls after the first call will return a promise that resolves/rejects
  * with the result of the first call.
  *
@@ -66,15 +76,10 @@ import { type AnyFn, type AwaitRet, makePromise } from "./util.ts";
  * This is not an issue if the resource doesn't leak other resources,
  * since it will eventually be GC'd.
  */
-export function once<TFn extends AnyFn>({ fn }: OnceConstructor<TFn>) {
-    const impl = new OnceImpl(fn);
-    return (...args: Parameters<TFn>) => impl.invoke(...args);
-}
-
-export type OnceConstructor<TFn> = {
+export interface OnceConstructor<TFn> {
     /** Function to be called only once */
     fn: TFn;
-};
+}
 
 export class OnceImpl<TFn extends AnyFn> {
     private promise: Promise<AwaitRet<TFn>> | undefined;

@@ -2,20 +2,28 @@
  * Client side log util
  *
  * This is rather simple logging stuff with the primary focus
- * being easy to debug.
+ * being easy-to-debug, instead of optimized for bundle size or performance.
  *
- * Use {@link logger} to create a logger with a name and a color,
- * then use one of the {@link LoggerFactory} methods to setup the logging level.
+ * Because this library doesn't have global states, there is no "global" logger
+ * or any global logger settings. Instead, each library or component of the
+ * application can create their own instance of the logger, which stores
+ * settings like the name, color and level of that logger.
  *
- * There are 3 levels of logging:
- * 1. (Default) Warnings and Errors only
- * 2. Also log info messages
- * 3. Also log debug messages.
+ * ```typescript
+ * import { logger } from "@pistonite/pure";
  *
- * Each logger can turn on info and debug logging separately, or it can
- * be turned on at the global level for debugging.
+ * export const myLogger = logger("my-library", {
+ *     color: "#ff8800", // any CSS color (note that styling only works in browser)
+ * });
+ * ```
  *
- * You can also turn off each logger individually or at global level for debugging.
+ * It's recommended that a library exports the logger object
+ * so downstream app can modify the logging level if needed for debugging.
+ * ```typescript
+ * import { myLogger } from "my-library";
+ *
+ * myLogger.setLevel("debug");
+ * ```
  *
  * Due to the nature of JS, all logging calls, even when turned off, will incur
  * some small runtime overhead. While we could remove debug calls
@@ -25,14 +33,4 @@
  *
  * @module
  */
-export {
-    globalLogOff,
-    globalLogInfo,
-    globalLogDebug,
-    logger,
-    type LoggerFactory,
-    type Logger,
-    resettableLogger,
-    type ResettableLogger,
-} from "./logger.ts";
-export { internalLogOff, internalLogDebug, internalLogInfo } from "./internal.ts";
+export { type LogLevelStr, type LoggerConstructor, type Logger, logger } from "./logger.ts";

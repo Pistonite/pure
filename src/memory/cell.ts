@@ -1,21 +1,31 @@
-/**
- * Create a light weight storage wrapper around a value
- * that can be subscribed to for changes
- */
-export function cell<T>({ initial }: CellConstructor<T>): Cell<T> {
-    return new CellImpl(initial);
-}
-
-export type CellConstructor<T> = {
-    /** Initial value */
-    initial: T;
+/** Create a {@link Cell} */
+export const cell = <T>(args: CellConstructor<T>): Cell<T> => {
+    return new CellImpl(args.initial);
 };
 
-export type Cell<T> = {
+/** Args for constructing a cell */
+export interface CellConstructor<T> {
+    /** Initial value */
+    initial: T;
+}
+
+/**
+ * A light weight storage wrapper around a value
+ * that can be subscribed to for changes
+ *
+ * Created via `cell()`
+ *
+ * ```typescript
+ * import { cell } from "@pistonite/pure/memory";
+ *
+ * const myCell = cell(true);
+ * ```
+ */
+export interface Cell<T> {
     get(): T;
     set(value: T): void;
     subscribe(callback: (value: T) => void, notifyImmediately?: boolean): () => void;
-};
+}
 
 class CellImpl<T> implements Cell<T> {
     private subscribers: ((value: T) => void)[] = [];

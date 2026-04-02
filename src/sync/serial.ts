@@ -2,7 +2,18 @@ import type { Result } from "../result/index.ts";
 import type { AnyFn } from "./util.ts";
 
 /**
- * An async event wrapper that is cancelled when a new one starts.
+ * Factory function for `serial`. See {@link SerialConstructor} for usage
+ */
+export const serial = <TFn extends AnyFn>(args: SerialConstructor<TFn>) => {
+    const { fn, onCancel } = args;
+    const impl = new SerialImpl(fn, onCancel);
+    return (...args: Parameters<TFn>) => impl.invoke(...args);
+};
+
+/**
+ * Options for `serial` function
+ *
+ * `serial` is an async event wrapper that is cancelled when a new one starts.
  * When a new event is started, the previous caller will receive a
  * cancellation error, instead of being hung up indefinitely.
  *
@@ -132,16 +143,7 @@ import type { AnyFn } from "./util.ts";
  *
  * If the underlying function throws, the exception will be re-thrown to the caller.
  */
-
-export function serial<TFn extends AnyFn>({ fn, onCancel }: SerialConstructor<TFn>) {
-    const impl = new SerialImpl(fn, onCancel);
-    return (...args: Parameters<TFn>) => impl.invoke(...args);
-}
-
-/**
- * Options for `serial` function
- */
-export type SerialConstructor<TFn> = {
+export interface SerialConstructor<TFn> {
     /**
      * Function creator that returns the async function to be wrapped
      */
@@ -152,7 +154,7 @@ export type SerialConstructor<TFn> = {
      * This is guaranteed to be only called at most once per execution
      */
     onCancel?: SerialEventCancelCallback;
-};
+}
 
 class SerialImpl<TFn extends AnyFn> {
     private serial: SerialId;

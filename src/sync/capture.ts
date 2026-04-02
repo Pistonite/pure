@@ -1,3 +1,5 @@
+// this is an exception to the global state rule - since it doesn't really matter
+// if this is duplicated
 const captured = new Set<unknown>();
 
 /**

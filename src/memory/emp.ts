@@ -39,31 +39,41 @@
  * In 32-bit context like WASM32, the inner value can be a `number`.
  * In 64-bit context, `number` might be fine for some systems, but `bigint`
  * is recommended.
+ *
+ * ## Usage
+ *
+ * ```typescript
+ * // First create a marker to distinguish between different Emp types for TypeScript.
+ * // This is not used at runtime
+ * const MyNativeType = Symbol("MyNativeType");
+ * export type MyNativeType = typeof MyNativeType;
+ *
+ * // Then use makeEmpType to create a factory function
+ * const makeMyNativeTypeEmp = makeEmpType({
+ *     marker: MyNativeType,
+ *     free: (ptr) => freeMyNativeType(ptr),
+ * });
+ *
+ * // Now acquire ownership of an object from external native code
+ * // and assign it to an Emp
+ * const myObjRawPtr = allocMyNativeType();
+ * const myObj = makeMyNativeTypeEmp(myObjRawPtr);
+ *
+ * // when myObj is GC'ed, it will be freed by calling freeMyNativeType
+ * ```
  */
-export type Emp<T, TRepr> = {
+export interface Emp<T, TRepr> {
     /** The type marker for T. This only marks the type for TypeScript and does not exist at runtime */
     readonly __phantom: T;
     /** The underlying pointer value */
     readonly value: TRepr;
-};
+}
 
-export type EmpConstructor<T, TRepr> = {
+/** Args for constructing a Emp type */
+export interface EmpConstructor<T, TRepr> {
     /**
-     * The marker for the Emp type, used to distinguish between multiple types
-     *
-     * Typically, this is a unique symbol:
-     * ```typescript
-     * const MyNativeType = Symbol("MyNativeType");
-     * export type MyNativeType = typeof MyNativeType;
-     *
-     * const makeMyNativeTypeEmp = makeEmpType({
-     *     marker: MyNativeType,
-     *     free: (ptr) => void freeMyNativeType(ptr)
-     * })
-     * ```
-     *
-     * Note that this is not used in runtime, but just used for type inference,
-     * so you can also skip passing it and specify the type parameter instead
+     * The marker for the Emp type, used to distinguish between multiple Emp types
+     * in TypeScript
      */
     marker?: T;
 
@@ -71,14 +81,15 @@ export type EmpConstructor<T, TRepr> = {
      * Function to free the underlying object. Called when this Emp is garbage-collected
      */
     free: (ptr: TRepr) => void | Promise<void>;
-};
+}
 
 /**
- * Create a factory function for an {@link Emp} type.
+ * Create a factory function for an Emp type. See {@link Emp}
  */
-export const makeEmpType = <T, TRepr>({
-    free,
-}: EmpConstructor<T, TRepr>): ((ptr: TRepr) => Emp<T, TRepr>) => {
+export const makeEmpType = <T, TRepr>(
+    args: EmpConstructor<T, TRepr>,
+): ((ptr: TRepr) => Emp<T, TRepr>) => {
+    const { free } = args;
     const registry = new FinalizationRegistry(free);
     return (ptr: TRepr) => {
         const obj = Object.freeze({ value: ptr });

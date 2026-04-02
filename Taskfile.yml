@@ -26,9 +26,9 @@ tasks:
   fix:
     - task: ecma:fix
   test:
-    - task: ecma:vitest
+    - task: ecma:test
   dev:
-    - task: ecma:vitest-dev
+    - task: ecma:test-dev
   build:
     - task: ecma:lib-build
 

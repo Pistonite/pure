@@ -1,7 +1,18 @@
 import { type AnyFn, type AwaitRet, makePromise, type PromiseHandle } from "./util.ts";
 
 /**
- * An async event wrapper that always resolve to the result of the latest
+ * Factory for `latest`. See {@link LatestConstructor} for usage.
+ */
+export function latest<TFn extends AnyFn>(args: LatestConstructor<TFn>) {
+    const { fn, areArgsEqual, updateArgs } = args;
+    const impl = new LatestImpl(fn, areArgsEqual, updateArgs);
+    return (...args: Parameters<TFn>) => impl.invoke(...args);
+}
+
+/**
+ * Args for constructing `latest`
+ *
+ * `latest` is an async event wrapper that always resolve to the result of the latest
  * call
  *
  * ## Example
@@ -31,16 +42,7 @@ import { type AnyFn, type AwaitRet, makePromise, type PromiseHandle } from "./ut
  * See the constructor options for more advanced usage, for example,
  * control how arguments are updated when new calls are made.
  */
-export function latest<TFn extends AnyFn>({
-    fn,
-    areArgsEqual,
-    updateArgs,
-}: LatestConstructor<TFn>) {
-    const impl = new LatestImpl(fn, areArgsEqual, updateArgs);
-    return (...args: Parameters<TFn>) => impl.invoke(...args);
-}
-
-export type LatestConstructor<TFn extends AnyFn> = {
+export interface LatestConstructor<TFn extends AnyFn> {
     /** Function to be wrapped */
     fn: TFn;
 
@@ -72,9 +74,10 @@ export type LatestConstructor<TFn extends AnyFn> = {
      *   to be executed next.
      *
      */
-    updateArgs?: UpdateArgsFn<TFn>;
-};
-export type UpdateArgsFn<TFn extends AnyFn> = (
+    updateArgs?: LatestUpdateArgsFn<TFn>;
+}
+/** See {@link LatestConstructor} */
+export type LatestUpdateArgsFn<TFn extends AnyFn> = (
     current: Parameters<TFn>,
     middle: Parameters<TFn>[],
     latest: Parameters<TFn>,
@@ -91,12 +94,12 @@ export class LatestImpl<TFn extends AnyFn> {
     private middleArgs: Parameters<TFn>[];
 
     private areArgsEqual: (a: Parameters<TFn>, b: Parameters<TFn>) => boolean;
-    private updateArgs: UpdateArgsFn<TFn>;
+    private updateArgs: LatestUpdateArgsFn<TFn>;
 
     constructor(
         private fn: TFn,
         areArgsEqual?: (a: Parameters<TFn>, b: Parameters<TFn>) => boolean,
-        updateArgs?: UpdateArgsFn<TFn>,
+        updateArgs?: LatestUpdateArgsFn<TFn>,
     ) {
         this.middleArgs = [];
         this.areArgsEqual = areArgsEqual || (() => false);

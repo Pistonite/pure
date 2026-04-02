@@ -165,9 +165,15 @@ export type Result<T, E> = Ok<T> | Err<E>;
 // This is to get type narrowing to work most of the time
 
 /** A success value */
-export type Ok<T> = { val: T; err?: never };
+export interface Ok<T> {
+    val: T;
+    err?: never;
+}
 /** An error value */
-export type Err<E> = { err: E; val?: never };
+export interface Err<E> {
+    err: E;
+    val?: never;
+}
 
 /**
  * A value that is either `void` or an error

@@ -1,7 +1,6 @@
-
 import { errstr } from "../result/index.ts";
 
-/** 
+/**
  * String-enum for logging levels
  *
  * off - no logging at all
@@ -9,81 +8,32 @@ import { errstr } from "../result/index.ts";
  * info - warning, errors, info
  * debug - warning, errors, info, debug
  */
-export type LogLevelStr = "off" | "info" | "debug" | "default";
 
-export const LogLevel = { Off: 0, High: 1, Info: 2, Debug: 3 } as const;
-export type LogLevel = (typeof LogLevel)[keyof typeof LogLevel];
+const LogLevel = { off: 0, default: 1, info: 2, debug: 3 } as const;
+export type LogLevelStr = "off" | "default" | "info" | "debug";
+if (import.meta.vitest) {
+    const { test, expectTypeOf } = import.meta.vitest;
+    test("type LogLevelStr", () => {
+        expectTypeOf<LogLevelStr>().toEqualTypeOf<keyof typeof LogLevel>();
+    });
+}
+type LogLevel = (typeof LogLevel)[LogLevelStr];
 
-let globalLevel: LogLevel = LogLevel.High;
-/**
- * Suppress ALL logging.
- *
- * This overrides logger-level settings
- */
-export const globalLogOff = () => {
-    globalLevel = LogLevel.Off;
-};
-/**
- * Enable +info logging for ALL loggers
- *
- * This overrides logger-level settings
- */
-export const globalLogInfo = () => {
-    globalLevel = LogLevel.Info;
-};
-/**
- * Enable +debug logging for ALL loggers
- *
- * This overrides logger-level settings
- */
-export const globalLogDebug = () => {
-    globalLevel = LogLevel.Debug;
-};
+/** Args for constructing a logger */
+export interface LoggerConstructor {
+    /** CSS Color for the logger, default is 'gray' */
+    color?: string;
+    /**
+     * Logging level, default is "default".
+     * The level can still be changed later with setLevel
+     */
+    level?: LogLevelStr;
+}
 
-/** Create a logger creator. Use the factory methods to finish making the logger */
-export const logger = (name: string, color?: string): LoggerFactory => {
-    return {
-        default: () => new LoggerImpl(name, color, LogLevel.High),
-        debug: () => new LoggerImpl(name, color, LogLevel.Debug),
-        info: () => new LoggerImpl(name, color, LogLevel.Info),
-        off: () => new LoggerImpl(name, color, LogLevel.Off),
-    };
-};
-
-/** Create a {@link ResettableLogger} that can be easily reconfigured */
-export const resettableLogger = (name: string, color?: string): ResettableLogger => {
-    const logger = new LoggerImpl(name, color, LogLevel.High);
-    return {
-        logger,
-        debug: () => (logger.level = LogLevel.Debug),
-        info: () => (logger.level = LogLevel.Info),
-        off: () => (logger.level = LogLevel.Off),
-    };
-};
-
-/**
- * A logger whose level can be changed later. Useful for libraries to expose,
- * so users can easily debug calls in the library
- */
-export interface ResettableLogger  {
-    logger: Logger;
-    debug(): void;
-    info(): void;
-    off(): void;
-};
-
-export type LoggerFactory =  {
-    /** Standard important logger (warning and errors) */
-    default(): Logger;
-    /** Enable +info +debug logging for this logger */
-    debug(): Logger;
-    /** Enable +info logging for this logger */
-    info(): Logger;
-    /** Stop all logging, including warn and error */
-    off(): Logger;
-};
-
+/** The logger type */
 export interface Logger {
+    /** Set the level of the logger */
+    setLevel(level: LogLevelStr): void;
     /** Log a debug message */
     debug(obj: unknown): void;
     /** Log an info message */
@@ -92,21 +42,69 @@ export interface Logger {
     warn(obj: unknown): void;
     /** Log an error message */
     error(obj: unknown): void;
+}
+
+/** Create a logger creator. Use the factory methods to finish making the logger */
+export const logger = (name: string, args: LoggerConstructor): Logger => {
+    const { color, level } = args;
+    const levelObj = LogLevel[level || "off"] || LogLevel.off;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if ((globalThis as any).process) {
+        return new BareLoggerImpl(name, levelObj);
+    }
+    const color2 = color || "gray";
+    return new CssLoggerImpl(name, color2, levelObj);
 };
 
-export class LoggerImpl implements Logger {
-    name: string;
-    color: string | undefined;
-    level: LogLevel;
-
-    constructor(name: string, color: string | undefined, level: LogLevel) {
-        this.name = name;
-        this.color = "padding:0 3x;color:white" + (color ? `;background:${color}` : "");
-        this.level = level;
+class BareLoggerImpl implements Logger {
+    constructor(
+        private name: string,
+        private level: LogLevel,
+    ) {}
+    setLevel(level: LogLevelStr): void {
+        this.level = LogLevel[level] || LogLevel["off"];
     }
+    debug(obj: unknown): void {
+        if (this.level !== LogLevel.debug) {
+            return;
+        }
+        console.debug(`DEBUG [${this.name}] ${obj}`);
+    }
+    info(obj: unknown): void {
+        if (this.level < LogLevel.info) {
+            return;
+        }
+        console.info(`INFO [${this.name}] ${obj}`);
+    }
+    warn(obj: unknown): void {
+        if (this.level < LogLevel.default) {
+            return;
+        }
+        console.warn(`WARN [${this.name}] ${obj}`);
+    }
+    error(obj: unknown): void {
+        if (this.level < LogLevel.default) {
+            return;
+        }
+        const msg = errstr(obj);
+        console.error(`ERROR [${this.name}] ${msg}`);
+        if (msg !== obj) {
+            console.error(obj);
+        }
+    }
+}
 
-    debug(obj: unknown) {
-        if (globalLevel !== LogLevel.Debug && this.level !== LogLevel.Debug) {
+class CssLoggerImpl implements Logger {
+    constructor(
+        private name: string,
+        private color: string,
+        private level: LogLevel,
+    ) {}
+    setLevel(level: LogLevelStr): void {
+        this.level = LogLevel[level] || LogLevel["off"];
+    }
+    debug(obj: unknown): void {
+        if (this.level !== LogLevel.debug) {
             return;
         }
         console.debug(
@@ -116,9 +114,8 @@ export class LoggerImpl implements Logger {
             "color:inherit;background:inherit",
         );
     }
-
-    info(obj: unknown) {
-        if (globalLevel < LogLevel.Info && this.level < LogLevel.Info) {
+    info(obj: unknown): void {
+        if (this.level < LogLevel.info) {
             return;
         }
         console.info(
@@ -128,9 +125,8 @@ export class LoggerImpl implements Logger {
             "color:inherit;background:inherit",
         );
     }
-
-    warn(obj: unknown) {
-        if (globalLevel < LogLevel.High || this.level < LogLevel.High) {
+    warn(obj: unknown): void {
+        if (this.level < LogLevel.default) {
             return;
         }
         console.warn(
@@ -140,9 +136,8 @@ export class LoggerImpl implements Logger {
             "color:inherit;background:inherit",
         );
     }
-
-    error(obj: unknown) {
-        if (globalLevel < LogLevel.High || this.level < LogLevel.High) {
+    error(obj: unknown): void {
+        if (this.level < LogLevel.default) {
             return;
         }
         const msg = errstr(obj);

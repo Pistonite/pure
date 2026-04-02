@@ -3,13 +3,8 @@ import { cell, type Cell, type CellConstructor } from "./cell.ts";
 /**
  * Create a cell that persists its value to a web storage
  */
-export function persist<T>({
-    storage,
-    key,
-    serialize = JSON.stringify,
-    deserialize,
-    initial,
-}: PersistConstructor<T>): Persist<T> {
+export function persist<T>(args: PersistConstructor<T>): Persist<T> {
+    const { storage, key, serialize = JSON.stringify, deserialize, initial } = args;
     const deser =
         deserialize ??
         ((value: string) => {
@@ -22,7 +17,8 @@ export function persist<T>({
     return new PersistImpl(storage, key, serialize, deser, initial);
 }
 
-export type PersistConstructor<T> = CellConstructor<T> & {
+/** Args for creating a persisted cell */
+export interface PersistConstructor<T> extends CellConstructor<T> {
     /** The web storage to use */
     storage: Storage;
 
@@ -41,9 +37,10 @@ export type PersistConstructor<T> = CellConstructor<T> & {
      * By default, it will use `JSON.parse` wrapped with try-catch
      */
     deserialize?(value: string): T | null;
-};
+}
 
-export type Persist<T> = Cell<T> & {
+/** A cell that also persists its value */
+export interface Persist<T> extends Cell<T> {
     /**
      * Load the value initially, and notify all the current subscribers
      *
@@ -52,9 +49,9 @@ export type Persist<T> = Cell<T> & {
     init(initial?: T): T;
     /** Clear the value from the storage */
     clear(): void;
-    /** Clera the value and disable the persistence */
+    /** Clear the value and disable the persistence */
     disable(): void;
-};
+}
 
 class PersistImpl<T> implements Persist<T> {
     private cell: Cell<T>;

@@ -18,11 +18,11 @@ export const makePromise = <T>(): PromiseHandle<T> => {
  * A handle of the promise that breaks down the promise object
  * and its resolve and reject functions
  */
-export type PromiseHandle<T> = {
+export interface PromiseHandle<T> {
     promise: Promise<T>;
     resolve: (value: T | PromiseLike<T>) => void;
     reject: (reason?: unknown) => void;
-};
+}
 
 /** Shorthand for Awaited<ReturnType<T>> */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
