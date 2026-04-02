@@ -8,53 +8,31 @@ on:
     branches:
       - main
 
-
 jobs:
   build:
-    name: Check & Test
-    runs-on: ubuntu-latest
+    name: Check & Test & Build
+    runs-on: blacksmith-4vcpu-ubuntu-2404
     steps:
-      - uses: actions/checkout@v4
+      - uses: Pistonight/mono-dev/actions/setup@new_setup
         with:
-          persist-credentials: false
-          submodules: true
-      - uses: arduino/setup-task@v2
-        with:
-          version: 3.x
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 10
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'pnpm'
+          mono-dev: new_setup
+          ecma-pnpm: true
       - run: task install
       - run: task check
       - run: task test
+      - run: task build
 
   build-docs:
     name: Build Docs
-    runs-on: ubuntu-latest
+    runs-on: blacksmith-4vcpu-ubuntu-2404
     steps:
-      - uses: actions/checkout@v4
+      - uses: Pistonight/mono-dev/actions/setup@new_setup
         with:
-          persist-credentials: false
-          submodules: true
-      - uses: arduino/setup-task@v2
-        with:
-          version: 3.x
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 10
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'pnpm'
+          mono-dev: new_setup
+          ecma-pnpm: true
       - run: task install
       - run: task doc
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v4
         with:
           path: docs
           retention-days: 3
@@ -70,7 +48,7 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
+    runs-on: blacksmith-4vcpu-ubuntu-2404
     steps:
       - id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5

@@ -1,7 +1,45 @@
 {
+    "name": "@pistonite/pure",
+    "version": "0.29.0",
+    "type": "module",
+    "description": "Pure TypeScript libraries for my projects",
+    "homepage": "https://github.com/Pistonite/pure",
+    "bugs": {
+        "url": "https://github.com/Pistonite/pure/issues"
+    },
+    "license": "MIT",
+    "author": "Pistonight <pistonknight@outlook.com>",
+    "files": [
+        "dist/**/*",
+        "src/**/*"
+    ],
+    "exports": {
+        "./log": {
+            "import": "./dist/log/index.js",
+            "types": "./dist/_dts_/src/log/index.d.ts"
+        },
+        "./memory": {
+            "import": "./dist/memory/index.js",
+            "types": "./dist/_dts_/src/memory/index.d.ts"
+        },
+        "./result": {
+            "import": "./dist/result/index.js",
+            "types": "./dist/_dts_/src/result/index.d.ts"
+        },
+        "./sync": {
+            "import": "./dist/sync/index.js",
+            "types": "./dist/_dts_/src/sync/index.d.ts"
+        }
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Pistonite/pure.git"
+    },
     "devDependencies": {
-        "eslint": "^9.36.0",
-        "serve": "^14.2.5",
-        "typedoc": "^0.28.13"
+        "eslint": "^9",
+        "mono-dev": "link:./mono-dev"
+    },
+    "dependencies": {
+        "denque": "^2.1.0"
     }
 }

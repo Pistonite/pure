@@ -1,68 +1,44 @@
 version: "3"
 
 includes:
-  common:
-    taskfile: ./packages/mono-dev/task/common.yaml
-    flatten: true
+  ecma:
+    taskfile: ./mono-dev/task/ecma.yaml
+    internal: true
     optional: true
 
-  pure:
-    aliases: [p]
-    taskfile: ./packages/pure
-    dir: ./packages/pure
-    internal: true
-
-  pure-react:
-    aliases: [pr]
-    taskfile: ./packages/pure-react
-    dir: ./packages/pure-react
-    internal: true
-
-  pure-i18next:
-    aliases: [pi]
-    taskfile: ./packages/pure-i18next
-    dir: ./packages/pure-i18next
-    internal: true
-
 tasks:
+  setup:
+    - rm -rf mono-dev
+    - git clone --branch new_setup --single-branch https://github.com/Pistonight/mono-dev
+    - task: install
   install:
-    cmds:
-      - pnpm install
+    - cd mono-dev && pnpm install
+    - pnpm install
+    - task: ecma:config
+  upgrade:
+    - task: setup
+    - pnpm dedupe
+    - pnpm dedupe --check
+    - task: install
 
   check:
-    desc: Check the code
-    deps:
-      - pure:check
-      - pure-react:check
-      - pure-i18next:check
-
-  test:
-    desc: Run the tests
-    cmds:
-      - task: pure:test
-
+    - task: ecma:check
   fix:
-    desc: Fix the code
-    deps:
-      - pure:fix
-      - pure-react:fix
-      - pure-i18next:fix
+    - task: ecma:fix
+  test:
+    - task: ecma:test
+  dev:
+    - task: ecma:test-dev
+  build:
+    - task: ecma:lib-build
 
   doc:
-    desc: Generate the documentation
-    deps:
-      - pure:install
-      - pure-react:install
-      - pure-i18next:install
-    cmds:
-      - pnpm exec typedoc
-
-  serve:
-    desc: Serve the documentation
-    cmds:
-      - pnpm exec serve docs
-
+    - task: ecma:doc-build
+  dev-doc:
+    - task: ecma:doc-dev
+  
   publish:
-    deps: [check, test, doc]
+    deps: [check, test, build, doc]
     cmds:
-      - pnpm -r publish --access public
+      - pnpm publish --access public
+
