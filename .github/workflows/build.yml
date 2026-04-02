@@ -10,16 +10,17 @@ on:
 
 jobs:
   build:
-    name: Check & Test
+    name: Check & Test & Build
     runs-on: blacksmith-4vcpu-ubuntu-2404
     steps:
       - uses: Pistonight/mono-dev/actions/setup@new_setup
         with:
           mono-dev: new_setup
           ecma-pnpm: true
-      - run: pnpm install
+      - run: task install
       - run: task check
       - run: task test
+      - run: task build
 
   build-docs:
     name: Build Docs
@@ -29,7 +30,7 @@ jobs:
         with:
           mono-dev: new_setup
           ecma-pnpm: true
-      - run: pnpm install
+      - run: task install
       - run: task doc
       - uses: actions/upload-pages-artifact@v4
         with:
