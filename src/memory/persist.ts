@@ -20,7 +20,7 @@ export function persist<T>(args: PersistConstructor<T>): Persist<T> {
 /** Args for creating a persisted cell */
 export interface PersistConstructor<T> extends CellConstructor<T> {
     /** The web storage to use */
-    storage: Storage;
+    storage: PersistStorage;
 
     /** The key to use in the storage */
     key: string;
@@ -58,7 +58,7 @@ class PersistImpl<T> implements Persist<T> {
     private unsubscribe: () => void;
 
     constructor(
-        private storage: Storage,
+        private storage: PersistStorage,
         private key: string,
         private serialize: (value: T) => string,
         private deserialize: (value: string) => T | null,
@@ -115,4 +115,15 @@ class PersistImpl<T> implements Persist<T> {
         this.clear();
         this.unsubscribe();
     }
+}
+
+/**
+ * Interface for Web Storage API used by `persist`.
+ *
+ * This is here so projects without DOM types can use `persist`
+ */
+export interface PersistStorage {
+    getItem(key: string): string | null;
+    setItem(key: string, value: string): void;
+    removeItem(key: string): void;
 }
