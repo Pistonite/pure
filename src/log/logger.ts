@@ -10,6 +10,7 @@ import { errstr } from "../result/index.ts";
  */
 
 const LogLevel = { off: 0, default: 1, info: 2, debug: 3 } as const;
+/** String form log level */
 export type LogLevelStr = "off" | "default" | "info" | "debug";
 if (import.meta.vitest) {
     const { test, expectTypeOf } = import.meta.vitest;
@@ -44,7 +45,11 @@ export interface Logger {
     error(obj: unknown): void;
 }
 
-/** Create a logger creator. Use the factory methods to finish making the logger */
+/**
+ * Create a logger
+ *
+ * See {@link log! | module level documentation} for example
+ */
 export const logger = (name: string, args: LoggerConstructor): Logger => {
     const { color, level } = args;
     const levelObj = LogLevel[level || "off"] || LogLevel.off;

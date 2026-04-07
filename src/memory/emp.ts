@@ -69,7 +69,7 @@ export interface Emp<T, TRepr> {
     readonly value: TRepr;
 }
 
-/** Args for constructing a Emp type */
+/** Args for constructing a {@link Emp} type */
 export interface EmpConstructor<T, TRepr> {
     /**
      * The marker for the Emp type, used to distinguish between multiple Emp types
@@ -84,7 +84,7 @@ export interface EmpConstructor<T, TRepr> {
 }
 
 /**
- * Create a factory function for an Emp type. See {@link Emp}
+ * Create a factory function for an {@link Emp} type.
  */
 export const makeEmpType = <T, TRepr>(
     args: EmpConstructor<T, TRepr>,
