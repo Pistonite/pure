@@ -15,7 +15,7 @@ jobs:
     steps:
       - uses: Pistonight/mono-dev/actions/setup@new_setup
         with:
-          mono-dev: new_setup
+          mono-dev: false
           ecma-pnpm: true
       - run: task install
       - run: task check
@@ -28,7 +28,7 @@ jobs:
     steps:
       - uses: Pistonight/mono-dev/actions/setup@new_setup
         with:
-          mono-dev: new_setup
+          mono-dev: false
           ecma-pnpm: true
       - run: task install
       - run: task doc

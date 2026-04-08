@@ -1,19 +1,8 @@
 import { type AnyFn, type AwaitRet, makePromise, type PromiseHandle } from "./util.ts";
 
 /**
- * Factory for `latest`. See {@link LatestConstructor} for usage.
- */
-export function latest<TFn extends AnyFn>(args: LatestConstructor<TFn>) {
-    const { fn, areArgsEqual, updateArgs } = args;
-    const impl = new LatestImpl(fn, areArgsEqual, updateArgs);
-    return (...args: Parameters<TFn>) => impl.invoke(...args);
-}
-
-/**
- * Args for constructing `latest`
- *
- * `latest` is an async event wrapper that always resolve to the result of the latest
- * call
+ * An async event wrapper that always resolve to the result of the latest
+ * call.
  *
  * ## Example
  * In the example below, both call will return the result
@@ -39,8 +28,17 @@ export function latest<TFn extends AnyFn>(args: LatestConstructor<TFn>) {
  * ```
  *
  * ## Advanced Usage
- * See the constructor options for more advanced usage, for example,
+ * See {@link LatestConstructor} options for more advanced usage, for example,
  * control how arguments are updated when new calls are made.
+ */
+export function latest<TFn extends AnyFn>(args: LatestConstructor<TFn>) {
+    const { fn, areArgsEqual, updateArgs } = args;
+    const impl = new LatestImpl(fn, areArgsEqual, updateArgs);
+    return (...args: Parameters<TFn>) => impl.invoke(...args);
+}
+
+/**
+ * Options to construct a {@link latest} function
  */
 export interface LatestConstructor<TFn extends AnyFn> {
     /** Function to be wrapped */

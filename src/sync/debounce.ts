@@ -1,16 +1,9 @@
 import { type AnyFn, type AwaitRet, makePromise, type PromiseHandle } from "./util.ts";
 
-/** Factory for debounced function. See {@link DebounceConstructor} for usage */
-export function debounce<TFn extends AnyFn>(args: DebounceConstructor<TFn>) {
-    const { fn, interval, disregardExecutionTime } = args;
-    const impl = new DebounceImpl(fn, interval, !!disregardExecutionTime);
-    return (...args: Parameters<TFn>) => impl.invoke(...args);
-}
-
 /**
- * Options for `debounce` function
+ * An async event wrapper to execute a function with a minimal interval between calls.
  *
- * A debounced function is an async event wrapper that is guaranteed to:
+ * The implementation is guaranteed to:
  * - Not re-fire in a minimal interval after it's initialially fired.
  * - All calls will eventually fire
  *
@@ -86,7 +79,16 @@ export function debounce<TFn extends AnyFn>(args: DebounceConstructor<TFn>) {
  *     disregardExecutionTime: true,
  * });
  * ```
+ *
+ * See {@link DebounceConstructor} for options
  */
+export function debounce<TFn extends AnyFn>(args: DebounceConstructor<TFn>) {
+    const { fn, interval, disregardExecutionTime } = args;
+    const impl = new DebounceImpl(fn, interval, !!disregardExecutionTime);
+    return (...args: Parameters<TFn>) => impl.invoke(...args);
+}
+
+/** Options to construct a {@link debounce} function */
 export interface DebounceConstructor<TFn> {
     /** Function to be debounced */
     fn: TFn;

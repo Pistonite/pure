@@ -14,12 +14,6 @@ Install the package from NPM
 npm install @pistonite/pure
 ```
 
-For React hooks
-
-```bash
-npm install @pistonite/pure-react
-```
-
 Import the things you need
 
 ```typescript
