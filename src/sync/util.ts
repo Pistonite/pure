@@ -24,7 +24,7 @@ export interface PromiseHandle<T> {
     reject: (reason?: unknown) => void;
 }
 
-/** Shorthand for Awaited<ReturnType<T>> */
+/** Shorthand for `Awaited<ReturnType<T>>` */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type AwaitRet<T> = T extends (...args: any[]) => infer R ? Awaited<R> : never;
 

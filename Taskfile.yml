@@ -2,17 +2,12 @@ version: "3"
 
 includes:
   ecma:
-    taskfile: ./mono-dev/task/ecma.yaml
+    taskfile: ./node_modules/mono-dev/task/ecma.yaml
     internal: true
     optional: true
 
 tasks:
-  setup:
-    - rm -rf mono-dev
-    - git clone --branch new_setup --single-branch https://github.com/Pistonight/mono-dev
-    - task: install
   install:
-    - cd mono-dev && pnpm install
     - pnpm install
     - task: ecma:config
   upgrade:

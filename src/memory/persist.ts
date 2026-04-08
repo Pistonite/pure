@@ -17,7 +17,11 @@ export function persist<T>(args: PersistConstructor<T>): Persist<T> {
     return new PersistImpl(storage, key, serialize, deser, initial);
 }
 
-/** Args for creating a persisted cell */
+/**
+ * Args for creating a persisted cell.
+ *
+ * See {@link persist}
+ */
 export interface PersistConstructor<T> extends CellConstructor<T> {
     /** The web storage to use */
     storage: PersistStorage;
@@ -39,7 +43,11 @@ export interface PersistConstructor<T> extends CellConstructor<T> {
     deserialize?(value: string): T | null;
 }
 
-/** A cell that also persists its value */
+/**
+ * A cell that also persists its value.
+ *
+ * See {@link persist}
+ */
 export interface Persist<T> extends Cell<T> {
     /**
      * Load the value initially, and notify all the current subscribers

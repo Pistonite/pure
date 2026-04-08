@@ -15,9 +15,9 @@ jobs:
     steps:
       - uses: Pistonight/mono-dev/actions/setup@new_setup
         with:
-          mono-dev: new_setup
+          mono-dev: false
           ecma-pnpm: true
-      - run: task install
+      - run: pnpm install
       - run: task check
       - run: task test
       - run: task build
@@ -28,9 +28,9 @@ jobs:
     steps:
       - uses: Pistonight/mono-dev/actions/setup@new_setup
         with:
-          mono-dev: new_setup
+          mono-dev: false
           ecma-pnpm: true
-      - run: task install
+      - run: pnpm install
       - run: task doc
       - uses: actions/upload-pages-artifact@v4
         with:

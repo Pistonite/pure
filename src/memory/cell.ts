@@ -1,29 +1,33 @@
-/** Create a {@link Cell} */
+/**
+ * A light weight storage wrapper around a value
+ * that can be subscribed to for changes
+ *
+ * ```typescript
+ * import { cell } from "@pistonite/pure/memory";
+ *
+ * // type: Cell<boolean>
+ * const myCell = cell({ initial: true });
+ * ```
+ *
+ * See {@link Cell}
+ */
 export const cell = <T>(args: CellConstructor<T>): Cell<T> => {
     return new CellImpl(args.initial);
 };
 
-/** Args for constructing a cell */
+/** Args for constructing a {@link cell} */
 export interface CellConstructor<T> {
     /** Initial value */
     initial: T;
 }
 
-/**
- * A light weight storage wrapper around a value
- * that can be subscribed to for changes
- *
- * Created via `cell()`
- *
- * ```typescript
- * import { cell } from "@pistonite/pure/memory";
- *
- * const myCell = cell(true);
- * ```
- */
+/** See {@link cell} */
 export interface Cell<T> {
+    /** Get the current value */
     get(): T;
+    /** Set the value and triggers subscribers if the new value is not the same reference (compared with `===`)*/
     set(value: T): void;
+    /** Add a subscriber. Returns a function to unsubscribe */
     subscribe(callback: (value: T) => void, notifyImmediately?: boolean): () => void;
 }
 
