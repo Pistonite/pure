@@ -11,7 +11,7 @@ tasks:
     - pnpm install
     - task: ecma:config
   upgrade:
-    - task: setup
+    - pnpm up mono-dev
     - pnpm dedupe
     - pnpm dedupe --check
     - task: install
