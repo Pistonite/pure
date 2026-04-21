@@ -13,7 +13,7 @@ jobs:
     name: Check & Test & Build
     runs-on: blacksmith-4vcpu-ubuntu-2404
     steps:
-      - uses: Pistonight/mono-dev/actions/setup@new_setup
+      - uses: Pistonight/mono-dev/actions/setup@main
         with:
           mono-dev: false
           ecma-pnpm: true
@@ -26,13 +26,13 @@ jobs:
     name: Build Docs
     runs-on: blacksmith-4vcpu-ubuntu-2404
     steps:
-      - uses: Pistonight/mono-dev/actions/setup@new_setup
+      - uses: Pistonight/mono-dev/actions/setup@main
         with:
           mono-dev: false
           ecma-pnpm: true
       - run: pnpm install
       - run: task doc
-      - uses: actions/upload-pages-artifact@v4
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: docs
           retention-days: 3
