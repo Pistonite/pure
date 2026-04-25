@@ -1,4 +1,4 @@
-/// <reference types="mono-dev/vitest-types" />
+/// <reference types="mono-dev/lib-types" />
 
 declare const console: {
     log(...x: unknown): void;
