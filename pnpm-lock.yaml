@@ -17,7 +17,7 @@ importers:
         version: 9.39.4
       mono-dev:
         specifier: github:pistonight/mono-dev#dist
-        version: https://codeload.github.com/pistonight/mono-dev/tar.gz/b7bfc28797fcef05d03112f64e30f26979f55a19(prettier@3.8.3)(rolldown@1.0.0-rc.17)(yaml@2.8.3)
+        version: https://codeload.github.com/pistonight/mono-dev/tar.gz/143a6f9d32478a6bdb95f43ea905b05941e48cff(prettier@3.8.3)(rolldown@1.0.0-rc.17)(yaml@2.8.3)
 
 packages:
 
@@ -1068,9 +1068,9 @@ packages:
   minimatch@3.1.5:
     resolution: {integrity: sha512-VgjWUsnnT6n+NUk6eZq77zeFdpW2LWDzP6zFGrCbHXiYNul5Dzqk2HHQ5uFH2DNW5Xbp8+jVzaeNt94ssEEl4w==}
 
-  mono-dev@https://codeload.github.com/pistonight/mono-dev/tar.gz/b7bfc28797fcef05d03112f64e30f26979f55a19:
-    resolution: {tarball: https://codeload.github.com/pistonight/mono-dev/tar.gz/b7bfc28797fcef05d03112f64e30f26979f55a19}
-    version: 0.3.25
+  mono-dev@https://codeload.github.com/pistonight/mono-dev/tar.gz/143a6f9d32478a6bdb95f43ea905b05941e48cff:
+    resolution: {tarball: https://codeload.github.com/pistonight/mono-dev/tar.gz/143a6f9d32478a6bdb95f43ea905b05941e48cff}
+    version: 0.3.26
     hasBin: true
 
   ms@2.1.3:
@@ -2605,7 +2605,7 @@ snapshots:
     dependencies:
       brace-expansion: 1.1.13
 
-  mono-dev@https://codeload.github.com/pistonight/mono-dev/tar.gz/b7bfc28797fcef05d03112f64e30f26979f55a19(prettier@3.8.3)(rolldown@1.0.0-rc.17)(yaml@2.8.3):
+  mono-dev@https://codeload.github.com/pistonight/mono-dev/tar.gz/143a6f9d32478a6bdb95f43ea905b05941e48cff(prettier@3.8.3)(rolldown@1.0.0-rc.17)(yaml@2.8.3):
     dependencies:
       '@babel/core': 7.29.0
       '@eslint/js': 9.39.4
