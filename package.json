@@ -1,7 +1,8 @@
 {
     "name": "@pistonite/pure",
-    "version": "0.29.4",
+    "version": "0.29.5",
     "type": "module",
+    "private": true,
     "description": "Pure TypeScript libraries for my projects",
     "homepage": "https://github.com/Pistonite/pure",
     "bugs": {
@@ -13,6 +14,10 @@
         "dist/**/*",
         "src/**/*"
     ],
+    "pistonight/mono-dev": {
+        "lib": true,
+        "publish": true
+    },
     "exports": {
         "./log": {
             "import": "./dist/log/index.js",
@@ -37,9 +42,15 @@
     },
     "devDependencies": {
         "eslint": "^9",
-        "mono-dev": "github:pistonight/mono-dev#main"
+        "mono-dev": "github:pistonight/mono-dev#dist"
     },
     "dependencies": {
         "denque": "^2.1.0"
+    },
+    "imports": {
+        "#log": "./src/log/index.ts",
+        "#memory": "./src/memory/index.ts",
+        "#result": "./src/result/index.ts",
+        "#sync": "./src/sync/index.ts"
     }
 }
