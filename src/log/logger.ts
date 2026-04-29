@@ -1,4 +1,4 @@
-import { errstr } from "../result/index.ts";
+import { errstr } from "#result";
 
 /**
  * String-enum for logging levels
@@ -100,11 +100,14 @@ class BareLoggerImpl implements Logger {
 }
 
 class CssLoggerImpl implements Logger {
+    private color: string;
     constructor(
         private name: string,
-        private color: string,
+        color: string,
         private level: LogLevel,
-    ) {}
+    ) {
+        this.color = "color:white;background:" + color;
+    }
     setLevel(level: LogLevelStr): void {
         this.level = LogLevel[level] || LogLevel["off"];
     }
