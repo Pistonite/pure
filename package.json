@@ -1,6 +1,6 @@
 {
     "name": "@pistonite/pure",
-    "version": "0.29.6",
+    "version": "0.29.7",
     "type": "module",
     "private": true,
     "description": "Pure TypeScript libraries for my projects",
@@ -11,30 +11,13 @@
     "license": "MIT",
     "author": "Pistonight <pistonknight@outlook.com>",
     "files": [
-        "dist/**/*",
         "src/**/*"
     ],
-    "pistonight/mono-dev": {
-        "lib": true,
-        "publish": true
-    },
     "exports": {
-        "./log": {
-            "import": "./dist/log/index.js",
-            "types": "./dist/_dts_/src/log/index.d.ts"
-        },
-        "./memory": {
-            "import": "./dist/memory/index.js",
-            "types": "./dist/_dts_/src/memory/index.d.ts"
-        },
-        "./result": {
-            "import": "./dist/result/index.js",
-            "types": "./dist/_dts_/src/result/index.d.ts"
-        },
-        "./sync": {
-            "import": "./dist/sync/index.js",
-            "types": "./dist/_dts_/src/sync/index.d.ts"
-        }
+        "./log": "./src/log/index.ts",
+        "./memory": "./src/memory/index.ts",
+        "./result": "./src/result/index.ts",
+        "./sync": "./src/sync/index.ts"
     },
     "repository": {
         "type": "git",
@@ -52,5 +35,9 @@
         "#memory": "./src/memory/index.ts",
         "#result": "./src/result/index.ts",
         "#sync": "./src/sync/index.ts"
+    },
+    "pistonight/mono-dev": {
+        "lib": true,
+        "publish": true
     }
 }
