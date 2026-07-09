@@ -7,14 +7,10 @@ includes:
     optional: true
 
 tasks:
-  install:
-    - pnpm install
-    - task: ecma:config
   upgrade:
     - pnpm up mono-dev
     - pnpm dedupe
     - pnpm dedupe --check
-    - task: install
 
   check:
     - task: ecma:check
