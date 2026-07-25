@@ -13,6 +13,7 @@ export { latest, type LatestConstructor, type LatestUpdateArgsFn } from "./lates
 export { debounce, type DebounceConstructor } from "./debounce.ts";
 export { batch, type BatchConstructor } from "./batch.ts";
 export { once, type OnceConstructor } from "./once.ts";
+export { Mutex } from "./mutex.ts";
 export { makePromise, type PromiseHandle } from "./util.ts";
 export { scopedCapture, scopedCaptureSync } from "./capture.ts";
 
