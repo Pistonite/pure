@@ -14,10 +14,6 @@ jobs:
     runs-on: blacksmith-4vcpu-ubuntu-2404
     steps:
       - uses: Pistonight/mono-dev/actions/setup@main
-        with:
-          mono-dev: false
-          ecma-pnpm: true
-      - run: pnpm install
       - run: task check
       - run: task test
       - run: task build
@@ -27,10 +23,6 @@ jobs:
     runs-on: blacksmith-4vcpu-ubuntu-2404
     steps:
       - uses: Pistonight/mono-dev/actions/setup@main
-        with:
-          mono-dev: false
-          ecma-pnpm: true
-      - run: pnpm install
       - run: task doc
       - uses: actions/upload-pages-artifact@v5
         with:

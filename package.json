@@ -10,6 +10,18 @@
     },
     "license": "MIT",
     "author": "Pistonight <pistonknight@outlook.com>",
+    "devEngines": {
+        "packageManager": {
+            "name": "pnpm",
+            "version": "^12",
+            "onFail": "error"
+        },
+        "runtime": {
+            "name": "node",
+            "version": "^26",
+            "onFail": "error"
+        }
+    },
     "files": [
         "src/**/*"
     ],
@@ -24,7 +36,7 @@
         "url": "git+https://github.com/Pistonite/pure.git"
     },
     "devDependencies": {
-        "eslint": "^9",
+        "eslint": "^10",
         "mono-dev": "github:pistonight/mono-dev#dist"
     },
     "dependencies": {
